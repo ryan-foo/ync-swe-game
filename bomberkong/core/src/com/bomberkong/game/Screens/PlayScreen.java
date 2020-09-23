@@ -8,21 +8,22 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.bomberkong.game.BomberKong;
+import com.bomberkong.game.Scenes.Hud;
 
 import static com.badlogic.gdx.Gdx.*;
 
 public class PlayScreen implements Screen {
 
     private BomberKong game;
-    Texture texture;
     private OrthographicCamera gamecam;
     private Viewport gamePort;
+    private Hud hud;
 
     public PlayScreen(BomberKong game) {
         this.game = game;
-        texture = new Texture("badlogic.jpg");
         gamecam = new OrthographicCamera();
         gamePort = new FitViewport(BomberKong.V_WIDTH, BomberKong.V_HEIGHT, gamecam);
+        hud = new Hud(game.batch);
     }
 
     @Override
@@ -34,10 +35,9 @@ public class PlayScreen implements Screen {
     public void render(float delta) {
         gl.glClearColor(0, 0, 0, 1);
         gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-        game.batch.setProjectionMatrix(gamecam.combined);
-        game.batch.begin();
-        game.batch.draw(texture, 0, 0);
-        game.batch.end();
+
+        game.batch.setProjectionMatrix(hud.stage.getCamera().combined);
+        hud.stage.draw();
     }
 
     @Override
