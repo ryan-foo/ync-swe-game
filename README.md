@@ -4,6 +4,27 @@ We will use [LibGDX](https://libgdx.badlogicgames.com/) and Android Studio in or
 
 We will write our code and work in Android Studio. 
 
+### Starting
+
+```shell
+git clone git@github.com:ryan-foo/ync-swe-game.git
+```
+
+After cloning to your local, use Android Studio to open the project. The last minute of [this video](https://www.youtube.com/watch?v=a8MPxzkwBwo) will show you how to setup Desktop Build (very important for fast workflow later on!)
+
+### Folders of interest 
+
+`bomberkong/core/src/com/bomberkong/game`
+We will spend most of our time in this folder as we will implement majority of the game logic here. We can take input using LibGDX and then let the library handle the interface between devices and the game program.
+
+The net effect is that we can test on computer (which is much faster to debug behaviour etc) and then easily port over to Android controls, rather than waiting for the Virtual Android to boot up etc. I am paranoid, but I am not an android user.
+
+`bomberkong/android`
+When we have implemented enough features, if there are Android specific requirements we can place code for that here. However, majority should be on core.
+
+`assets`
+Self explanatory, contains audio and image assets that will be used by the game.
+
 ### Project
 
 You can click on the [Projects](https://github.com/ryan-foo/ync-swe-game/projects) icon to see how the project is organized.
