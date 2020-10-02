@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="wrap_content"
+    android:layout_height="match_parent"
+    tools:context=".GameActivity">
+
+    <SurfaceView
+        android:id="@+id/surfaceView"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/linearLayout" />
+
+    <LinearLayout
+        android:id="@+id/linearLayout"
+        android:layout_width="729dp"
+        android:layout_height="0dp"
+        android:orientation="horizontal"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <TextView
+            android:id="@+id/timeText"
+            android:layout_width="102dp"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:gravity="center"
+            android:inputType="none"
+            android:text="@string/time" />
+
+        <TextView
+            android:id="@+id/timeCount"
+            android:layout_width="74dp"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="@string/startTime" />
+
+        <TextView
+            android:id="@+id/scoreText"
+            android:layout_width="160dp"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="@string/scoreText" />
+
+        <TextView
+            android:id="@+id/scoreAText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="right"
+            android:text="A:" />
+
+        <TextView
+            android:id="@+id/scoreA"
+            android:layout_width="32dp"
+            android:layout_height="wrap_content"
+            android:gravity="left"
+            android:text="@string/scoreA" />
+
+        <TextView
+            android:id="@+id/scoreBText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="right"
+            android:text="B:" />
+
+        <TextView
+            android:id="@+id/scoreB"
+            android:layout_width="32dp"
+            android:layout_height="wrap_content"
+            android:gravity="left"
+            android:text="@string/scoreB" />
+
+        <TextView
+            android:id="@+id/livesText"
+            android:layout_width="198dp"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="Lives:" />
+
+        <TextView
+            android:id="@+id/lives"
+            android:layout_width="32dp"
+            android:layout_height="wrap_content"
+            android:gravity="left"
+            android:text="@string/lives" />
+    </LinearLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
