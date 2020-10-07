@@ -1,0 +1,4 @@
+#Wed Oct 07 18:17:25 SGT 2020
+base.0=/Users/Ryan/code/school/y4s1/ync-swe-game/app/build/intermediates/dex/debug/mergeDexDebug/classes.dex
+path.0=classes.dex
+renamed.0=classes.dex
