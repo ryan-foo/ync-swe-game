@@ -1,4 +1,4 @@
-package com.example.bomberkong_rippedoff.view;
+  package com.example.bomberkong_rippedoff.view;
 
 import android.graphics.Canvas;
 import android.graphics.Paint;
