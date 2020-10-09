@@ -1,5 +1,4 @@
-package com.example.bomberkong_rippedoff.utils;
-
+package io.github.bbodin.yncgamelab.utils;
 
 public class Int2 {
 

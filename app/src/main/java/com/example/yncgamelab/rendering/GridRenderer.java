@@ -1,15 +1,22 @@
-  package com.example.bomberkong_rippedoff.view;
+package io.github.bbodin.yncgamelab.rendering;
 
+import android.content.res.Resources;
 import android.graphics.Canvas;
 import android.graphics.Paint;
+import android.graphics.drawable.Drawable;
 import android.util.Log;
 import android.view.SurfaceHolder;
 
-import com.example.bomberkong_rippedoff.models.CellStatus;
-import com.example.bomberkong_rippedoff.models.Grid;
-import com.example.bomberkong_rippedoff.utils.Int2;
+import androidx.core.content.res.ResourcesCompat;
 
-public class GridRenderer implements Grid.Callback, SurfaceHolder.Callback{
+import io.github.bbodin.yncgamelab.R;
+import io.github.bbodin.yncgamelab.models.CellStatus;
+import io.github.bbodin.yncgamelab.models.Grid;
+import io.github.bbodin.yncgamelab.utils.Int2;
+
+public class GridRenderer implements Grid.Callback, SurfaceHolder.Callback  {
+
+
     @Override
     public void gridChanged(Grid universe) {
         this.drawSurfaceView();
@@ -19,6 +26,7 @@ public class GridRenderer implements Grid.Callback, SurfaceHolder.Callback{
             e.printStackTrace();
         }
     }
+
     private final static String TAG = "RendererObject";
     private Grid grid;
     private SurfaceHolder holder;
@@ -96,41 +104,30 @@ public class GridRenderer implements Grid.Callback, SurfaceHolder.Callback{
                 Int2 pos = new Int2(nx,ny);
                 CellStatus status = grid.getCellStatus(pos);
 
-
-                Paint gemPaint = new Paint();
-                gemPaint.setStyle(Paint.Style.FILL_AND_STROKE);
-                gemPaint.setStrokeWidth(5);
+                Paint  cellPaint = new Paint();
+                cellPaint.setStyle(Paint.Style.FILL_AND_STROKE);
+                cellPaint.setStrokeWidth(5);
 
                 switch (status) {
-                    case YELLOW:
-                        gemPaint.setARGB(255, 255, 255, 179);
+                    case WALL:
+                        cellPaint.setARGB(255, 0, 0, 0);
                         break;
 
-                    case RED:
-                        gemPaint.setARGB(255,251, 128, 114);
+                    case PLAYER:
+                        cellPaint.setARGB(255,251, 128, 114);
                         break;
 
-                    case BLUE:
-                        gemPaint.setARGB(255, 1128, 177, 211);
-                        break;
-                    case ORANGE:
-                        gemPaint.setARGB(255, 253, 180, 98);
-                        break;
-
-                    case GREEN:
-                        gemPaint.setARGB(255, 179, 222, 105);
-                        break;
-                    case PINK:
-                        gemPaint.setARGB(255, 252, 205, 229);
+                    case BOX:
+                        cellPaint.setARGB(255, 150, 75, 0);
                         break;
 
                     case UNKNOWN:
                     case EMPTY:
                     default:
-                        gemPaint.setARGB(0, 0, 0, 0);
+                        cellPaint.setARGB(0, 200, 0, 0);
                         break;
                 }
-                canvas.drawRect(xpos1, canvas.getHeight() - ypos1, xpos2, canvas.getHeight() - ypos2, gemPaint);
+                canvas.drawRect(xpos1, canvas.getHeight() - ypos1, xpos2, canvas.getHeight() - ypos2, cellPaint);
             }
         }
 

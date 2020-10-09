@@ -1,12 +1,10 @@
 <resources>
-    <string name="app_name">bomberkong_rippedoff</string>
-    <string name="bomberkong">BomberKong</string>
+    <string name="app_name">BomberKong</string>
+    <string name="reset">Reset</string>
+    <string name="solve">Solve</string>
+    <string name="edit">Edit</string>
+    <string name="game_name">BomberKong</string>
     <string name="start_game">Start Game</string>
-    <string name="how_to_play">How to Play</string>
-    <string name="time">Time Left:</string>
-    <string name="startTime">180</string>
-    <string name="scoreText">Score:</string>
-    <string name="scoreA">0</string>
-    <string name="scoreB">0</string>
-    <string name="lives">3</string>
+    <string name="moves">Moves:</string>
+    <string name="_0">0</string>
 </resources>

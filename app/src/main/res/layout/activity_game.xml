@@ -2,7 +2,8 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="wrap_content"
+    android:id="@+id/moves"
+    android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".GameActivity">
 
@@ -12,85 +13,52 @@
         android:layout_height="0dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/linearLayout"
-        app:layout_constraintVertical_bias="0.0" />
+        app:layout_constraintVertical_bias="0.59000003" />
 
     <LinearLayout
         android:id="@+id/linearLayout"
-        android:layout_width="729dp"
-        android:layout_height="0dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:orientation="horizontal"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
-        <TextView
-            android:id="@+id/timeText"
-            android:layout_width="102dp"
+        <Button
+            android:id="@+id/resetButton"
+            android:layout_width="6dp"
             android:layout_height="wrap_content"
-            android:ems="10"
+            android:layout_weight="1"
+            android:text="@string/reset" />
+
+        <Button
+            android:id="@+id/solveButton"
+            android:layout_width="12dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/solve" />
+
+        <CheckBox
+            android:id="@+id/EditCheckBox"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/edit" />
+
+        <TextView
+            android:id="@+id/moveLabel"
+            android:layout_width="6dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
             android:gravity="center"
-            android:inputType="none"
-            android:text="@string/time" />
+            android:text="@string/moves" />
 
         <TextView
-            android:id="@+id/timeCount"
-            android:layout_width="74dp"
+            android:id="@+id/textView2"
+            android:layout_width="1dp"
             android:layout_height="wrap_content"
-            android:gravity="center"
-            android:text="@string/startTime" />
-
-        <TextView
-            android:id="@+id/scoreText"
-            android:layout_width="160dp"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:text="@string/scoreText" />
-
-        <TextView
-            android:id="@+id/scoreAText"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:gravity="right"
-            android:text="A:" />
-
-        <TextView
-            android:id="@+id/scoreA"
-            android:layout_width="32dp"
-            android:layout_height="wrap_content"
-            android:gravity="left"
-            android:text="@string/scoreA" />
-
-        <TextView
-            android:id="@+id/scoreBText"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:gravity="right"
-            android:text="B:" />
-
-        <TextView
-            android:id="@+id/scoreB"
-            android:layout_width="32dp"
-            android:layout_height="wrap_content"
-            android:gravity="left"
-            android:text="@string/scoreB" />
-
-        <TextView
-            android:id="@+id/livesText"
-            android:layout_width="198dp"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:text="Lives:" />
-
-        <TextView
-            android:id="@+id/lives"
-            android:layout_width="32dp"
-            android:layout_height="wrap_content"
-            android:gravity="left"
-            android:text="@string/lives" />
+            android:layout_weight="1"
+            android:text="@string/_0" />
     </LinearLayout>
-
 </androidx.constraintlayout.widget.ConstraintLayout>
