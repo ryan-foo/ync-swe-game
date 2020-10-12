@@ -1,31 +1,31 @@
-package io.github.bbodin.yncgamelab.utils;
+package com.example.bomberkong.util;
 
-public class Int2 {
+public class Int2
+{
+    private int x;
+    private int y;
 
-    private final int x;
-    private final int y;
-
-    public Int2(int x , int y) {
+    public Int2(int x, int y){
         this.x = x;
         this.y = y;
     }
 
-    public int getX() {
-        return x;
+    public int getX(){
+        return this.x;
     }
 
-    public int getY() {
-        return y;
+    public int getY(){
+        return this.y;
     }
 
-
-    public Int2 add(Int2 other) {
-        return new Int2(this.x + other.x , this.y + other.y);
+    public void add(Int2 other){
+        this.x += other.getX();
+        this.y += other.getY();
     }
 
-    @Override
-    public String toString() {
-        return x +","+ y ;
+    public Int2 addReturn(Int2 other){
+        Int2 out = new Int2(this.x + other.getX(), this.y + other.getY());
+        return out;
     }
 
     @Override
@@ -43,12 +43,10 @@ public class Int2 {
 
         return this.getX() == e.getX() && this.getY() == e.getY();
     }
+
     @Override
     public int hashCode()
     {
         return x + y * 100;
     }
-
-
-
 }
