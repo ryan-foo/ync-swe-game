@@ -15,6 +15,10 @@ public class World
         player = new Player(new Int2(2, 2));
     }
 
+    public Grid returnGrid() {
+        return this.grid;
+    }
+
     public void createGame(){
         this.grid.reset();
         this.grid.setCell(player.getPosition(), CellStatus.PLAYER);

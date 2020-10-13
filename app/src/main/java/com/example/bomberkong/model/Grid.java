@@ -10,6 +10,8 @@ public class Grid
     private Map<Int2, CellStatus> gridMap;
     private int w;
     private int h;
+    private Callback callback = null;
+
 
     public Grid(int w, int h){
         this.w = w;
@@ -50,6 +52,20 @@ public class Grid
             return "NULL";
         }
     }
+
+    // Callback when grid changes
+    public interface Callback {void gridChanged ( Grid grid ) ; }
+    public void setCallBack(Callback c) { callback = c; }
+    public void addCallBack (Callback c )  { this.callback = c; }
+
+    /**
+     * This function is used by the Grid to callback
+     * its observer (GridRenderer so far)
+     */
+    protected void castChanges() {
+        if (callback != null) {callback.gridChanged(this);}
+    }
+
 
     public void reset(){
         for (int x = 0; x < getW(); x ++){
