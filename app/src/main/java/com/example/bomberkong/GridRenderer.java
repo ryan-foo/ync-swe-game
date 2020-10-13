@@ -41,15 +41,18 @@ public class GridRenderer implements Grid.Callback, SurfaceHolder.Callback{
 
         for (int n = 0; n < xcount; n++) {
             float xpos = n * canvas.getWidth() / xcount ;
-            canvas.drawBitmap();
             canvas.drawLine(canvas.getWidth() - xpos, 0,canvas.getWidth() - xpos,  canvas.getHeight(),gridPaint);
         }
-
+        // Can you draw inside the grid? Draw BitMap
+        // If CellStatus BitMap
         for (int n = 0; n < ycount; n++) {
             float ypos = n * canvas.getHeight() / ycount ;
             canvas.drawLine(canvas.getWidth() - 0, ypos,canvas.getWidth() - canvas.getWidth(), ypos,gridPaint);
         }
     }
+
+    // Todo: draw buttons for player input, give them the coordinates <what are the bounds for up down left right, how to scale that?>
+    // Drawing should be gray and semitransluscent so that player can click while still seeing what's happening on the game.
 
     @Override
     public void surfaceCreated(@NonNull SurfaceHolder holder) {

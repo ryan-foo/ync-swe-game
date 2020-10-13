@@ -8,6 +8,10 @@ import com.example.bomberkong.util.Int2;
 
 public class World
 {
+    private final boolean DEBUGGING = true;
+
+    // Objects for drawing
+
     private Grid grid;
     private Player player;
     public World(){
