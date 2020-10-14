@@ -1,20 +1,29 @@
 package com.example.bomberkong;
 
+import android.content.Context;
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.Paint;
 import android.view.SurfaceHolder;
+import android.view.SurfaceView;
+
 
 import androidx.annotation.NonNull;
 
+import com.example.bomberkong.World;
 import com.example.bomberkong.model.Grid;
 
 public class GridRenderer implements Grid.Callback, SurfaceHolder.Callback{
     private Grid grid;
+
     private SurfaceHolder holder;
 
-    public GridRenderer (Grid grid){
+    public GridRenderer (Grid grid) {
         this.grid = grid;
     }
+
+    // Draw game objects and HUD
+
 
     private void drawSurfaceView() {
         if (grid != null && holder != null) {
