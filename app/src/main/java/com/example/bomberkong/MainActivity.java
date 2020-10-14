@@ -2,6 +2,7 @@ package com.example.bomberkong;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.Activity;
 import android.graphics.Point;
 import android.os.Bundle;
 import android.view.Display;
@@ -9,15 +10,17 @@ import android.view.SurfaceView;
 
 import com.example.bomberkong.model.Grid;
 
-public class MainActivity extends AppCompatActivity {
+// credits for framework: John Horton
+
+public class MainActivity extends Activity {
     private World mWorld;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        SurfaceView sv = null;
-        Grid grid = null;
+    //        SurfaceView sv = null;
+    //        Grid grid = null;
 
         // to get the display and display dimensions
         Display display = getWindowManager().getDefaultDisplay();

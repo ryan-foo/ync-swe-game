@@ -1,9 +1,20 @@
 package com.example.bomberkong.model;
 
+import android.graphics.Point;
+import android.graphics.RectF;
+
 import com.example.bomberkong.util.Int2;
 
 public class Player implements Cell
 {
+
+    // Location of player on the Grid
+    private Point mLocation = new Point();
+
+    // these will be a function of the size of screen
+    private float mPlayerWidth;
+    private float mPlayerHeight;
+
     private boolean destroyable = true;
     private boolean collidable = true;
     private Int2 position;
@@ -11,7 +22,10 @@ public class Player implements Cell
     /**
      * Constructor for objects of class Player
      */
-    public Player(Int2 position){
+    public Player(Int2 position) {
+        // Todo: determine player height and width based on block
+//        mPlayerWidth = screenX / 10;
+//        mPlayerHeight = screenX / 10;
         this.position = position;
     }
 
