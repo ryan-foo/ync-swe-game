@@ -9,7 +9,6 @@ import android.graphics.Point;
 import android.view.MotionEvent;
 
 import com.example.bomberkong.util.Int2;
-import com.example.bomberkong.R;
 
 public class Player implements Cell
 {
@@ -49,19 +48,19 @@ public class Player implements Cell
 
         mBitmapHeadUp = BitmapFactory
                 .decodeResource(context.getResources(),
-                        R.drawable.monkey);
+                        R.drawable.oneup);
 
         mBitmapHeadDown = BitmapFactory
                 .decodeResource(context.getResources(),
-                        R.drawable.monkey);
+                        R.drawable.onedown);
 
         mBitmapHeadLeft = BitmapFactory
                 .decodeResource(context.getResources(),
-                        R.drawable.monkey);
+                        R.drawable.oneleft);
 
         mBitmapHeadRight = BitmapFactory
                 .decodeResource(context.getResources(),
-                        R.drawable.monkey);
+                        R.drawable.oneright);
 
         mBitmapHeadUp = Bitmap.createScaledBitmap(mBitmapHeadUp, ss, ss, false);
         mBitmapHeadDown = Bitmap.createScaledBitmap(mBitmapHeadDown, ss, ss, false);
@@ -83,19 +82,19 @@ public class Player implements Cell
     void move() {
         switch (heading) {
             case UP:
-                mLocation.y -= 10;
+                mLocation.y -= 50;
                 break;
 
             case RIGHT:
-                mLocation.x += 10;
+                mLocation.x += 50;
                 break;
 
             case DOWN:
-                mLocation.y += 10;
+                mLocation.y += 50;
                 break;
 
             case LEFT:
-                mLocation.x -= 10;
+                mLocation.x -= 50;
                 break;
         }
     }
