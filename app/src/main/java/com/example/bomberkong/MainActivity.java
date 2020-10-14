@@ -1,14 +1,9 @@
 package com.example.bomberkong;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.app.Activity;
 import android.graphics.Point;
 import android.os.Bundle;
 import android.view.Display;
-import android.view.SurfaceView;
-
-import com.example.bomberkong.model.Grid;
 
 // credits for framework: John Horton
 

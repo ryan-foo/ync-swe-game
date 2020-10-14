@@ -17,10 +17,6 @@ import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 
-import com.example.bomberkong.model.CellStatus;
-import com.example.bomberkong.model.Food;
-import com.example.bomberkong.model.Grid;
-import com.example.bomberkong.model.Player;
 import com.example.bomberkong.util.Int2;
 
 import java.io.IOException;
@@ -58,9 +54,10 @@ public class World extends SurfaceView implements Runnable
     private int mSpawn_ID = -1; // sound when fruit is spawned
     private int mEat_ID = -1; // sound when fruit is picked
     private int mBombID = -1; // sound when bomb explodes
+    private int mDeathID = -1; // sound when player dies
 
     // Size in segments of the playable area
-    private final int NUM_BLOCKS_WIDE = 40;
+    private final int NUM_BLOCKS_WIDE = 20;
     private int mNumBlocksHigh;
 
     // Threads and control variables
@@ -105,16 +102,30 @@ public class World extends SurfaceView implements Runnable
             AssetFileDescriptor descriptor;
 
             // Prepare sounds in memory
+            // pickup food sound
             descriptor = assetManager.openFd("get_food.ogg");
             mEat_ID = mSP.load(descriptor, 0);
+            // bomb explode sound
             descriptor = assetManager.openFd("bomb.ogg");
             mBombID =  mSP.load(descriptor, 0);
+            //death sound
+            descriptor = assetManager.openFd("chimchar.ogg");
+            mDeathID = mSP.load(descriptor, 0);
         } catch (IOException e) {
             // Error
         }
 
+        // todo: grid should take blocksize
         grid = new Grid(5, 5);
-        player = new Player(new Int2(2, 2));
+
+        food = new Food(context,
+                new Point(NUM_BLOCKS_WIDE,
+                        mNumBlocksHigh),
+        blockSize);
+
+        player = new Player(context,
+        new Point(NUM_BLOCKS_WIDE, mNumBlocksHigh),
+        blockSize);
 
         // Initialize with values passed in as params
         mScreenX = x;
@@ -128,11 +139,6 @@ public class World extends SurfaceView implements Runnable
         // Initialize objects for drawing
         mHolder = getHolder();
         mPaint = new Paint();
-
-        food = new Food(context,
-                new Point(NUM_BLOCKS_WIDE,
-                        mNumBlocksHigh),
-        blockSize);
 
         startNewGame();
     }
@@ -179,7 +185,7 @@ public class World extends SurfaceView implements Runnable
         // reset grid
         this.grid.reset();
         // Todo: reset to player original positions depending on player number
-        this.grid.setCell(player.getPosition(), CellStatus.PLAYER);
+        player.reset(NUM_BLOCKS_WIDE, mNumBlocksHigh);
 
         // banana should be spawned
         food.spawn();
@@ -207,10 +213,11 @@ public class World extends SurfaceView implements Runnable
 
             // Draw Grid
 
-            // Draw food
+            // Draw food, player
             food.draw(mCanvas, mPaint);
+            player.draw(mCanvas, mPaint);
 
-            // Draw player, bombs, fire, walls
+            // Draw bombs, fire, walls
 
             // Choose font size
             mPaint.setTextSize(mFontSize);
@@ -235,11 +242,22 @@ public class World extends SurfaceView implements Runnable
 //        this.grid.reset();
 //        this.grid.setCell(player.getPosition(), CellStatus.PLAYER);
 
-        // Move player and update Grid if there is input
+        // todo: Move player and update Grid if there is input
+        // todo: also, have a cooldown based on FPS how many fast a player can move... (use
+        
 
         // Did player eat the food?
+        if (player.checkPickup(food.getLocation())) {
+            // todo: multi-player. for now, all pickups will be given to player 1.
+            food.spawn();
+            mScoreP1 = mScoreP1 + 1;
+            mSP.play(mEat_ID, 1, 1, 0, 0, 1);
+        }
 
-        // Did player die?
+        // Did player die? (todo: player cannot die yet.)
+        if (player.detectDeath()) {
+            mSP.play(mDeathID, 1, 1, 0, 0, 1);
+        }
 
 
         generateGame();
@@ -254,6 +272,8 @@ public class World extends SurfaceView implements Runnable
                     startNewGame();
                     return true;
                 }
+
+                player.switchHeading(motionEvent);
                 break;
             default:
                 break;

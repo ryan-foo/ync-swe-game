@@ -1,17 +1,11 @@
 package com.example.bomberkong;
 
-import android.content.Context;
 import android.graphics.Canvas;
-import android.graphics.Color;
 import android.graphics.Paint;
 import android.view.SurfaceHolder;
-import android.view.SurfaceView;
 
 
 import androidx.annotation.NonNull;
-
-import com.example.bomberkong.World;
-import com.example.bomberkong.model.Grid;
 
 public class GridRenderer implements Grid.Callback, SurfaceHolder.Callback{
     private Grid grid;
