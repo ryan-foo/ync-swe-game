@@ -11,15 +11,15 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        SurfaceView sv           = null;
-        Grid grid                 = null;
+        SurfaceView sv = null;
+        Grid grid = null;
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        World tw = new World();
-        grid = tw.returnGrid();
+        World world = new World();
+        grid = world.returnGrid();
 
-        GridRenderer gridRenderer = new GridRenderer(grid);
+        GridRenderer gridRenderer = new GridRenderer(grid, this);
         grid.addCallBack(gridRenderer);
 
         sv = (SurfaceView) findViewById(R.id.surfaceView);
