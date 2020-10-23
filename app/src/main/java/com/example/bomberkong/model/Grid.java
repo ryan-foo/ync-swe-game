@@ -10,12 +10,16 @@ public class Grid
     private Map<Int2, CellStatus> gridMap;
     private int w;
     private int h;
+    private int x;
+    private int y;
     private Callback callback = null;
 
 
-    public Grid(int w, int h){
+    public Grid(int w, int h, int x, int y){
         this.w = w;
         this.h = h;
+        this.x = x;
+        this.y = y;
         this.gridMap = new HashMap<Int2, CellStatus>();
         reset();
     }
@@ -27,10 +31,16 @@ public class Grid
     public int getW(){
         return w;
     }
-
     public int getH(){
         return h;
     }
+    public int getX(){
+        return x;
+    }
+    public int getY(){
+        return y;
+    }
+
 
     public void setCell(Int2 pos, CellStatus status) {
         gridMap.put(pos, status);
@@ -66,6 +76,46 @@ public class Grid
         if (callback != null) {callback.gridChanged(this);}
     }
 
+    /**
+     * absoluteToGridPos takes a position and returns its location on a grid.
+     * @param absX Absolute value of X (screen position in pixels)
+     * @param absY Absolute value of Y (screen position in pixels)
+     * @param xCount How many cells in grid?
+     * @param yCount How many cells in grid?
+     * @param gridWidth Width of the grid in pixels
+     * @param gridHeight Height of the grid in pixels
+     * @return Int2 xGrid and yGrid position
+     */
+
+    Int2 absoluteToGridPos(float absX, float absY, int xCount, int yCount, int gridWidth, int gridHeight) {
+
+        // number of cells width wise
+        // number of cells height wise
+        int xGrid = -1;
+        int yGrid = -1;
+
+        for (int nx = 0; nx < xCount; nx++) {
+            for (int ny = 0; ny < yCount; ny++) {
+
+                float xpos1 = nx * gridWidth / xCount;
+                float ypos1 = ny * gridHeight / yCount;
+                float xpos2 = (nx + 1) * gridWidth / xCount;
+                float ypos2 = (ny + 1) * gridHeight / yCount;
+
+                // We have found the x pos on the grid
+                if (xpos1 < absX && absX < xpos2) {
+                    xGrid = nx;
+                }
+
+                // We have found the y pos on the grid
+                if (ypos1 < absY && absY < ypos2) {
+                    yGrid = ny;
+                }
+            }
+        }
+
+        return new Int2(xGrid, yGrid);
+    }
 
     public void reset(){
         for (int x = 0; x < getW(); x ++){

@@ -2,8 +2,8 @@ package com.example.bomberkong.util;
 
 public class Int2
 {
-    private int x;
-    private int y;
+    public int x;
+    public int y;
 
     public Int2(int x, int y){
         this.x = x;

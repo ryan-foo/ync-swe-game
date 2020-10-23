@@ -11,18 +11,26 @@ import androidx.annotation.NonNull;
 
 import com.example.bomberkong.model.CellStatus;
 import com.example.bomberkong.model.Grid;
+import com.example.bomberkong.model.Player;
 import com.example.bomberkong.util.Int2;
 
-public class GridRenderer implements Grid.Callback, SurfaceHolder.Callback{
+public class Renderer implements Grid.Callback, SurfaceHolder.Callback{
+    private World world;
     private Grid grid;
+    private Player playerOne;
+    private Player playerTwo;
     private SurfaceHolder holder;
     private Bitmap bitmapfood;
     private Bitmap bitmapplayer;
     private Bitmap bitmapwall;
     private Context context;
 
-    public GridRenderer (Grid grid, Context context){
-        this.grid = grid;
+    public Renderer(World world, Context context){
+        this.world = world;
+        this.grid = world.returnGrid();
+        this.playerOne = world.returnPlayerOne();
+        this.playerTwo = world.returnPlayerTwo();
+
         bitmapfood = BitmapFactory.decodeResource(context.getResources(), R.drawable.banana);
         bitmapplayer = BitmapFactory.decodeResource(context.getResources(), R.drawable.monkey);
         bitmapwall = BitmapFactory.decodeResource(context.getResources(), R.drawable.wall);
@@ -77,11 +85,14 @@ public class GridRenderer implements Grid.Callback, SurfaceHolder.Callback{
                 CellStatus status = grid.getCellStatus(pos);
 
                 switch (status) {
-                    case FRUIT:
+                    case FOOD:
                         canvas.drawBitmap(bitmapfood, xpos1, ypos1, null);
                         break;
 
                     case PLAYER:
+                        // todo: A way of interfacing with the Player class
+                        // Player.heading (direction)
+                        // switch (heading)
                         canvas.drawBitmap(bitmapplayer, xpos1, ypos1, null);
                         break;
 
