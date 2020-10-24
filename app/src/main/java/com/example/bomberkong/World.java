@@ -27,7 +27,7 @@ import java.io.IOException;
  * sound, etc.
  */
 
-public class World extends SurfaceView {
+public class World extends SurfaceView implements Runnable {
 
     private final boolean DEBUGGING = true;
     private Grid grid;
@@ -48,6 +48,7 @@ public class World extends SurfaceView {
     private int mBombID = -1; // sound when bomb explodes
     private int mDeathID = -1; // sound when player dies
 
+    private volatile boolean mPlaying;
     private boolean mPaused = true;
     private long mNextFrameTime;
 
@@ -131,6 +132,66 @@ public class World extends SurfaceView {
         mFontSize = x / 20;
         // 1.5% of width
         mFontMargin = x / 75;
+    }
+
+    @Override
+    public void run() {
+        while (mPlaying) {
+            // What time is it at the start of the game loop?
+            long frameStartTime = System.currentTimeMillis();
+
+            // if game isn't paused, update 10 times a second
+            if (!mPaused) {
+                if (updateRequired()) {
+                    update();
+                }
+                // Todo: detectCollisions (to 'kill player', or to 'destroy wall')
+            }
+
+            // after update, we can draw
+            draw();
+
+            // How long was this frame?
+            long timeThisFrame =
+                    System.currentTimeMillis() - frameStartTime;
+
+            // Dividing by 0 will crash game
+            if (timeThisFrame > 0) {
+                // Store the current frame in mFPS and pass it to
+                // update methods of the grid next frame/loop
+                mFPS = MILLI_IN_SECONDS / timeThisFrame;
+
+                // we will use mSpeed / mFPS to determine how fast players move on the screen
+            }
+
+        }
+    }
+
+    // this creates the blocky movement we desire
+    public boolean updateRequired() {
+        // Run at 10 fps
+        final long TARGET_FPS = 10;
+        // 1000 milliseconds in a second
+        final long MILLIS_PER_SECOND = 1000;
+
+        // are we due to update the frame?
+        if (mNextFrameTime <= System.currentTimeMillis()) {
+            // 1 tenth of a second has passed
+            mNextFrameTime = System.currentTimeMillis() + MILLIS_PER_SECOND / TARGET_FPS;
+            return true;
+        }
+        return false;
+
+    }
+
+    public void pause() {
+        mPlaying = false;
+        try {
+            // stop thread
+            mGameThread.join();
+        } catch (InterruptedException e) {
+            Log.e("Error:", "joining thread");
+        }
     }
 
     @Override
