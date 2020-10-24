@@ -117,7 +117,18 @@ public class Grid
         return new Int2(xGrid, yGrid);
     }
 
-    public getWalls
+    public ArrayList<Int2> getEmpty() {
+        ArrayList<Int2> emptyCells = new ArrayList<Int2>();
+        for (int x = 0; x < w; x++) {
+            for (int y = 0; y < h; y++) {
+                CellStatus status = getCellStatus(new Int2(x, y));
+                if (status == CellStatus.EMPTY) {
+                    emptyCells.add(new Int2(x, y));
+                }
+            }
+        }
+        return emptyCells;
+    }
 
     public void reset(){
         for (int x = 0; x < getW(); x ++){

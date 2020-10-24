@@ -20,9 +20,7 @@ import java.util.Random;
 import static java.lang.System.in;
 
 public class Food {
-    private Int2 location;
-
-    // todo: this should check whether the cell itself is food, or something else before going on to spawn the fruit there
+    public static Int2 location;
     // currently, this will hold the max values for horizontal / vert positions
     private Int2 mSpawnRange;
 
@@ -50,21 +48,23 @@ public class Food {
 
     /**
      * spawn takes a list of all candidates and generates a new position for the food.
-     * @param empty (ArrayList containing all walls)
-     * @return New location of fruit
+     * @param empty (ArrayList containing all empty spaces)
+     * @param spawnRangeX (int, size of Grid)
+     * @param spawnRangeY (int, size of Grid)
+     * @return location New location of fruit
      */
 
-    public Int2 spawn(ArrayList<Int2> empty) {
+    public static Int2 spawn(ArrayList<Int2> empty, int spawnRangeX, int spawnRangeY) {
         // Choose two random values, validate that its empty, then place the food
         Random random = new Random();
 
-        int candidateX = random.nextInt(mSpawnRange.x) + 1;
-        int candidateY = random.nextInt(mSpawnRange.y) + 1;
+        int candidateX = random.nextInt(spawnRangeX) + 1;
+        int candidateY = random.nextInt(spawnRangeY) + 1;
 
         // todo: while we haven't gotten a good candidate, keep running and find a new area to place the apple
-        while boolean b = !(new Int2(candidateX, candidateY in empty)); {
-            candidateX = random.nextInt(mSpawnRange.x) + 1;
-            candidateY = random.nextInt(mSpawnRange.y) + 1;
+        while (!(empty.contains(new Int2(candidateX, candidateY)))) {
+            candidateX = random.nextInt(spawnRangeX) + 1;
+            candidateY = random.nextInt(spawnRangeY) + 1;
         }
         // after exiting loop...
         location.x = candidateX;
@@ -74,7 +74,7 @@ public class Food {
     }
 
     // allow World to know where the food is
-    Int2 getLocation() {
+    public Int2 getLocation() {
         return location;
     }
 
@@ -83,4 +83,4 @@ public class Food {
             canvas.drawBitmap(mBitmapFood,
                     location.getX() * mSize, location.getY() * mSize, paint);
         }
-    }
+}

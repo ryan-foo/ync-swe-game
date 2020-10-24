@@ -16,11 +16,13 @@ import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 
 import com.example.bomberkong.model.CellStatus;
+import com.example.bomberkong.model.Food;
 import com.example.bomberkong.model.Grid;
 import com.example.bomberkong.model.Player;
 import com.example.bomberkong.util.Int2;
 
 import java.io.IOException;
+import java.util.ArrayList;
 
 /**
  * This class is our game engine. It holds all the other classes and handles scoring,
@@ -33,6 +35,7 @@ public class World extends SurfaceView implements Runnable {
     private Grid grid;
     private Player playerOne;
     private Player playerTwo;
+    private Food food;
     private int x; // World width
     private int y; // World height
 
@@ -139,17 +142,21 @@ public class World extends SurfaceView implements Runnable {
         while (mPlaying) {
             // What time is it at the start of the game loop?
             long frameStartTime = System.currentTimeMillis();
+            int timesUpdated = 0;
 
             // if game isn't paused, update 10 times a second
             if (!mPaused) {
                 if (updateRequired()) {
+                    timesUpdated = timesUpdated + 1;
+                    Log.d("World", String.valueOf(timesUpdated));
                     update();
                 }
                 // Todo: detectCollisions (to 'kill player', or to 'destroy wall')
             }
 
-            // after update, we can draw
-            draw();
+            //todo
+            // after update, we can draw (from renderer)
+
 
             // How long was this frame?
             long timeThisFrame =
@@ -194,11 +201,18 @@ public class World extends SurfaceView implements Runnable {
         }
     }
 
+    public void resume() {
+        mPlaying = true;
+        mGameThread = new Thread(this);
+        mGameThread.start();
+    }
+
     @Override
     public boolean onTouchEvent(MotionEvent motionEvent) {
         switch (motionEvent.getAction() & MotionEvent.ACTION_MASK) {
             case MotionEvent.ACTION_UP:
                 if (mPaused) {
+                    Log.d(LOG, "unpaused");
                     mPaused = false;
                     startNewGame();
                     return true;
@@ -226,11 +240,7 @@ public class World extends SurfaceView implements Runnable {
         }
     }
 
-<<<<<<< HEAD
-        private void printDebuggingText() {
-=======
     private void printDebuggingText () {
->>>>>>> 2baddfdc10a0542189055748bbe07f284ff0ad08
             int debugSize = mFontSize / 2;
             int debugStart = 150;
             mPaint.setTextSize(debugSize);
@@ -243,12 +253,12 @@ public class World extends SurfaceView implements Runnable {
         public Grid returnGrid() {
             return this.grid;
         }
-        
+
         public Player returnPlayerOne () {
             return this.playerOne;
         }
 
-        public Player returnPlayerTwo () {
+        public Player returnPlayerTwo() {
             return this.playerTwo;
         }
 
@@ -257,7 +267,12 @@ public class World extends SurfaceView implements Runnable {
             this.grid.reset();
             // Todo: reset to player original positions depending on player number
 
+            // get a list of empty cells
+            ArrayList<Int2> emptyCells = grid.getEmpty();
+
             // Food should be spawned
+            // spawn returns a location, we set the cell where the food is spawned to food
+            grid.setCell(food.spawn(emptyCells, NUM_BLOCKS_WIDE, NUM_BLOCKS_HIGH), CellStatus.FOOD);
 
             // Reset score
             mScoreP1 = 0;
@@ -268,7 +283,39 @@ public class World extends SurfaceView implements Runnable {
         }
 
         public void update() {
-            this.grid.reset();
+        // Did player eat food?
+            if (playerOne.checkPickup(food.getLocation())) {
+                ArrayList<Int2> emptyCells = grid.getEmpty();
+                food.spawn(emptyCells, NUM_BLOCKS_WIDE, NUM_BLOCKS_HIGH);
+                mScoreP1 = mScoreP1 + 1;
+                mSP.play(mEat_ID, 1, 1, 0, 0, 1);
+            }
+
+            if (playerTwo.checkPickup(food.getLocation())) {
+                ArrayList<Int2> emptyCells = grid.getEmpty();
+                food.spawn(emptyCells, NUM_BLOCKS_WIDE, NUM_BLOCKS_HIGH);
+                mScoreP2 = mScoreP2 + 1;
+                mSP.play(mEat_ID, 1, 1, 0, 0, 1);
+            }
+
+            // Did player die?
+            if (playerOne.detectDeath()) {
+                mSP.play(mDeathID, 1, 1, 0, 0, 1);
+                pause();
+                Log.d("World", "Player one dies");
+                // Say player 2 wins, timeout, then start new game in 5 secs
+                startNewGame();
+            }
+
+            if (playerTwo.detectDeath()) {
+                mSP.play(mDeathID, 1, 1, 0, 0, 1);
+                pause();
+                Log.d("World", "Player two dies");
+                // Say player 1 wins, timeout, then start new game in 5 secs
+                startNewGame();
+            }
+
+            // this.grid.reset(); todo: see what happens
             this.grid.setCell(playerOne.getPosition(), CellStatus.PLAYER);
             this.grid.setCell(playerTwo.getPosition(), CellStatus.PLAYER);
         }

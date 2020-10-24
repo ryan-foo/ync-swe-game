@@ -12,7 +12,8 @@ import com.example.bomberkong.model.Grid;
 
 public class MainActivity extends AppCompatActivity {
 
-    private  final static String TAG = "MainActivity";
+    private final static String TAG = "MainActivity";
+    private World world;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,7 +34,7 @@ public class MainActivity extends AppCompatActivity {
         /**
          * We pass the size of the display into world
          */
-        World world = new World(this, size.x, size.y);
+        world = new World(this, size.x, size.y);
 
         grid = world.returnGrid();
 
@@ -48,5 +49,20 @@ public class MainActivity extends AppCompatActivity {
         InputListener inputListener = new InputListener(20, 10, size.x, size.y);
         sv.setOnTouchListener(inputListener);
 
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        world.resume();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        // To do
+
+        world.pause();
     }
 }
