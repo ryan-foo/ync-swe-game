@@ -18,6 +18,8 @@ public class Player implements Cell
     private int playerNum;
     private Grid grid;
 
+    public boolean dead = false;
+
     private Bitmap mBitmapHeadRight;
     private Bitmap mBitmapHeadLeft;
     private Bitmap mBitmapHeadUp;
@@ -102,6 +104,26 @@ public class Player implements Cell
         }
     }
 
+    public boolean detectDeath() {
+        boolean dead = false;
+
+        if (grid.getCellStatus(position) == CellStatus.FIRE) {
+            dead = true;
+        }
+
+        return dead;
+    }
+
+    public boolean checkPickup(Int2 foodPosition) {
+        // Check if the food has the same coordinates as Player.
+        // if so, increment score etc.
+        if (position.x == foodPosition.x && position.y == foodPosition.y) {
+            return true;
+        }
+
+        return false;
+    }
+
     /**
      * Handles changing direction given a movement
      * @param motionEvent
@@ -116,7 +138,7 @@ public class Player implements Cell
     // if they tap in between, then it will try for the direction with the least distance.
     // todo: and finally, if they tap on the monkey itself, it will call the place bomb method
     public void switchHeading(MotionEvent motionEvent) {
-        Log.d("swithHeading", "motion event recieved");
+        Log.d("switchHeading", "motion event recieved");
         float touch_x = motionEvent.getX();
         float touch_y = motionEvent.getY();
 
@@ -196,6 +218,7 @@ public class Player implements Cell
     /**
      * Moves the player up by one unit.
      * Each of these take a reference to the Grid to validate the movement.
+     * Everytime we move, if it is a valid move, we set the cell
      */
     public Grid moveUp(Grid grid){
         Int2 newpos = position.addReturn(new Int2(0, -1));
