@@ -52,7 +52,7 @@ public class World extends SurfaceView implements Runnable {
     private int mDeathID = -1; // sound when player dies
 
     private volatile boolean mPlaying;
-    private boolean mPaused = true;
+    private boolean mPaused = false;
     private long mNextFrameTime;
 
     // These will be initialized based on screen size in pixels
@@ -139,16 +139,17 @@ public class World extends SurfaceView implements Runnable {
 
     @Override
     public void run() {
+        Log.d("Run", "I am running");
+        int timesUpdated = 0;
         while (mPlaying) {
+            //Log.d("WORLD", "i'm running");
             // What time is it at the start of the game loop?
             long frameStartTime = System.currentTimeMillis();
-            int timesUpdated = 0;
-
             // if game isn't paused, update 10 times a second
             if (!mPaused) {
                 if (updateRequired()) {
                     timesUpdated = timesUpdated + 1;
-                    Log.d("World", String.valueOf(timesUpdated));
+                    Log.d("timesUpdated", String.valueOf(timesUpdated));
                     update();
                 }
                 // Todo: detectCollisions (to 'kill player', or to 'destroy wall')
@@ -284,36 +285,36 @@ public class World extends SurfaceView implements Runnable {
 
         public void update() {
         // Did player eat food?
-            if (playerOne.checkPickup(food.getLocation())) {
-                ArrayList<Int2> emptyCells = grid.getEmpty();
-                food.spawn(emptyCells, NUM_BLOCKS_WIDE, NUM_BLOCKS_HIGH);
-                mScoreP1 = mScoreP1 + 1;
-                mSP.play(mEat_ID, 1, 1, 0, 0, 1);
-            }
-
-            if (playerTwo.checkPickup(food.getLocation())) {
-                ArrayList<Int2> emptyCells = grid.getEmpty();
-                food.spawn(emptyCells, NUM_BLOCKS_WIDE, NUM_BLOCKS_HIGH);
-                mScoreP2 = mScoreP2 + 1;
-                mSP.play(mEat_ID, 1, 1, 0, 0, 1);
-            }
+//            if (playerOne.checkPickup(food.getLocation())) {
+//                ArrayList<Int2> emptyCells = grid.getEmpty();
+//                food.spawn(emptyCells, NUM_BLOCKS_WIDE, NUM_BLOCKS_HIGH);
+//                mScoreP1 = mScoreP1 + 1;
+//                mSP.play(mEat_ID, 1, 1, 0, 0, 1);
+//            }
+//
+//            if (playerTwo.checkPickup(food.getLocation())) {
+//                ArrayList<Int2> emptyCells = grid.getEmpty();
+//                food.spawn(emptyCells, NUM_BLOCKS_WIDE, NUM_BLOCKS_HIGH);
+//                mScoreP2 = mScoreP2 + 1;
+//                mSP.play(mEat_ID, 1, 1, 0, 0, 1);
+//            }
 
             // Did player die?
-            if (playerOne.detectDeath()) {
-                mSP.play(mDeathID, 1, 1, 0, 0, 1);
-                pause();
-                Log.d("World", "Player one dies");
-                // Say player 2 wins, timeout, then start new game in 5 secs
-                startNewGame();
-            }
-
-            if (playerTwo.detectDeath()) {
-                mSP.play(mDeathID, 1, 1, 0, 0, 1);
-                pause();
-                Log.d("World", "Player two dies");
-                // Say player 1 wins, timeout, then start new game in 5 secs
-                startNewGame();
-            }
+//            if (playerOne.detectDeath()) {
+//                mSP.play(mDeathID, 1, 1, 0, 0, 1);
+//                pause();
+//                Log.d("World", "Player one dies");
+//                // Say player 2 wins, timeout, then start new game in 5 secs
+//                startNewGame();
+//            }
+//
+//            if (playerTwo.detectDeath()) {
+//                mSP.play(mDeathID, 1, 1, 0, 0, 1);
+//                pause();
+//                Log.d("World", "Player two dies");
+//                // Say player 1 wins, timeout, then start new game in 5 secs
+//                startNewGame();
+//            }
 
             // this.grid.reset(); todo: see what happens
             this.grid.setCell(playerOne.getPosition(), CellStatus.PLAYER);
