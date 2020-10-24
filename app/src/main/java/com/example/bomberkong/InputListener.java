@@ -9,10 +9,12 @@ import com.example.bomberkong.util.Float2;
 import com.example.bomberkong.util.Int2;
 
 public class InputListener implements View.OnTouchListener {
-    private String TAG = "Input";
+    private String TAG = "InputListener";
 
     //the absolute position of the touch
-    private Float2 down_pos;
+    private Float2 click_pos;
+
+    private Callback callback;
 
     //passed on through constructor
     private int xCount;
@@ -29,18 +31,16 @@ public class InputListener implements View.OnTouchListener {
 
     @Override
     public boolean onTouch(View view, MotionEvent motionEvent) {
-        Float2 dim     = new Float2(view.getWidth(), view.getHeight());
+        Float2 dim = new Float2(view.getWidth(), view.getHeight());
         Float2 current = new Float2(motionEvent.getX(), motionEvent.getY());
 
         Log.d(TAG, "ontouch created");
-        switch(motionEvent.getAction())
-        {
+        switch (motionEvent.getAction()) {
             case MotionEvent.ACTION_DOWN:
-                Log.d(TAG, "pressed down");
-                down_pos = new Float2(motionEvent.getX(), motionEvent.getY());
-                Log.d(TAG, String.valueOf(down_pos));
-                Int2 gridPos = absoluteToGridPos(down_pos.getX(), down_pos.getY(), xCount, yCount, gridWidth, gridHeight);
-                Log.d(TAG, (gridPos.getX()) + "," + gridPos.getY());
+                click_pos = new Float2(motionEvent.getX(), motionEvent.getY());
+                Int2 grid_pos = absoluteToGridPos(click_pos.getX(), click_pos.getY(), xCount, yCount, gridWidth, gridHeight);
+                //pass the grid_pos into the InputHandler to handle the the input.
+                callback.onClick(grid_pos);
                 break;
         }
         return true;
@@ -76,4 +76,16 @@ public class InputListener implements View.OnTouchListener {
         return new Int2(xGrid, yGrid);
     }
 
+    /**
+     * Set the callback object to call
+     * when touch actions occur.
+     * @param cb The callback object
+     */
+    public void setCallback(Callback cb) {
+        this.callback = cb;
+    }
+
+    public interface Callback {
+        void onClick(Int2 grid_pos);
+    }
 }

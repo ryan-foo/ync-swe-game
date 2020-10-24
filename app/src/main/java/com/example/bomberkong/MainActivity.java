@@ -48,5 +48,7 @@ public class MainActivity extends AppCompatActivity {
         InputListener inputListener = new InputListener(20, 10, size.x, size.y);
         sv.setOnTouchListener(inputListener);
 
+        InputHandler inputHandler = new InputHandler(grid);
+        inputListener.setCallback(inputHandler);
     }
 }

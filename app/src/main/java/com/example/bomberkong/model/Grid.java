@@ -14,7 +14,6 @@ public class Grid
     private int y;
     private Callback callback = null;
 
-
     public Grid(int w, int h, int x, int y){
         this.w = w;
         this.h = h;
@@ -40,7 +39,6 @@ public class Grid
     public int getY(){
         return y;
     }
-
 
     public void setCell(Int2 pos, CellStatus status) {
         gridMap.put(pos, status);
