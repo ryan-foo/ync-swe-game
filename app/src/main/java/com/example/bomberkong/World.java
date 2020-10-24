@@ -10,6 +10,7 @@ import android.media.AudioAttributes;
 import android.media.AudioManager;
 import android.media.SoundPool;
 import android.os.Build;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
@@ -68,6 +69,9 @@ public class World extends SurfaceView {
     // For smooth movement
     private long mFPS;
     private final int MILLI_IN_SECONDS = 1000;
+
+    //testing
+    private String LOG = "World";
 
     public World(Context context, int x, int y) {
         super(context);
@@ -138,6 +142,7 @@ public class World extends SurfaceView {
                     startNewGame();
                     return true;
                 }
+                Log.d(LOG,"touched");
                 // todo: Check if motion event is coming from Player 1 or 2, and handle accordingly
                 playerOne.switchHeading(motionEvent);
                 break;
@@ -160,7 +165,7 @@ public class World extends SurfaceView {
         }
     }
 
-        private void printDebuggingText () {
+    private void printDebuggingText () {
             int debugSize = mFontSize / 2;
             int debugStart = 150;
             mPaint.setTextSize(debugSize);
@@ -173,14 +178,14 @@ public class World extends SurfaceView {
         public Grid returnGrid () {
             return this.grid;
         }
+
         public Player returnPlayerOne () {
             return this.playerOne;
         }
-        ;
+
         public Player returnPlayerTwo () {
             return this.playerTwo;
         }
-        ;
 
         public void startNewGame () {
             // reset grid

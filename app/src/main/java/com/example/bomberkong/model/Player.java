@@ -3,6 +3,7 @@ package com.example.bomberkong.model;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.util.Log;
 import android.view.MotionEvent;
 
 import com.example.bomberkong.util.Int2;
@@ -115,6 +116,7 @@ public class Player implements Cell
     // if they tap in between, then it will try for the direction with the least distance.
     // todo: and finally, if they tap on the monkey itself, it will call the place bomb method
     public void switchHeading(MotionEvent motionEvent) {
+        Log.d("swithHeading", "motion event recieved");
         float touch_x = motionEvent.getX();
         float touch_y = motionEvent.getY();
 
