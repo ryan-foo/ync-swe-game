@@ -222,7 +222,7 @@ public class World extends SurfaceView implements Runnable {
         }
     }
 
-        private void printDebuggingText () {
+        private void printDebuggingText() {
             int debugSize = mFontSize / 2;
             int debugStart = 150;
             mPaint.setTextSize(debugSize);
@@ -232,19 +232,19 @@ public class World extends SurfaceView implements Runnable {
                     50, debugStart + debugSize, mPaint);
         }
 
-        public Grid returnGrid () {
+        public Grid returnGrid() {
             return this.grid;
         }
-        public Player returnPlayerOne () {
+        public Player returnPlayerOne() {
             return this.playerOne;
         }
         ;
-        public Player returnPlayerTwo () {
+        public Player returnPlayerTwo() {
             return this.playerTwo;
         }
         ;
 
-        public void startNewGame () {
+        public void startNewGame() {
             // reset grid
             this.grid.reset();
             // Todo: reset to player original positions depending on player number
@@ -259,7 +259,7 @@ public class World extends SurfaceView implements Runnable {
             mNextFrameTime = System.currentTimeMillis();
         }
 
-        public void update () {
+        public void update() {
             this.grid.reset();
             this.grid.setCell(playerOne.getPosition(), CellStatus.PLAYER);
             this.grid.setCell(playerTwo.getPosition(), CellStatus.PLAYER);

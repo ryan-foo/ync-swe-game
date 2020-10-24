@@ -2,6 +2,7 @@ package com.example.bomberkong.model;
 
 import com.example.bomberkong.util.Int2;
 
+import java.util.ArrayList;
 import java.util.Map;
 import java.util.HashMap;
 
@@ -40,7 +41,6 @@ public class Grid
     public int getY(){
         return y;
     }
-
 
     public void setCell(Int2 pos, CellStatus status) {
         gridMap.put(pos, status);
@@ -116,6 +116,8 @@ public class Grid
 
         return new Int2(xGrid, yGrid);
     }
+
+    public getWalls
 
     public void reset(){
         for (int x = 0; x < getW(); x ++){
