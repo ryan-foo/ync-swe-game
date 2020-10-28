@@ -1,4 +1,4 @@
-package com.example.bomberkong;
+package com.example.bomberkong.activities;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -8,11 +8,16 @@ import android.util.Log;
 import android.view.Display;
 import android.view.SurfaceView;
 
+import com.example.bomberkong.InputHandler;
+import com.example.bomberkong.InputListener;
+import com.example.bomberkong.R;
+import com.example.bomberkong.Renderer;
+import com.example.bomberkong.World;
 import com.example.bomberkong.model.Grid;
 
-public class MainActivity extends AppCompatActivity {
+public class GameActivity extends AppCompatActivity {
 
-    private final static String TAG = "MainActivity";
+    private final static String TAG = "GameActivity";
     private World world;
 
     @Override
