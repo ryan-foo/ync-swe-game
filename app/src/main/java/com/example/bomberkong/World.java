@@ -23,6 +23,7 @@ import com.example.bomberkong.model.Food;
 import com.example.bomberkong.model.Grid;
 import com.example.bomberkong.model.Player;
 import com.example.bomberkong.util.Int2;
+import java.util.Iterator;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -154,7 +155,7 @@ public class World extends SurfaceView implements Runnable
         cellResolution = new Int2(actualViewWidth/numCellsWide, actualViewHeight/numCellsHigh);
         playerOne = new Player(context, grid, new Int2(2, 2), 1, cellResolution, bombList);
         playerTwo = new Player(context, grid, new Int2(4, 4), 2, cellResolution, bombList);
-        food = new Food(context, grid, new Int2(3, 3), cellResolution);
+        food = new Food(context, new Int2(3, 3), cellResolution);
         bombList = new ArrayList<Bomb>();
         fireList = new ArrayList<Fire>();
         bombList.add(new Bomb(context, new Int2(5, 5), cellResolution));
@@ -255,11 +256,12 @@ public class World extends SurfaceView implements Runnable
             playerTwo.draw(mCanvas, mPaint);
 
 //             Draw bombs, fire
-            if (bombList.size() > 0) {
-                for (Bomb bomb : bombList) {
-                    bomb.draw(mCanvas, mPaint);
+            Iterator<Bomb> itr = bombList.iterator();
+
+            while (itr.hasNext()) {
+                Bomb bomb = itr.next();
+                bomb.draw(mCanvas, mPaint);
                 }
-            }
 
             if (fireList.size() > 0) {
                 for (Fire fire : fireList) {
@@ -324,21 +326,22 @@ public class World extends SurfaceView implements Runnable
         }
 
 //         all bombs in bomb list should tick down
-        // todo: for Each is probably not the right way to do this, since we do mutate the array
 
-        if (bombList.size() > 0) {
-            Log.d("Bomb", "There is more than 1 bomb");
+        /**
+         * Iterators allow us to remove elements while iterating through it.
+         */
 
-            for (Bomb bomb: bombList) {
-                bomb.ticksToExplode -= 1;
-                // if there are any bombs with 0 ticks left, call explode(grid) -- explode them onto the grid
-                if (bomb.ticksToExplode == 0) {
-                    // todo: explode instead of just removing bomb
-                    bomb.explode(grid);
-                    bombList.remove(bomb);
-                    mSP.play(mBombID, 1, 1, 0, 0, 1);
-                }
-                //todo: perhaps store the index of current bomb into "to be removed", then remove
+        Iterator<Bomb> itr = bombList.iterator();
+
+        while (itr.hasNext()) {
+            Log.d("Length of bombList", String.valueOf(bombList.size()));
+            Bomb bomb = itr.next();
+            bomb.ticksToExplode -= 1;
+            if (bomb.ticksToExplode == 0) {
+                bomb.explode(grid);
+                itr.remove();
+                mSP.play(mBombID, 1, 1, 0, 0, 1);
+
             }
         }
 

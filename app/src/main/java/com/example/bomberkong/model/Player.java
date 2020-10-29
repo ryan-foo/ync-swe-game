@@ -25,8 +25,8 @@ public class Player implements Cell
 
     private Context context;
     private Grid grid;
-    private Bomb bomb;
     private int playerNum;
+    private Bomb bomb;
     private Int2 cellSize;
     private ArrayList<Bomb> bombList;
     private Heading heading = Heading.DOWN;

@@ -16,7 +16,6 @@ import java.util.Random;
 
 public class Food {
     public static Int2 position;
-    private Grid grid;
     private int cellWidth;
     private int cellHeight;
     // currently, this will hold the max values for horizontal / vert positions
@@ -27,9 +26,8 @@ public class Food {
 
     // todo: continue from here
 
-    public Food(Context context, Grid grid, Int2 position, Int2 cellSize) {
+    public Food(Context context, Int2 position, Int2 cellSize) {
         this.position = position;
-        this.grid = grid;
         cellWidth = cellSize.x;
         cellHeight = cellSize.y;
 
