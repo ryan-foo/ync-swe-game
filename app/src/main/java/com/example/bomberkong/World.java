@@ -16,7 +16,9 @@ import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 
+import com.example.bomberkong.model.Bomb;
 import com.example.bomberkong.model.CellStatus;
+import com.example.bomberkong.model.Fire;
 import com.example.bomberkong.model.Food;
 import com.example.bomberkong.model.Grid;
 import com.example.bomberkong.model.Player;
@@ -37,14 +39,24 @@ public class World extends SurfaceView implements Runnable
     private Paint scorePaint;
 
     // Instances of objects that will last throughout
+    private Context context;
     private Grid grid;
     private Player playerOne;
     private Player playerTwo;
     private Food food;
+    private Bomb bomb;
+    private Fire fire;
+
+    // Every bomb spawned will be added to bombList, and we can get their pos and time to tick down
+    private ArrayList<Bomb> bombList;
+    // Every fire spawned will be added to fireList, and we can get their pos and time to tick down
+    private ArrayList<Fire> fireList;
+
     private int actualViewWidth;
     private int actualViewHeight;
     private int numCellsWide;
     private int numCellsHigh;
+    public Int2 cellResolution;
 
     // For smooth movement
     private long mFPS;
@@ -139,10 +151,13 @@ public class World extends SurfaceView implements Runnable
         // resolved: see below
 
         grid = new Grid(context, numCellsWide, numCellsHigh, actualViewWidth, actualViewHeight);
-        Int2 cellResolution = new Int2(actualViewWidth/numCellsWide, actualViewHeight/numCellsHigh);
+        cellResolution = new Int2(actualViewWidth/numCellsWide, actualViewHeight/numCellsHigh);
         playerOne = new Player(context, grid, new Int2(2, 2), 1, cellResolution);
         playerTwo = new Player(context, grid, new Int2(4, 4), 2, cellResolution);
         food = new Food(context, grid, new Int2(3, 3), cellResolution);
+        bombList = new ArrayList<Bomb>();
+        fireList = new ArrayList<Fire>();
+        bombList.add(new Bomb(context, new Int2(5, 5), cellResolution));
         grid.setCell(playerOne.getGridPosition(), CellStatus.PLAYER);
         grid.setCell(playerTwo.getGridPosition(), CellStatus.PLAYER);
 
@@ -179,10 +194,6 @@ public class World extends SurfaceView implements Runnable
             // if game isn't paused, update 10 times a second
             if (!mPaused) {
                 if (updateRequired()) {
-<<<<<<< HEAD
-=======
-                    timesUpdated = timesUpdated + 1;
->>>>>>> 1c6d8263cd622f0b26063ab263c32d4c2ec33d5f
                     update();
                 }
             }
@@ -215,6 +226,7 @@ public class World extends SurfaceView implements Runnable
         // banana should be spawned
         ArrayList<Int2> emptyCells = grid.getEmpty();
         food.spawn(emptyCells, numCellsWide, numCellsHigh);
+//        bombList = playerOne.spawnBomb(context, grid, cellResolution, bombList);
 
         // Reset score
         mScoreP1 = 0;
@@ -243,7 +255,14 @@ public class World extends SurfaceView implements Runnable
             playerOne.draw(mCanvas, mPaint);
             playerTwo.draw(mCanvas, mPaint);
 
-            // Draw bombs, fire
+//             Draw bombs, fire
+            for (Bomb bomb: bombList) {
+                bomb.draw(mCanvas, mPaint);
+            }
+
+            for (Fire fire: fireList) {
+                fire.draw(mCanvas, mPaint);
+            }
 
             // Choose font size
             mPaint.setTextSize(mFontSize);
@@ -300,6 +319,28 @@ public class World extends SurfaceView implements Runnable
             // Say player 1 wins, timeout, then start new game in 5 secs
             startNewGame();
         }
+
+        // all bombs in bomb list should tick down
+//        for (Bomb bomb: bombList) {
+//            bomb.ticksToExplode -= 1;
+//            // if there are any bombs with 0 ticks left, call explode(grid) -- explode them onto the grid
+//            if (bomb.ticksToExplode == 0) {
+//                // todo: explode instead of just removing bomb
+//                bomb.explode(grid);
+//                bombList.remove(bomb);
+//                mSP.play(mBombID, 1, 1, 0, 0, 1);
+//            }
+//        }
+
+        // all fires in fire list should tick down
+//        for (Fire fire: fireList) {
+//            fire.ticksToFade -= 1;
+//            // if there are any fires with 0 ticks left, change their space to Empty
+//            if (fire.ticksToFade == 0) {
+//                fireList.remove(fire);
+//                grid.setCell(fire.getGridPosition(), CellStatus.EMPTY);
+//            }
+//        }
     }
 
     // this creates the blocky movement we desire
@@ -331,6 +372,9 @@ public class World extends SurfaceView implements Runnable
                 Log.d("Touch","onTouchEvent in World");
                 // todo: Check if motion event is coming from Player 1 or 2, and handle accordingly
                 playerOne.switchHeading(motionEvent);
+
+                // if it is placing a bomb: add this to bombList
+
                 break;
             default:
                 break;

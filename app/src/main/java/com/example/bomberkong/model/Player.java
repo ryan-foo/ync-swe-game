@@ -11,6 +11,8 @@ import android.view.MotionEvent;
 import com.example.bomberkong.R;
 import com.example.bomberkong.util.Int2;
 
+import java.util.ArrayList;
+
 public class Player implements Cell
 {
     // What direction is the player facing?
@@ -300,8 +302,18 @@ public class Player implements Cell
         return grid;
     }
 
-    public Grid spawnBomb(Grid grid){
-        Int2 spawnpos = gridPosition;
+    /**
+     * spawnBomb takes context, grid, cellSize, and the current list of bombs on the map.
+     * This list is maintained in World. When player clicks, they will call spawnBomb
+     * @param context
+     * @param grid
+     * @param cellSize
+     * @param bombList
+     * @return
+     */
+
+    public ArrayList<Bomb> spawnBomb(Context context, Grid grid, Int2 cellSize, ArrayList<Bomb> bombList) {
+        Int2 spawnpos = gridPosition; // current position of player
         // switch based on position you're facing
         switch (heading) {
             case UP:
@@ -322,9 +334,9 @@ public class Player implements Cell
         }
 
         if (grid.getCellStatus(spawnpos) == (CellStatus.EMPTY)) {
-            Bomb bomb = new Bomb(context, spawnpos);
+            bombList.add(new Bomb(context, spawnpos, cellSize));
         }
         grid.setCell(spawnpos, CellStatus.BOMB);
-        return grid;
+        return bombList;
     }
 }

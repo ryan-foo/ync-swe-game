@@ -16,7 +16,6 @@ import java.util.Random;
 
 public class Food {
     public static Int2 position;
-    private static String TAG = "food";
     private Grid grid;
     private int cellWidth;
     private int cellHeight;
@@ -65,8 +64,6 @@ public class Food {
             candidateY = random.nextInt(spawnRangeY) + 1;
         }
         // if an empty cell is found:
-        Log.d(TAG, "loop successful");
-
         position.x = candidateX;
         position.y = candidateY;
 
