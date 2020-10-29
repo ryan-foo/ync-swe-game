@@ -69,8 +69,8 @@ public class World extends SurfaceView implements Runnable
     private Thread mGameThread = null;
 
     // volatile can be accessed from outside and inside the thread
-    private volatile boolean mPlaying;
-    private boolean mPaused = true;
+    private volatile boolean mPlaying = true;
+    private boolean mPaused = false;
 
     private long mNextFrameTime;
 

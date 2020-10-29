@@ -21,7 +21,6 @@ public class MainActivity extends Activity {
 
         mWorld = new World(this, size.x, size.y);
         setContentView(mWorld);
-
     }
 
     // Resume and Pause
