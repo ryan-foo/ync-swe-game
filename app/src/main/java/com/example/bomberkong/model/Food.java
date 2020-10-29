@@ -1,4 +1,4 @@
-package com.example.bomberkong;
+package com.example.bomberkong.model;
 
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -7,6 +7,7 @@ import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.util.Log;
 
+import com.example.bomberkong.R;
 import com.example.bomberkong.util.Int2;
 
 import java.util.ArrayList;

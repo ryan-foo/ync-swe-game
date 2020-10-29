@@ -14,7 +14,7 @@ public class MainActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-            // to get the display and display dimensions
+        // to get the display and display dimensions
         Display display = getWindowManager().getDefaultDisplay();
         Point size = new Point();
         display.getSize(size);

@@ -1,4 +1,4 @@
-package com.example.bomberkong;
+package com.example.bomberkong.model;
 
 import android.graphics.Canvas;
 import android.graphics.Paint;
@@ -12,16 +12,16 @@ import java.util.HashMap;
 public class Grid
 {
     private Map<Int2, CellStatus> gridMap;
-    private int w;
-    private int h;
-    private int x;
-    private int y;
+    private int numCellsWide;
+    private int numCellsHigh;
+    private int actualViewWidth;
+    private int actualViewHigh;
 
-    public Grid(int w, int h, int x, int y){
-        this.w = w; // width of the grid in grid blocks
-        this.h = h; // height of the grid in grid blocks
-        this.x = x; // width of the grid in absolute x
-        this.y = y; // width of the grid in absolute y
+    public Grid(int numCellsWide, int numCellsHigh, int actualViewWidth, int actualViewHigh ){
+        this.numCellsWide = numCellsWide; // width of the grid in grid blocks
+        this.numCellsHigh = numCellsHigh; // height of the grid in grid blocks
+        this.actualViewWidth = actualViewWidth; // width of the grid in absolute x
+        this.actualViewHigh = actualViewHigh ; // width of the grid in absolute y
         this.gridMap = new HashMap<Int2, CellStatus>();
         reset();
     }
@@ -30,17 +30,17 @@ public class Grid
         return gridMap;
     }
 
-    public int getW(){
-        return w;
+    public int getNumCellsWide(){
+        return numCellsWide;
     }
-    public int getH(){
-        return h;
+    public int getNumCellsHigh(){
+        return numCellsHigh;
     }
-    public int getX(){
-        return x;
+    public int getActualViewWidth(){
+        return actualViewWidth;
     }
-    public int getY(){
-        return y;
+    public int getActualViewHigh(){
+        return actualViewHigh;
     }
 
     public void setCell(Int2 pos, CellStatus status) {
@@ -58,7 +58,7 @@ public class Grid
      * @param paint
      */
 
-    void draw(Canvas canvas, Paint paint) {
+    public void draw(Canvas canvas, Paint paint) {
         if (canvas == null) return;
 
         canvas.drawARGB(255, 255, 255, 255);
@@ -68,8 +68,8 @@ public class Grid
         gridPaint.setStrokeWidth(10);
         gridPaint.setARGB(135, 0, 0, 0);
 
-        int xcount = getW();
-        int ycount = getH();
+        int xcount = getNumCellsWide();
+        int ycount = getNumCellsHigh();
 
         for (int n = 0; n < xcount; n++) {
             float xpos = n * canvas.getWidth() / xcount;
@@ -90,8 +90,8 @@ public class Grid
 
     public ArrayList<Int2> getEmpty() {
         ArrayList<Int2> emptyCells = new ArrayList<Int2>();
-        for (int x = 0; x < w; x++) {
-            for (int y = 0; y < h; y++) {
+        for (int x = 0; x < numCellsWide; x++) {
+            for (int y = 0; y < numCellsHigh; y++) {
                 CellStatus status = getCellStatus(new Int2(x, y));
                 if (status == CellStatus.EMPTY) {
                     emptyCells.add(new Int2(x, y));
@@ -148,18 +148,18 @@ public class Grid
      */
 
     public void reset() {
-        for (int x = 0; x < getW(); x ++){
-            for (int y = 0; y < getH(); y ++){
+        for (int x = 0; x < getNumCellsWide(); x ++){
+            for (int y = 0; y < getNumCellsHigh(); y ++){
                 this.setCell(new Int2 (x, y), CellStatus.EMPTY);
             }
         }
-        for(int x = 0; x < getW(); x ++){
+        for(int x = 0; x < getNumCellsWide(); x ++){
             this.setCell(new Int2 (x, 0), CellStatus.WALL);
-            this.setCell(new Int2 (x, getH() - 1), CellStatus.WALL);
+            this.setCell(new Int2 (x, getNumCellsHigh() - 1), CellStatus.WALL);
         }
-        for (int y = 0; y < getH(); y ++) {
+        for (int y = 0; y < getNumCellsHigh(); y ++) {
             this.setCell(new Int2 (0, y), CellStatus.WALL);
-            this.setCell(new Int2 (getW() - 1, y), CellStatus.WALL);
+            this.setCell(new Int2 (getNumCellsWide() - 1, y), CellStatus.WALL);
         }
     }
 }

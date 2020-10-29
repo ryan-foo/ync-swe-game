@@ -1,4 +1,4 @@
-package com.example.bomberkong;
+package com.example.bomberkong.model;
 
 
 public enum CellStatus

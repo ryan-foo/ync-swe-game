@@ -1,4 +1,4 @@
-package com.example.bomberkong;
+package com.example.bomberkong.model;
 
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -9,6 +9,7 @@ import android.graphics.Point;
 import android.util.Log;
 import android.view.MotionEvent;
 
+import com.example.bomberkong.R;
 import com.example.bomberkong.util.Int2;
 
 public class Player implements Cell
@@ -77,7 +78,7 @@ public class Player implements Cell
         mBitmapHeadRight = Bitmap.createScaledBitmap(mBitmapHeadRight, cellWidth, cellHeight, false);
     }
 
-    void reset(int w, int h) {
+    public void reset(int w, int h) {
         // Reset Heading
         heading = heading.DOWN;
 
@@ -131,7 +132,7 @@ public class Player implements Cell
 
     // todo: gridToAbsolute, we should draw the bitmap based on the gridToAbsolute(position.x), gridToAbsolute(position.y)
     // how do I get the notion of scale, and cellSize into the render? look @ drawScaledBitmap method
-    void draw(Canvas canvas, Paint paint) {
+    public void draw(Canvas canvas, Paint paint) {
         switch (heading) {
             case UP:
                 canvas.drawBitmap(mBitmapHeadUp, mLocation.x, mLocation.y, paint);
@@ -173,7 +174,7 @@ public class Player implements Cell
          * Grid positions
          * */
 
-        Int2 gridPosition = grid.absoluteToGridPos(touch_x, touch_y, grid.getW(), grid.getH(), grid.getX(), grid.getY());
+        Int2 gridPosition = grid.absoluteToGridPos(touch_x, touch_y, grid.getNumCellsWide(), grid.getNumCellsHigh(), grid.getActualViewWidth(), grid.getActualViewHigh());
 
         int x = gridPosition.getX();
         int y = gridPosition.getY();

@@ -7,7 +7,6 @@ import android.content.res.AssetManager;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
-import android.graphics.Point;
 import android.media.AudioAttributes;
 import android.media.AudioManager;
 import android.media.SoundPool;
@@ -17,6 +16,10 @@ import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 
+import com.example.bomberkong.model.CellStatus;
+import com.example.bomberkong.model.Food;
+import com.example.bomberkong.model.Grid;
+import com.example.bomberkong.model.Player;
 import com.example.bomberkong.util.Int2;
 
 import java.io.IOException;
@@ -32,13 +35,15 @@ public class World extends SurfaceView implements Runnable
     private Canvas mCanvas;
     private Paint mPaint;
 
-    private final boolean DEBUGGING = true;
+    // Instances of objects that will last throughout
     private Grid grid;
     private Player playerOne;
     private Player playerTwo;
     private Food food;
-    private int w; // world width
-    private int h; // world height
+    private int actualViewWidth;
+    private int actualViewHeight;
+    private int numCellsWide;
+    private int numCellsHigh;
 
     // For smooth movement
     private long mFPS;
@@ -62,31 +67,35 @@ public class World extends SurfaceView implements Runnable
     private int mBombID = -1; // sound when bomb explodes
     private int mDeathID = -1; // sound when player dies
 
-    // Size in segments of the playable area
-    private final int NUM_BLOCKS_WIDE = 20;
-    private int NUM_BLOCKS_HIGH = 10;
-
     // Threads and control variables
     private Thread mGameThread = null;
 
     // volatile can be accessed from outside and inside the thread
     private volatile boolean mPlaying = true;
     private boolean mPaused = false;
-
     private long mNextFrameTime;
 
-    public World(Context context, int x, int y) {
+    /**
+     * This is the constructor method for World, which acts as the game engine
+     * @param context is passed from MainActivity
+     * @param actualViewWidth represents the actual width of the entire view
+     * @param actualViewHeight represents the actual height of the entire view
+     */
 
+    public World(Context context, int actualViewWidth, int actualViewHeight) {
         super(context);
 
-        this.w = x;
-        this.h = y;
+        // Actual width/height of cells
+        this.actualViewWidth = actualViewWidth;
+        this.actualViewHeight = actualViewHeight;
 
         // Number of horizontal/vertical cells
-        final int NUM_BLOCKS_WIDE = 20;
-        final int NUM_BLOCKS_HIGH = 10;
+        numCellsWide = 20;
+        numCellsHigh = 10;
 
-        // initialize SoundPool
+        /**
+         * Initialize soundpool
+         */
         if (Build.VERSION.SDK_INT > Build.VERSION_CODES.LOLLIPOP) {
             AudioAttributes audioAttributes =
                     new AudioAttributes.Builder()
@@ -103,7 +112,6 @@ public class World extends SurfaceView implements Runnable
         else {
             mSP = new SoundPool(5, AudioManager.STREAM_MUSIC, 0);
         }
-
         try {
             AssetManager assetManager = context.getAssets();
             AssetFileDescriptor descriptor;
@@ -118,19 +126,22 @@ public class World extends SurfaceView implements Runnable
             //death sound
             descriptor = assetManager.openFd("chimchar.ogg");
             mDeathID = mSP.load(descriptor, 0);
-        } catch (IOException e) {
+        }
+        catch (IOException e) {
             // Error
         }
 
         /**
          * Initialize grid and players
          */
-
         // todo: we should instantiate playerOne and playerTwo with cellsize from gridToAbsolute
-        grid = new Grid(NUM_BLOCKS_WIDE, NUM_BLOCKS_HIGH, x, y);
-        playerOne = new Player(context, grid, new Int2(2, 2), 1, new Int2(grid.getX(), grid.getY()));
-        playerTwo = new Player(context, grid, new Int2(4, 4), 2, new Int2(grid.getX(), grid.getY()));
-        food = new Food(context, grid, new Int2(3, 3), new Int2(grid.getX(), grid.getY()));
+        // resolved: see below
+
+        grid = new Grid(numCellsWide, numCellsHigh, actualViewWidth, actualViewHeight);
+        Int2 cellResolution = new Int2(actualViewWidth/numCellsWide, actualViewHeight/numCellsHigh);
+        playerOne = new Player(context, grid, new Int2(2, 2), 1, cellResolution);
+        playerTwo = new Player(context, grid, new Int2(4, 4), 2, cellResolution);
+        food = new Food(context, grid, new Int2(3, 3), cellResolution);
         grid.setCell(playerOne.getPosition(), CellStatus.PLAYER);
         grid.setCell(playerTwo.getPosition(), CellStatus.PLAYER);
 
@@ -139,8 +150,8 @@ public class World extends SurfaceView implements Runnable
         mPaint = new Paint();
 
         // Initialize with values passed in as params
-        mScreenX = x;
-        mScreenY = y;
+        mScreenX = actualViewWidth;
+        mScreenY = actualViewHeight;
 
         // 5% of width
         mFontSize = mScreenX / 20;
@@ -199,12 +210,12 @@ public class World extends SurfaceView implements Runnable
         // reset grid
         this.grid.reset();
         // Todo: reset to player original positions depending on player number
-        playerOne.reset(NUM_BLOCKS_WIDE, NUM_BLOCKS_HIGH);
-        playerTwo.reset(NUM_BLOCKS_WIDE, NUM_BLOCKS_HIGH);
+        playerOne.reset(numCellsWide, numCellsHigh);
+        playerTwo.reset(numCellsWide, numCellsHigh);
 
         // banana should be spawned
         ArrayList<Int2> emptyCells = grid.getEmpty();
-        food.spawn(emptyCells, NUM_BLOCKS_WIDE, NUM_BLOCKS_HIGH);
+        food.spawn(emptyCells, numCellsWide, numCellsHigh);
 
         // Reset score
         mScoreP1 = 0;
@@ -258,14 +269,14 @@ public class World extends SurfaceView implements Runnable
         // Did player eat food?
         if (playerOne.checkPickup(food.getLocation())) {
             ArrayList<Int2> emptyCells = grid.getEmpty();
-            food.spawn(emptyCells, NUM_BLOCKS_WIDE, NUM_BLOCKS_HIGH);
+            food.spawn(emptyCells, numCellsWide, numCellsHigh);
             mScoreP1 = mScoreP1 + 1;
             mSP.play(mEat_ID, 1, 1, 0, 0, 1);
         }
 
         if (playerTwo.checkPickup(food.getLocation())) {
             ArrayList<Int2> emptyCells = grid.getEmpty();
-            food.spawn(emptyCells, NUM_BLOCKS_WIDE, NUM_BLOCKS_HIGH);
+            food.spawn(emptyCells, numCellsWide, numCellsHigh);
             mScoreP2 = mScoreP2 + 1;
             mSP.play(mEat_ID, 1, 1, 0, 0, 1);
         }
