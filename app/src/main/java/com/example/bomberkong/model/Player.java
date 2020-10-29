@@ -252,8 +252,8 @@ public class Player implements Cell
         )
         {
             gridPosition = newpos;
+            grid.setCell(newpos, CellStatus.PLAYER);
         }
-        grid.setCell(newpos, CellStatus.PLAYER);
         return grid;
     }
 
@@ -265,8 +265,8 @@ public class Player implements Cell
         )
         {
             gridPosition = newpos;
+            grid.setCell(newpos, CellStatus.PLAYER);
         }
-        grid.setCell(newpos, CellStatus.PLAYER);
         return grid;
     }
 
@@ -278,8 +278,8 @@ public class Player implements Cell
         )
         {
             gridPosition = newpos;
+            grid.setCell(newpos, CellStatus.PLAYER);
         }
-        grid.setCell(newpos, CellStatus.PLAYER);
         return grid;
     }
 
@@ -291,8 +291,8 @@ public class Player implements Cell
         )
         {
             gridPosition = newpos;
+            grid.setCell(newpos, CellStatus.PLAYER);
         }
-        grid.setCell(newpos, CellStatus.PLAYER);
         return grid;
     }
 
