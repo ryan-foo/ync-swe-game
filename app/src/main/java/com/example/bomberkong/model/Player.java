@@ -15,7 +15,7 @@ public class Player implements Cell
 {
     // What direction is the player facing?
     private enum Heading {
-        UP, DOWN, LEFT, RIGHT
+        UP, DOWN, LEFT, RIGHT, NEUTRAL;
     }
 
     private int cellWidth;
@@ -29,6 +29,7 @@ public class Player implements Cell
     private Bitmap mBitmapHeadLeft;
     private Bitmap mBitmapHeadUp;
     private Bitmap mBitmapHeadDown;
+    private Bitmap mBitmapNeutral;
 
     private boolean destroyable = true;
     private boolean collidable = true;
@@ -45,24 +46,18 @@ public class Player implements Cell
         cellHeight = cellSize.y;
 
         // todo: take different resource based on Player Number
-        mBitmapHeadUp = BitmapFactory
-                .decodeResource(context.getResources(),
-                        R.drawable.oneup);
-        mBitmapHeadDown = BitmapFactory
-                .decodeResource(context.getResources(),
-                        R.drawable.onedown);
-        mBitmapHeadLeft = BitmapFactory
-                .decodeResource(context.getResources(),
-                        R.drawable.oneleft);
-        mBitmapHeadRight = BitmapFactory
-                .decodeResource(context.getResources(),
-                        R.drawable.oneright);
+        mBitmapHeadUp = BitmapFactory.decodeResource(context.getResources(), R.drawable.oneup);
+        mBitmapHeadDown = BitmapFactory.decodeResource(context.getResources(), R.drawable.onedown);
+        mBitmapHeadLeft = BitmapFactory.decodeResource(context.getResources(), R.drawable.oneleft);
+        mBitmapHeadRight = BitmapFactory.decodeResource(context.getResources(), R.drawable.oneright);
+        mBitmapNeutral = BitmapFactory.decodeResource(context.getResources(), R.drawable.monkey);
 
         // todo: load different resource based on whether P1 or P2
         mBitmapHeadUp = Bitmap.createScaledBitmap(mBitmapHeadUp, cellWidth, cellHeight, false);
         mBitmapHeadDown = Bitmap.createScaledBitmap(mBitmapHeadDown, cellWidth, cellHeight, false);
         mBitmapHeadLeft = Bitmap.createScaledBitmap(mBitmapHeadLeft, cellWidth, cellHeight, false);
         mBitmapHeadRight = Bitmap.createScaledBitmap(mBitmapHeadRight, cellWidth, cellHeight, false);
+        mBitmapNeutral = Bitmap.createScaledBitmap(mBitmapNeutral, cellWidth, cellHeight, false);
     }
 
     public void reset(int w, int h) {
@@ -92,6 +87,9 @@ public class Player implements Cell
             case LEFT:
                 moveLeft(grid);
                 break;
+
+            case NEUTRAL:
+                break;
         }
     }
 
@@ -114,9 +112,6 @@ public class Player implements Cell
         return false;
     }
 
-
-    // todo: gridToAbsolute, we should draw the bitmap based on the gridToAbsolute(position.x), gridToAbsolute(position.y)
-    // how do I get the notion of scale, and cellSize into the render? look @ drawScaledBitmap method
     public void draw(Canvas canvas, Paint paint) {
         switch (heading) {
             case UP:
@@ -134,6 +129,10 @@ public class Player implements Cell
             case RIGHT:
                 canvas.drawBitmap(mBitmapHeadRight, gridPosition.x * cellWidth, gridPosition.y * cellHeight, paint);
                 break;
+
+            case NEUTRAL:
+                canvas.drawBitmap(mBitmapNeutral, gridPosition.x * cellWidth, gridPosition.y * cellHeight, paint);
+                break;
         }
     }
 
@@ -141,81 +140,75 @@ public class Player implements Cell
      * Handles changing direction given a movement
      * @param motionEvent
      */
-
-    // Handle changing direction given a movement
-    // todo: have they pressed a button, d-pad instead of this movement scheme.
-    // preliminary: if they tap somewhere above the location of their player, then they will move that way
     // todo: the logic here is pretty complex, but it should work as intended. might be worth refactoring.
-    // as Prof Bruno explained:
-    // if they tap somewhere below their player, they will move that way, etc.
-    // if they tap in between, then it will try for the direction with the least distance.
     // todo: and finally, if they tap on the monkey itself, it will call the place bomb method
     public void switchHeading(MotionEvent motionEvent) {
-        Log.d("switchHeading", "motion event recieved");
         float touch_x = motionEvent.getX();
         float touch_y = motionEvent.getY();
 
         /**
          * Grid positions
          * */
+        Int2 touchGridPosition = grid.absoluteToGridPos(touch_x, touch_y, grid.getNumCellsWide(), grid.getNumCellsHigh(), grid.getActualViewWidth(), grid.getActualViewHigh());
 
-        Int2 gridPosition = grid.absoluteToGridPos(touch_x, touch_y, grid.getNumCellsWide(), grid.getNumCellsHigh(), grid.getActualViewWidth(), grid.getActualViewHigh());
+        int touchGridPositionX = touchGridPosition.getX();
+        int touchGridPositionY = touchGridPosition.getY();
 
-        int x = gridPosition.getX();
-        int y = gridPosition.getY();
-
-        // todo: tapping on the monkey itself should call place bomb method. this should be the first if condition.
-        // todo: you might both turn and place a bomb at the same time. that's pretty disastrous, we will need to fix this somehow.
+        Log.d("currentpos", String.valueOf(gridPosition.x) + "," + String.valueOf(gridPosition.y));
+        Log.d("touchpos", String.valueOf(touchGridPositionX) + "," + String.valueOf(touchGridPositionY));
 
         // todo: movement should also validate if the desired grid position is non-collidable!
         // todo: movement should be seamless (i.e, if we hold down, we should keep moving / turning, and we should control how many times in a frame a player can move.
 
-        // consider between moving right or up or down depending on which is higher or lower displacement
+        if (touchGridPositionX == this.gridPosition.getX() && touchGridPositionY == this.gridPosition.getY()){
+            heading = Heading.NEUTRAL;
+            // todo: tapping on the monkey itself should call place bomb method. this should be the first if condition.
+        }
 
-        if (x >= this.gridPosition.getX()) {
+        // consider between moving right or up or down depending on which is higher or lower displacement
+        else if (touchGridPositionX >= this.gridPosition.getX()) {
             // moving towards bottom right
-            if (y >= this.gridPosition.getY() && (x - this.gridPosition.getX() > y - this.gridPosition.getY())) {
+            if (touchGridPositionY >= this.gridPosition.getY() && (touchGridPositionX - this.gridPosition.getX() > touchGridPositionY - this.gridPosition.getY())) {
                 heading = Heading.RIGHT;
             }
 
             // moving towards bottom right
-            if (y >= this.gridPosition.getY() && (y - this.gridPosition.getY() > x - this.gridPosition.getX())) {
+            else if (touchGridPositionY >= this.gridPosition.getY() && (touchGridPositionY - this.gridPosition.getY() > touchGridPositionX - this.gridPosition.getX())) {
                 heading = Heading.DOWN;
             }
 
             // moving towards top right
-            if (this.gridPosition.getY() >= y && (x - this.gridPosition.getX() > y - this.gridPosition.getY())) {
+            else if (this.gridPosition.getY() >= touchGridPositionY && (touchGridPositionX - this.gridPosition.getX() > touchGridPositionY - this.gridPosition.getY())) {
                 heading = Heading.UP;
             }
 
             // moving towards top right
-            if (this.gridPosition.getY() >= y && (y - this.gridPosition.getY() > x - this.gridPosition.getX())) {
+            else if (this.gridPosition.getY() >= touchGridPositionY && (touchGridPositionY - this.gridPosition.getY() > touchGridPositionX - this.gridPosition.getX())) {
                 heading = Heading.RIGHT;
             }
         }
 
         else {
             // moving towards bottom left
-            if (y >= this.gridPosition.getY() && (this.gridPosition.getX() - x > y - this.gridPosition.getY())) {
+            if (touchGridPositionY >= this.gridPosition.getY() && (this.gridPosition.getX() - touchGridPositionX > touchGridPositionY - this.gridPosition.getY())) {
                 heading = Heading.LEFT;
             }
 
             // moving towards bottom left
-            if (y >= this.gridPosition.getY() && (y - this.gridPosition.getY() > this.gridPosition.getX() - x)) {
+            else if (touchGridPositionY >= this.gridPosition.getY() && (touchGridPositionY - this.gridPosition.getY() > this.gridPosition.getX() - touchGridPositionX)) {
                 heading = Heading.DOWN;
             }
 
             // moving towards top left
-            if (this.gridPosition.getY() >= y && (this.gridPosition.getX() - x > y - this.gridPosition.getY())) {
+            else if (this.gridPosition.getY() >= touchGridPositionY && (this.gridPosition.getX() - touchGridPositionX > touchGridPositionY - this.gridPosition.getY())) {
                 heading = Heading.LEFT;
             }
 
             // moving towards top left
-            if (this.gridPosition.getY() >= y && (y - this.gridPosition.getY() > this.gridPosition.getX() - x)) {
+            if (this.gridPosition.getY() >= touchGridPositionY && (touchGridPositionY - this.gridPosition.getY() > this.gridPosition.getX() - touchGridPositionX)) {
                 heading = Heading.UP;
             }
         }
-
         // and then move after changing direction
         move();
     }
@@ -243,7 +236,6 @@ public class Player implements Cell
      * Each of these take a reference to the Grid to validate the movement.
      * Everytime we move, if it is a valid move, we set the cell
      */
-    // todo: check if the player model "lingers" after changing position
     public Grid moveUp(Grid grid){
         Int2 newpos = gridPosition.addReturn(new Int2(0, -1));
         if (grid.getCellStatus(newpos) == (CellStatus.EMPTY) ||
