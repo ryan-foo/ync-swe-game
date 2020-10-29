@@ -179,10 +179,6 @@ public class World extends SurfaceView implements Runnable
             // if game isn't paused, update 10 times a second
             if (!mPaused) {
                 if (updateRequired()) {
-<<<<<<< HEAD
-=======
-                    timesUpdated = timesUpdated + 1;
->>>>>>> 1c6d8263cd622f0b26063ab263c32d4c2ec33d5f
                     update();
                 }
             }

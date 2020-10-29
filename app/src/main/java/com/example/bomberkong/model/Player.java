@@ -145,10 +145,6 @@ public class Player implements Cell
     // todo: the logic here is pretty complex, but it should work as intended. might be worth refactoring.
     // todo: and finally, if they tap on the monkey itself, it will call the place bomb method
     public void switchHeading(MotionEvent motionEvent) {
-<<<<<<< HEAD
-=======
-        Log.d("switchHeading", "motion event received");
->>>>>>> 0c3ffa75642234770eb829910743d451a0803aa8
         float touch_x = motionEvent.getX();
         float touch_y = motionEvent.getY();
 
@@ -157,14 +153,11 @@ public class Player implements Cell
          * */
         Int2 touchGridPosition = grid.absoluteToGridPos(touch_x, touch_y, grid.getNumCellsWide(), grid.getNumCellsHigh(), grid.getActualViewWidth(), grid.getActualViewHigh());
 
-<<<<<<< HEAD
         int touchGridPositionX = touchGridPosition.getX();
         int touchGridPositionY = touchGridPosition.getY();
-=======
         // We need to handle the place bomb function here too -- if x > 3/4 of screen, then call place bomb, otherwise handle as per normal
 
         Int2 gridPosition = grid.absoluteToGridPos(touch_x, touch_y, grid.getNumCellsWide(), grid.getNumCellsHigh(), grid.getActualViewWidth(), grid.getActualViewHigh());
->>>>>>> 0c3ffa75642234770eb829910743d451a0803aa8
 
         Log.d("currentpos", String.valueOf(gridPosition.x) + "," + String.valueOf(gridPosition.y));
         Log.d("touchpos", String.valueOf(touchGridPositionX) + "," + String.valueOf(touchGridPositionY));
