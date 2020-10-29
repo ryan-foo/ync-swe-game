@@ -25,8 +25,8 @@ public class Player implements Cell
 
     private Context context;
     private Grid grid;
-    private Bomb bomb;
     private int playerNum;
+    private Bomb bomb;
     private Int2 cellSize;
     private ArrayList<Bomb> bombList;
     private Heading heading = Heading.DOWN;
@@ -342,8 +342,8 @@ public class Player implements Cell
 
         if (grid.getCellStatus(spawnpos) == (CellStatus.EMPTY)) {
             // todo: what is going on here? figure it out and spawn a bomb man.
-//            bomb = new Bomb(context, spawnpos, cellSize);
-//            bombList.add(bomb);
+            bomb = new Bomb(context, spawnpos, cellSize);
+            bombList.add(bomb);
             grid.setCell(spawnpos, CellStatus.BOMB);
         }
     }
