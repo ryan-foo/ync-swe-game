@@ -1,5 +1,7 @@
 package com.example.bomberkong.model;
 
+import android.content.Context;
+
 import com.example.bomberkong.util.Int2;
 
 public class Bomb implements Cell
@@ -7,11 +9,12 @@ public class Bomb implements Cell
     private boolean destroyable = true;
     private boolean collidable = false;
     private Int2 position;
+    private int ticksToExplode = 30; // our current game is 10 fps, so we will have 3 seconds before it explodes.
 
     /**
      * Constructor for objects of class Fire
      */
-    public Bomb(Int2 position){
+    public Bomb(Context context, Int2 position){
         this.position = position;
     }
 
@@ -26,14 +29,19 @@ public class Bomb implements Cell
         return this.collidable;
     }
 
-    /**
-     * Returns the position of the fire
-     */
     public Int2 getGridPosition(){
         return this.position;
     }
 
-    public void Explode(Grid grid){
+    public void tickDown() {
+        ticksToExplode -= 1;
+    }
+
+    /**
+     * Returns the position of the fire
+     */
+
+    public void explode(Grid grid){
 
     }
 }

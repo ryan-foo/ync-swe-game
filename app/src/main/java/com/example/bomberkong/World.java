@@ -34,6 +34,7 @@ public class World extends SurfaceView implements Runnable
     private SurfaceHolder mSurfaceHolder;
     private Canvas mCanvas;
     private Paint mPaint;
+    private Paint scorePaint;
 
     // Instances of objects that will last throughout
     private Grid grid;
@@ -148,6 +149,7 @@ public class World extends SurfaceView implements Runnable
         // Drawing objects
         mSurfaceHolder = getHolder();
         mPaint = new Paint();
+        scorePaint = new Paint();
 
         // Initialize with values passed in as params
         mScreenX = actualViewWidth;
@@ -157,10 +159,6 @@ public class World extends SurfaceView implements Runnable
         mFontSize = mScreenX / 20;
         // 1.5% of width
         mFontMargin = mScreenX / 75;
-
-        // Initialize objects for drawing
-        mSurfaceHolder = getHolder();
-        mPaint = new Paint();
 
         startNewGame();
     }
@@ -173,7 +171,6 @@ public class World extends SurfaceView implements Runnable
 
     @Override
     public void run() {
-        int timesUpdated = 0;
         Log.d("Run", "I am running");
         while (mPlaying) {
             // What time is it at the start of the game loop?
@@ -182,7 +179,10 @@ public class World extends SurfaceView implements Runnable
             // if game isn't paused, update 10 times a second
             if (!mPaused) {
                 if (updateRequired()) {
+<<<<<<< HEAD
+=======
                     timesUpdated = timesUpdated + 1;
+>>>>>>> 1c6d8263cd622f0b26063ab263c32d4c2ec33d5f
                     update();
                 }
             }
@@ -248,12 +248,16 @@ public class World extends SurfaceView implements Runnable
             // Choose font size
             mPaint.setTextSize(mFontSize);
 
+            // Paint Color for score
+            scorePaint.setColor(Color.argb(255, 0, 0, 0));
+            scorePaint.setTextSize(mFontSize);
+
             // Draw score
             mCanvas.drawText("Score P1: " + mScoreP1 + " Score P2: " + mScoreP2,
-                    mFontMargin, mFontSize, mPaint);
+                    mFontMargin, mFontSize, scorePaint);
 
             if (mPaused) {
-                mPaint.setColor(Color.argb(255, 255, 255, 255));
+                mPaint.setColor(Color.argb(255, 0, 0, 0));
                 mPaint.setTextSize(250);
 
                 mCanvas.drawText("Tap to begin!", 200, 700, mPaint);
