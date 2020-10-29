@@ -227,7 +227,7 @@ public class World extends SurfaceView implements Runnable
         // banana should be spawned
         ArrayList<Int2> emptyCells = grid.getEmpty();
         food.spawn(emptyCells, numCellsWide, numCellsHigh);
-//        bombList = playerOne.spawnBomb(context, grid, cellResolution, bombList);
+        playerOne.spawnBomb(context, grid, cellResolution, bombList);
 
         // Reset score
         mScoreP1 = 0;
@@ -242,7 +242,6 @@ public class World extends SurfaceView implements Runnable
             // Lock Canvas to draw
             mCanvas = mSurfaceHolder.lockCanvas();
 
-            // Fill screen with solid colour, Todo: replace with grid drawing
             mCanvas.drawColor(Color.argb(255, 26, 128, 182));
 
             // Color to paint with
@@ -374,7 +373,7 @@ public class World extends SurfaceView implements Runnable
                 // todo: Check if motion event is coming from Player 1 or 2, and handle accordingly
                 playerOne.switchHeading(motionEvent);
 
-                // if it is placing a bomb: add this to bombList
+                // todo: if it is placing a bomb: add this to bombList
 
                 break;
             default:

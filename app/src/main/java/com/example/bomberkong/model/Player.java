@@ -25,6 +25,7 @@ public class Player implements Cell
 
     private Context context;
     private Grid grid;
+    private Bomb bomb;
     private int playerNum;
     private Heading heading = Heading.DOWN;
 
@@ -36,7 +37,7 @@ public class Player implements Cell
 
     private boolean destroyable = true;
     private boolean collidable = true;
-    private Int2 gridPosition;
+    public Int2 gridPosition;
 
     /**
      * Constructor for objects of class Player
@@ -304,34 +305,34 @@ public class Player implements Cell
      * @param grid
      * @param cellSize
      * @param bombList
-     * @return
+     * @return bombList
      */
 
-    public ArrayList<Bomb> spawnBomb(Context context, Grid grid, Int2 cellSize, ArrayList<Bomb> bombList) {
-        Int2 spawnpos = new Int2(6,6); // current position of player
+    public void spawnBomb(Context context, Grid grid, Int2 cellSize, ArrayList<Bomb> bombList) {
+        Int2 spawnpos = gridPosition;
         // switch based on position you're facing
-//        switch (heading) {
-//            case UP:
-//                spawnpos = gridPosition.addReturn(new Int2(0, -1));
-//                break;
-//
-//            case DOWN:
-//                spawnpos = gridPosition.addReturn(new Int2(0, 1));
-//                break;
-//
-//            case LEFT:
-//                spawnpos = gridPosition.addReturn(new Int2(-1, 0));
-//                break;
-//
-//            case RIGHT:
-//                spawnpos = gridPosition.addReturn(new Int2(1, 0));
-//                break;
-//        }
+        switch (heading) {
+            case UP:
+                spawnpos = gridPosition.addReturn(new Int2(0, -1));
+                break;
+
+            case DOWN:
+                spawnpos = gridPosition.addReturn(new Int2(0, 1));
+                break;
+
+            case LEFT:
+                spawnpos = gridPosition.addReturn(new Int2(-1, 0));
+                break;
+
+            case RIGHT:
+                spawnpos = gridPosition.addReturn(new Int2(1, 0));
+                break;
+        }
 
         if (grid.getCellStatus(spawnpos) == (CellStatus.EMPTY)) {
-            bombList.add(new Bomb(context, spawnpos, cellSize));
+//            bomb = new Bomb(context, spawnpos, cellSize);
+//            bombList.add(bomb);
             grid.setCell(spawnpos, CellStatus.BOMB);
         }
-        return bombList;
     }
 }
