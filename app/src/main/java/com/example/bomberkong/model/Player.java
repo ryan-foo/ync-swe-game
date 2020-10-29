@@ -49,6 +49,8 @@ public class Player implements Cell
         cellWidth = cellSize.x;
         cellHeight = cellSize.y;
 
+        grid.setCell(gridPosition, CellStatus.PLAYER);
+
         // todo: take different resource based on Player Number
         mBitmapHeadUp = BitmapFactory.decodeResource(context.getResources(), R.drawable.oneup);
         mBitmapHeadDown = BitmapFactory.decodeResource(context.getResources(), R.drawable.onedown);
@@ -306,30 +308,30 @@ public class Player implements Cell
      */
 
     public ArrayList<Bomb> spawnBomb(Context context, Grid grid, Int2 cellSize, ArrayList<Bomb> bombList) {
-        Int2 spawnpos = gridPosition; // current position of player
+        Int2 spawnpos = new Int2(6,6); // current position of player
         // switch based on position you're facing
-        switch (heading) {
-            case UP:
-                spawnpos = gridPosition.addReturn(new Int2(0, -1));
-                break;
-
-            case DOWN:
-                spawnpos = gridPosition.addReturn(new Int2(0, 1));
-                break;
-
-            case LEFT:
-                spawnpos = gridPosition.addReturn(new Int2(-1, 0));
-                break;
-
-            case RIGHT:
-                spawnpos = gridPosition.addReturn(new Int2(1, 0));
-                break;
-        }
+//        switch (heading) {
+//            case UP:
+//                spawnpos = gridPosition.addReturn(new Int2(0, -1));
+//                break;
+//
+//            case DOWN:
+//                spawnpos = gridPosition.addReturn(new Int2(0, 1));
+//                break;
+//
+//            case LEFT:
+//                spawnpos = gridPosition.addReturn(new Int2(-1, 0));
+//                break;
+//
+//            case RIGHT:
+//                spawnpos = gridPosition.addReturn(new Int2(1, 0));
+//                break;
+//        }
 
         if (grid.getCellStatus(spawnpos) == (CellStatus.EMPTY)) {
             bombList.add(new Bomb(context, spawnpos, cellSize));
+            grid.setCell(spawnpos, CellStatus.BOMB);
         }
-        grid.setCell(spawnpos, CellStatus.BOMB);
         return bombList;
     }
 }

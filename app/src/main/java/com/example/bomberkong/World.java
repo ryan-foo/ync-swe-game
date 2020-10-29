@@ -158,6 +158,7 @@ public class World extends SurfaceView implements Runnable
         bombList = new ArrayList<Bomb>();
         fireList = new ArrayList<Fire>();
         bombList.add(new Bomb(context, new Int2(5, 5), cellResolution));
+        fireList.add(new Fire(context, new Int2(7, 7), cellResolution));
         grid.setCell(playerOne.getGridPosition(), CellStatus.PLAYER);
         grid.setCell(playerTwo.getGridPosition(), CellStatus.PLAYER);
 
@@ -320,27 +321,27 @@ public class World extends SurfaceView implements Runnable
             startNewGame();
         }
 
-        // all bombs in bomb list should tick down
-//        for (Bomb bomb: bombList) {
-//            bomb.ticksToExplode -= 1;
-//            // if there are any bombs with 0 ticks left, call explode(grid) -- explode them onto the grid
-//            if (bomb.ticksToExplode == 0) {
-//                // todo: explode instead of just removing bomb
-//                bomb.explode(grid);
-//                bombList.remove(bomb);
-//                mSP.play(mBombID, 1, 1, 0, 0, 1);
-//            }
-//        }
+//         all bombs in bomb list should tick down
+        for (Bomb bomb: bombList) {
+            bomb.ticksToExplode -= 1;
+            // if there are any bombs with 0 ticks left, call explode(grid) -- explode them onto the grid
+            if (bomb.ticksToExplode == 0) {
+                // todo: explode instead of just removing bomb
+                bomb.explode(grid);
+                bombList.remove(bomb);
+                mSP.play(mBombID, 1, 1, 0, 0, 1);
+            }
+        }
 
-        // all fires in fire list should tick down
-//        for (Fire fire: fireList) {
-//            fire.ticksToFade -= 1;
-//            // if there are any fires with 0 ticks left, change their space to Empty
-//            if (fire.ticksToFade == 0) {
-//                fireList.remove(fire);
-//                grid.setCell(fire.getGridPosition(), CellStatus.EMPTY);
-//            }
-//        }
+//         all fires in fire list should tick down
+        for (Fire fire: fireList) {
+            fire.ticksToFade -= 1;
+            // if there are any fires with 0 ticks left, change their space to Empty
+            if (fire.ticksToFade == 0) {
+                fireList.remove(fire);
+                grid.setCell(fire.getGridPosition(), CellStatus.EMPTY);
+            }
+        }
     }
 
     // this creates the blocky movement we desire

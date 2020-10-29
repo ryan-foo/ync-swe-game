@@ -15,7 +15,7 @@ public class Bomb implements Cell
     private int cellWidth;
     private int cellHeight;
     private Bitmap mBitmapBomb;
-    public int ticksToExplode = 200; // our current game is 10 fps, so we will have 3 seconds before it explodes.
+    public int ticksToExplode = 30; // our current game is 10 fps, so we will have 3 seconds before it explodes.
 
     // todo: continue from here
 
@@ -25,7 +25,7 @@ public class Bomb implements Cell
         cellHeight = cellSize.y;
 
         mBitmapBomb =
-                BitmapFactory.decodeResource(context.getResources(), R.drawable.monkey);
+                BitmapFactory.decodeResource(context.getResources(), R.drawable.twoleft);
         // Resize the bitmap
         // todo: gridPosToAbsolute
         mBitmapBomb =
