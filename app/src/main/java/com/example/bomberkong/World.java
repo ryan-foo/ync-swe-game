@@ -75,7 +75,7 @@ public class World extends SurfaceView implements Runnable
 
     // Sound
     private SoundPool mSP;
-    private int mSpawn_ID = -1; // sound when fruit is spawned
+    private int mSpawn_ID = -1; // sound when fire is gone
     private int mEat_ID = -1; // sound when fruit is picked
     private int mBombID = -1; // sound when bomb explodes
     private int mDeathID = -1; // sound when player dies
@@ -152,8 +152,8 @@ public class World extends SurfaceView implements Runnable
 
         grid = new Grid(context, numCellsWide, numCellsHigh, actualViewWidth, actualViewHeight);
         cellResolution = new Int2(actualViewWidth/numCellsWide, actualViewHeight/numCellsHigh);
-        playerOne = new Player(context, grid, new Int2(2, 2), 1, cellResolution);
-        playerTwo = new Player(context, grid, new Int2(4, 4), 2, cellResolution);
+        playerOne = new Player(context, grid, new Int2(2, 2), 1, cellResolution, bombList);
+        playerTwo = new Player(context, grid, new Int2(4, 4), 2, cellResolution, bombList);
         food = new Food(context, grid, new Int2(3, 3), cellResolution);
         bombList = new ArrayList<Bomb>();
         fireList = new ArrayList<Fire>();
@@ -227,7 +227,7 @@ public class World extends SurfaceView implements Runnable
         // banana should be spawned
         ArrayList<Int2> emptyCells = grid.getEmpty();
         food.spawn(emptyCells, numCellsWide, numCellsHigh);
-        playerOne.spawnBomb(context, grid, cellResolution, bombList);
+
 
         // Reset score
         mScoreP1 = 0;
@@ -321,6 +321,7 @@ public class World extends SurfaceView implements Runnable
         }
 
 //         all bombs in bomb list should tick down
+        // todo: for Each is probably not the right way to do this, since we do mutate the array
         for (Bomb bomb: bombList) {
             bomb.ticksToExplode -= 1;
             // if there are any bombs with 0 ticks left, call explode(grid) -- explode them onto the grid
@@ -330,6 +331,7 @@ public class World extends SurfaceView implements Runnable
                 bombList.remove(bomb);
                 mSP.play(mBombID, 1, 1, 0, 0, 1);
             }
+            //todo: perhaps store the index of current bomb into "to be removed", then remove
         }
 
 //         all fires in fire list should tick down
@@ -339,6 +341,7 @@ public class World extends SurfaceView implements Runnable
             if (fire.ticksToFade == 0) {
                 fireList.remove(fire);
                 grid.setCell(fire.getGridPosition(), CellStatus.EMPTY);
+                mSP.play(mSpawn_ID, 1, 1, 0, 0, 1);
             }
         }
     }

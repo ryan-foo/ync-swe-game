@@ -27,6 +27,8 @@ public class Player implements Cell
     private Grid grid;
     private Bomb bomb;
     private int playerNum;
+    private Int2 cellSize;
+    private ArrayList<Bomb> bombList;
     private Heading heading = Heading.DOWN;
 
     private Bitmap mBitmapHeadRight;
@@ -42,11 +44,13 @@ public class Player implements Cell
     /**
      * Constructor for objects of class Player
      */
-    public Player(Context context, Grid grid, Int2 gridPosition, int playerNum, Int2 cellSize) {
+    public Player(Context context, Grid grid, Int2 gridPosition, int playerNum, Int2 cellSize, ArrayList<Bomb> bombList) {
         this.context = context;
         this.gridPosition = gridPosition;
         this.playerNum = playerNum;
         this.grid = grid;
+        this.cellSize = cellSize;
+        this.bombList = bombList;
         cellWidth = cellSize.x;
         cellHeight = cellSize.y;
 
@@ -171,8 +175,8 @@ public class Player implements Cell
         // todo: movement should be seamless (i.e, if we hold down, we should keep moving / turning, and we should control how many times in a frame a player can move.
 
         if (touchGridPositionX == this.gridPosition.getX() && touchGridPositionY == this.gridPosition.getY()){
-            heading = Heading.NEUTRAL;
-            // todo: tapping on the monkey itself should call place bomb method. this should be the first if condition.
+//            heading = Heading.NEUTRAL;
+            spawnBomb(context, grid, cellSize, bombList);
         }
 
         // consider between moving right or up or down depending on which is higher or lower displacement
@@ -250,7 +254,8 @@ public class Player implements Cell
         Int2 newpos = gridPosition.addReturn(new Int2(0, -1));
         if (grid.getCellStatus(newpos) == (CellStatus.EMPTY) ||
                 grid.getCellStatus(newpos) == (CellStatus.FIRE) ||
-                grid.getCellStatus(newpos) == (CellStatus.FOOD)
+                grid.getCellStatus(newpos) == (CellStatus.FOOD) ||
+                grid.getCellStatus(newpos) == (CellStatus.BOMB)
         )
         {
             gridPosition = newpos;
@@ -263,7 +268,9 @@ public class Player implements Cell
         Int2 newpos = gridPosition.addReturn(new Int2(0, 1));
         if (grid.getCellStatus(newpos) == (CellStatus.EMPTY) ||
                 grid.getCellStatus(newpos) == (CellStatus.FIRE) ||
-                grid.getCellStatus(newpos) == (CellStatus.FOOD)
+                grid.getCellStatus(newpos) == (CellStatus.FOOD) ||
+                grid.getCellStatus(newpos) == (CellStatus.BOMB)
+
         )
         {
             gridPosition = newpos;
@@ -276,7 +283,9 @@ public class Player implements Cell
         Int2 newpos = gridPosition.addReturn(new Int2(1, 0));
         if (grid.getCellStatus(newpos) == (CellStatus.EMPTY) ||
                 grid.getCellStatus(newpos) == (CellStatus.FIRE) ||
-                grid.getCellStatus(newpos) == (CellStatus.FOOD)
+                grid.getCellStatus(newpos) == (CellStatus.FOOD) ||
+                grid.getCellStatus(newpos) == (CellStatus.BOMB)
+
         )
         {
             gridPosition = newpos;
@@ -289,7 +298,9 @@ public class Player implements Cell
         Int2 newpos = gridPosition.addReturn(new Int2(-1, 0));
         if (grid.getCellStatus(newpos) == (CellStatus.EMPTY) ||
                 grid.getCellStatus(newpos) == (CellStatus.FIRE) ||
-                grid.getCellStatus(newpos) == (CellStatus.FOOD)
+                grid.getCellStatus(newpos) == (CellStatus.FOOD) ||
+                grid.getCellStatus(newpos) == (CellStatus.BOMB)
+
         )
         {
             gridPosition = newpos;
@@ -330,6 +341,7 @@ public class Player implements Cell
         }
 
         if (grid.getCellStatus(spawnpos) == (CellStatus.EMPTY)) {
+            // todo: what is going on here? figure it out and spawn a bomb man.
 //            bomb = new Bomb(context, spawnpos, cellSize);
 //            bombList.add(bomb);
             grid.setCell(spawnpos, CellStatus.BOMB);
