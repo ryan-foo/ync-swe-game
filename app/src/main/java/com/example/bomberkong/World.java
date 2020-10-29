@@ -26,6 +26,7 @@ import java.util.ArrayList;
 
 public class World extends SurfaceView implements Runnable
 {
+    private static final String TAG = "World";
     // Objects for drawing
     private SurfaceHolder mSurfaceHolder;
     private Canvas mCanvas;
@@ -81,10 +82,9 @@ public class World extends SurfaceView implements Runnable
         this.w = x;
         this.h = y;
 
-        // Size in segments of the playable area
+        // Number of horizontal/vertical cells
         final int NUM_BLOCKS_WIDE = 20;
         final int NUM_BLOCKS_HIGH = 10;
-
 
         // initialize SoundPool
         if (Build.VERSION.SDK_INT > Build.VERSION_CODES.LOLLIPOP) {
@@ -130,13 +130,13 @@ public class World extends SurfaceView implements Runnable
         grid = new Grid(NUM_BLOCKS_WIDE, NUM_BLOCKS_HIGH, x, y);
         playerOne = new Player(context, grid, new Int2(2, 2), 1, new Int2(grid.getX(), grid.getY()));
         playerTwo = new Player(context, grid, new Int2(4, 4), 2, new Int2(grid.getX(), grid.getY()));
+        food = new Food(context, grid, new Int2(3, 3), new Int2(grid.getX(), grid.getY()));
         grid.setCell(playerOne.getPosition(), CellStatus.PLAYER);
         grid.setCell(playerTwo.getPosition(), CellStatus.PLAYER);
 
         // Drawing objects
         mSurfaceHolder = getHolder();
         mPaint = new Paint();
-
 
         // Initialize with values passed in as params
         mScreenX = x;
@@ -192,7 +192,6 @@ public class World extends SurfaceView implements Runnable
 
             // we will use mSpeed / mFPS to determine how fast players move on the screen
             }
-
         }
     }
 
@@ -289,7 +288,6 @@ public class World extends SurfaceView implements Runnable
         }
     }
 
-
     // this creates the blocky movement we desire
     public boolean updateRequired() {
         // Run at 10 fps
@@ -304,8 +302,8 @@ public class World extends SurfaceView implements Runnable
             return true;
         }
         return false;
-
     }
+
     @Override
     public boolean onTouchEvent(MotionEvent motionEvent) {
         switch (motionEvent.getAction() & MotionEvent.ACTION_MASK) {
@@ -341,6 +339,5 @@ public class World extends SurfaceView implements Runnable
         mGameThread = new Thread(this);
         mGameThread.start();
     }
-
 }
 

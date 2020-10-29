@@ -5,9 +5,8 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Paint;
-import android.graphics.Point;
+import android.util.Log;
 
-import com.example.bomberkong.R;
 import com.example.bomberkong.util.Int2;
 
 import java.util.ArrayList;
@@ -15,7 +14,9 @@ import java.util.Random;
 
 
 public class Food {
-    public static Int2 location;
+    public static Int2 position;
+    private static String TAG = "food";
+    private Grid grid;
     // currently, this will hold the max values for horizontal / vert positions
     private Int2 mSpawnRange;
 
@@ -25,11 +26,11 @@ public class Food {
 
     // todo: continue from here
 
-    public Food(Context context, Int2 sr, int s) {
-        mSpawnRange = sr;
-        mSize = s; // Cell size.
-
-        location.x = -10; // hide offscreen until game starts.
+    public Food(Context context, Grid grid, Int2 position, Int2 cellSize) {
+        this.position = position;
+        this.grid = grid;
+        int cellWidth = cellSize.x;
+        int cellHeight = cellSize.y;
 
         // we can spawn food, and then move it around everytime player eats it.
         // todo: if needed, we can refactor this to spawn more and more instances of food over time in an arraylist. (complex)
@@ -38,7 +39,7 @@ public class Food {
         // Resize the bitmap
         // todo: gridPosToAbsolute
         mBitmapFood =
-                Bitmap.createScaledBitmap(mBitmapFood, s, s, false);
+                Bitmap.createScaledBitmap(mBitmapFood, cellWidth, cellHeight, false);
     }
 
     /**
@@ -49,7 +50,7 @@ public class Food {
      * @return location New location of fruit
      */
 
-    public static Int2 spawn(ArrayList<Int2> empty, int spawnRangeX, int spawnRangeY) {
+    public Int2 spawn(ArrayList<Int2> empty, int spawnRangeX, int spawnRangeY) {
         // Choose two random values, validate that its empty, then place the food
         Random random = new Random();
 
@@ -61,22 +62,24 @@ public class Food {
             candidateX = random.nextInt(spawnRangeX) + 1;
             candidateY = random.nextInt(spawnRangeY) + 1;
         }
-        // after exiting loop...
-        location.x = candidateX;
-        location.y = candidateY;
+        // if an empty cell is found:
+        Log.d(TAG, "loop successful");
 
-        return location;
+        position.x = candidateX;
+        position.y = candidateY;
+
+        return position;
     }
 
     // allow World to know where the food is
     public Int2 getLocation() {
-        return location;
+        return position;
     }
 
     // the game objects will handle drawing themselves
     public void draw(Canvas canvas, Paint paint) {
         canvas.drawBitmap(mBitmapFood,
-                location.getX() * mSize, location.getY() * mSize, paint);
+                position.getX() * mSize, position.getY() * mSize, paint);
     }
 }
 
