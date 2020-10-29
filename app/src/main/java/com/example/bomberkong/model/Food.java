@@ -18,11 +18,12 @@ public class Food {
     public static Int2 position;
     private static String TAG = "food";
     private Grid grid;
+    private int cellWidth;
+    private int cellHeight;
     // currently, this will hold the max values for horizontal / vert positions
     private Int2 mSpawnRange;
 
     // size of pixels of food: which is equal to a single block on the grid
-    private int mSize;
     private Bitmap mBitmapFood;
 
     // todo: continue from here
@@ -30,8 +31,8 @@ public class Food {
     public Food(Context context, Grid grid, Int2 position, Int2 cellSize) {
         this.position = position;
         this.grid = grid;
-        int cellWidth = cellSize.x;
-        int cellHeight = cellSize.y;
+        cellWidth = cellSize.x;
+        cellHeight = cellSize.y;
 
         // we can spawn food, and then move it around everytime player eats it.
         // todo: if needed, we can refactor this to spawn more and more instances of food over time in an arraylist. (complex)
@@ -80,7 +81,7 @@ public class Food {
     // the game objects will handle drawing themselves
     public void draw(Canvas canvas, Paint paint) {
         canvas.drawBitmap(mBitmapFood,
-                position.getX() * mSize, position.getY() * mSize, paint);
+                position.getX() * cellWidth, position.getY() * cellHeight, paint);
     }
 }
 

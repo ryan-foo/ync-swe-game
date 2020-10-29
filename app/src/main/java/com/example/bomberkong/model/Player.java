@@ -14,13 +14,13 @@ import com.example.bomberkong.util.Int2;
 
 public class Player implements Cell
 {
-
-     private Point mMoveRange;
-
     // What direction is the player facing?
     private enum Heading {
         UP, DOWN, LEFT, RIGHT
     }
+
+    private int cellWidth;
+    private int cellHeight;
 
     private Grid grid;
     private int playerNum;
@@ -31,42 +31,30 @@ public class Player implements Cell
     private Bitmap mBitmapHeadUp;
     private Bitmap mBitmapHeadDown;
 
-    // Location of player on the Grid
-    private Point mLocation = new Point();
-
-    // these will be a function of the size of screen
-    private float mPlayerWidth;
-    private float mPlayerHeight;
-
     private boolean destroyable = true;
     private boolean collidable = true;
-    private Int2 position;
+    private Int2 gridPosition;
 
     /**
      * Constructor for objects of class Player
      */
-    public Player(Context context, Grid grid, Int2 position, int playerNum, Int2 cellSize) {
-        this.position = position;
+    public Player(Context context, Grid grid, Int2 gridPosition, int playerNum, Int2 cellSize) {
+        this.gridPosition = gridPosition;
         this.playerNum = playerNum;
         this.grid = grid;
-        int cellWidth = cellSize.x;
-        int cellHeight = cellSize.y;
-
+        cellWidth = cellSize.x;
+        cellHeight = cellSize.y;
 
         // todo: take different resource based on Player Number
-
         mBitmapHeadUp = BitmapFactory
                 .decodeResource(context.getResources(),
                         R.drawable.oneup);
-
         mBitmapHeadDown = BitmapFactory
                 .decodeResource(context.getResources(),
                         R.drawable.onedown);
-
         mBitmapHeadLeft = BitmapFactory
                 .decodeResource(context.getResources(),
                         R.drawable.oneleft);
-
         mBitmapHeadRight = BitmapFactory
                 .decodeResource(context.getResources(),
                         R.drawable.oneright);
@@ -112,7 +100,7 @@ public class Player implements Cell
     public boolean detectDeath() {
         boolean dead = false;
 
-        if (grid.getCellStatus(position) == CellStatus.FIRE) {
+        if (grid.getCellStatus(gridPosition) == CellStatus.FIRE) {
             dead = true;
         }
 
@@ -122,10 +110,9 @@ public class Player implements Cell
     public boolean checkPickup(Int2 foodPosition) {
         // Check if the food has the same coordinates as Player.
         // if so, increment score etc.
-        if (position.x == foodPosition.x && position.y == foodPosition.y) {
+        if (gridPosition.x == foodPosition.x && gridPosition.y == foodPosition.y) {
             return true;
         }
-
         return false;
     }
 
@@ -135,19 +122,19 @@ public class Player implements Cell
     public void draw(Canvas canvas, Paint paint) {
         switch (heading) {
             case UP:
-                canvas.drawBitmap(mBitmapHeadUp, mLocation.x, mLocation.y, paint);
+                canvas.drawBitmap(mBitmapHeadUp, gridPosition.x * cellWidth, gridPosition.y * cellHeight, paint);
                 break;
 
             case DOWN:
-                canvas.drawBitmap(mBitmapHeadDown, mLocation.x, mLocation.y, paint);
+                canvas.drawBitmap(mBitmapHeadDown, gridPosition.x * cellWidth, gridPosition.y * cellHeight, paint);
                 break;
 
             case LEFT:
-                canvas.drawBitmap(mBitmapHeadLeft, mLocation.x, mLocation.y, paint);
+                canvas.drawBitmap(mBitmapHeadLeft, gridPosition.x * cellWidth, gridPosition.y * cellHeight, paint);
                 break;
 
             case RIGHT:
-                canvas.drawBitmap(mBitmapHeadRight, mLocation.x, mLocation.y, paint);
+                canvas.drawBitmap(mBitmapHeadRight, gridPosition.x * cellWidth, gridPosition.y * cellHeight, paint);
                 break;
         }
     }
@@ -187,49 +174,46 @@ public class Player implements Cell
 
         // consider between moving right or up or down depending on which is higher or lower displacement
 
-        if (x >= position.getX()) {
+        if (x >= this.gridPosition.getX()) {
             // moving towards bottom right
-            if (y >= position.getY() && (x - position.getX() > y - position.getY())) {
+            if (y >= this.gridPosition.getY() && (x - this.gridPosition.getX() > y - this.gridPosition.getY())) {
                 heading = Heading.RIGHT;
             }
 
             // moving towards bottom right
-            if (y >= position.getY() && (y - position.getY() > x - position.getX())) {
+            if (y >= this.gridPosition.getY() && (y - this.gridPosition.getY() > x - this.gridPosition.getX())) {
                 heading = Heading.DOWN;
             }
 
             // moving towards top right
-            if (position.getY() >= y && (x - position.getX() > y - position.getY())) {
+            if (this.gridPosition.getY() >= y && (x - this.gridPosition.getX() > y - this.gridPosition.getY())) {
                 heading = Heading.UP;
             }
 
             // moving towards top right
-            if (position.getY() >= y && (y - position.getY() > x - position.getX())) {
+            if (this.gridPosition.getY() >= y && (y - this.gridPosition.getY() > x - this.gridPosition.getX())) {
                 heading = Heading.RIGHT;
             }
         }
 
-        // then left
-        // position.getX > x
         else {
-
             // moving towards bottom left
-            if (y >= position.getY() && (position.getX() - x > y - position.getY())) {
+            if (y >= this.gridPosition.getY() && (this.gridPosition.getX() - x > y - this.gridPosition.getY())) {
                 heading = Heading.LEFT;
             }
 
             // moving towards bottom left
-            if (y >= position.getY() && (y - position.getY() > position.getX() - x)) {
+            if (y >= this.gridPosition.getY() && (y - this.gridPosition.getY() > this.gridPosition.getX() - x)) {
                 heading = Heading.DOWN;
             }
 
             // moving towards top left
-            if (position.getY() >= y && (position.getX() - x > y - position.getY())) {
+            if (this.gridPosition.getY() >= y && (this.gridPosition.getX() - x > y - this.gridPosition.getY())) {
                 heading = Heading.LEFT;
             }
 
             // moving towards top left
-            if (position.getY() >= y && (y - position.getY() > position.getX() - x)) {
+            if (this.gridPosition.getY() >= y && (y - this.gridPosition.getY() > this.gridPosition.getX() - x)) {
                 heading = Heading.UP;
             }
         }
@@ -252,8 +236,8 @@ public class Player implements Cell
     /**
      * Returns the position of the player
      */
-    public Int2 getPosition(){
-        return this.position;
+    public Int2 getGridPosition(){
+        return this.gridPosition;
     }
 
     /**
@@ -261,60 +245,61 @@ public class Player implements Cell
      * Each of these take a reference to the Grid to validate the movement.
      * Everytime we move, if it is a valid move, we set the cell
      */
+    // todo: check if the player model "lingers" after changing position
     public Grid moveUp(Grid grid){
-        Int2 newpos = position.addReturn(new Int2(0, -1));
+        Int2 newpos = gridPosition.addReturn(new Int2(0, -1));
         if (grid.getCellStatus(newpos) == (CellStatus.EMPTY) ||
                 grid.getCellStatus(newpos) == (CellStatus.FIRE) ||
                 grid.getCellStatus(newpos) == (CellStatus.FOOD)
         )
         {
-            position = newpos;
+            gridPosition = newpos;
         }
         grid.setCell(newpos, CellStatus.PLAYER);
         return grid;
     }
 
     public Grid moveDown(Grid grid){
-        Int2 newpos = position.addReturn(new Int2(0, 1));
+        Int2 newpos = gridPosition.addReturn(new Int2(0, 1));
         if (grid.getCellStatus(newpos) == (CellStatus.EMPTY) ||
                 grid.getCellStatus(newpos) == (CellStatus.FIRE) ||
                 grid.getCellStatus(newpos) == (CellStatus.FOOD)
         )
         {
-            position = newpos;
+            gridPosition = newpos;
         }
         grid.setCell(newpos, CellStatus.PLAYER);
         return grid;
     }
 
     public Grid moveRight(Grid grid){
-        Int2 newpos = position.addReturn(new Int2(1, 0));
+        Int2 newpos = gridPosition.addReturn(new Int2(1, 0));
         if (grid.getCellStatus(newpos) == (CellStatus.EMPTY) ||
                 grid.getCellStatus(newpos) == (CellStatus.FIRE) ||
                 grid.getCellStatus(newpos) == (CellStatus.FOOD)
         )
         {
-            position = newpos;
+            gridPosition = newpos;
         }
         grid.setCell(newpos, CellStatus.PLAYER);
         return grid;
     }
 
     public Grid moveLeft(Grid grid){
-        Int2 newpos = position.addReturn(new Int2(-1, 0));
+        Int2 newpos = gridPosition.addReturn(new Int2(-1, 0));
         if (grid.getCellStatus(newpos) == (CellStatus.EMPTY) ||
                 grid.getCellStatus(newpos) == (CellStatus.FIRE) ||
                 grid.getCellStatus(newpos) == (CellStatus.FOOD)
         )
         {
-            position = newpos;
+            gridPosition = newpos;
         }
         grid.setCell(newpos, CellStatus.PLAYER);
         return grid;
     }
 
     public Grid spawnBomb(Grid grid){
-        Int2 spawnpos = position.addReturn(new Int2(0, 1));
+        Int2 spawnpos = gridPosition.addReturn(new Int2(0, 1));
         Bomb bomb = new Bomb (spawnpos);
         grid.setCell(spawnpos, CellStatus.BOMB);
         return grid;

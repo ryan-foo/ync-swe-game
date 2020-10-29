@@ -6,5 +6,5 @@ public interface Cell
 {
     boolean isDestroyable();
     boolean isCollidable();
-    Int2 getPosition();
+    Int2 getGridPosition();
 }

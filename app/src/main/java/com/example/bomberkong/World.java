@@ -142,8 +142,8 @@ public class World extends SurfaceView implements Runnable
         playerOne = new Player(context, grid, new Int2(2, 2), 1, cellResolution);
         playerTwo = new Player(context, grid, new Int2(4, 4), 2, cellResolution);
         food = new Food(context, grid, new Int2(3, 3), cellResolution);
-        grid.setCell(playerOne.getPosition(), CellStatus.PLAYER);
-        grid.setCell(playerTwo.getPosition(), CellStatus.PLAYER);
+        grid.setCell(playerOne.getGridPosition(), CellStatus.PLAYER);
+        grid.setCell(playerTwo.getGridPosition(), CellStatus.PLAYER);
 
         // Drawing objects
         mSurfaceHolder = getHolder();

@@ -29,7 +29,7 @@ public class Fire implements Cell
     /**
      * Returns the position of the fire
      */
-    public Int2 getPosition(){
+    public Int2 getGridPosition(){
         return this.position;
     }
 }

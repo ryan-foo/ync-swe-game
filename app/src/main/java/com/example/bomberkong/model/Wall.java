@@ -22,7 +22,7 @@ public class Wall implements Cell
         return this.collidable;
     }
     //Returns the Int2 position of the player
-    public Int2 getPosition(){
+    public Int2 getGridPosition(){
         return this.position;
     }
 }
