@@ -137,7 +137,7 @@ public class World extends SurfaceView implements Runnable
         // todo: we should instantiate playerOne and playerTwo with cellsize from gridToAbsolute
         // resolved: see below
 
-        grid = new Grid(numCellsWide, numCellsHigh, actualViewWidth, actualViewHeight);
+        grid = new Grid(context, numCellsWide, numCellsHigh, actualViewWidth, actualViewHeight);
         Int2 cellResolution = new Int2(actualViewWidth/numCellsWide, actualViewHeight/numCellsHigh);
         playerOne = new Player(context, grid, new Int2(2, 2), 1, cellResolution);
         playerTwo = new Player(context, grid, new Int2(4, 4), 2, cellResolution);
@@ -183,7 +183,6 @@ public class World extends SurfaceView implements Runnable
             if (!mPaused) {
                 if (updateRequired()) {
                     timesUpdated = timesUpdated + 1;
-                    Log.d("timesUpdated", String.valueOf(timesUpdated));
                     update();
                 }
             }

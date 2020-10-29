@@ -5,7 +5,6 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Paint;
-import android.graphics.Point;
 import android.util.Log;
 import android.view.MotionEvent;
 
@@ -76,7 +75,6 @@ public class Player implements Cell
     }
 
     // todo: movement needs to be conditional and check if the cell above is collidable or not.
-
     void move() {
         switch (heading) {
             case UP:
