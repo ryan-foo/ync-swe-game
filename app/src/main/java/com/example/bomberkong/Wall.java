@@ -7,7 +7,6 @@ public class Wall implements Cell
     private boolean destroyable = false;
     private boolean collidable = true;
     private Int2 position;
-    private String celltype = "wall";
 
     //Constructor class that take and Int2 position
     public Wall(Int2 position){

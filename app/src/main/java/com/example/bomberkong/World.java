@@ -20,15 +20,24 @@ import android.view.SurfaceView;
 import com.example.bomberkong.util.Int2;
 
 import java.io.IOException;
+import java.util.ArrayList;
 
 // credits for framework: John Horton
 
 public class World extends SurfaceView implements Runnable
 {
     // Objects for drawing
-    private SurfaceHolder mHolder;
+    private SurfaceHolder mSurfaceHolder;
     private Canvas mCanvas;
     private Paint mPaint;
+
+    private final boolean DEBUGGING = true;
+    private Grid grid;
+    private Player playerOne;
+    private Player playerTwo;
+    private Food food;
+    private int w; // world width
+    private int h; // world height
 
     // For smooth movement
     private long mFPS;
@@ -45,10 +54,6 @@ public class World extends SurfaceView implements Runnable
     public int mScoreP1 = 0;
     public int mScoreP2 = 0;
 
-    private Grid grid;
-    private Player player;
-    private Food food;
-
     // Sound
     private SoundPool mSP;
     private int mSpawn_ID = -1; // sound when fruit is spawned
@@ -58,7 +63,7 @@ public class World extends SurfaceView implements Runnable
 
     // Size in segments of the playable area
     private final int NUM_BLOCKS_WIDE = 20;
-    private int mNumBlocksHigh;
+    private int NUM_BLOCKS_HIGH = 10;
 
     // Threads and control variables
     private Thread mGameThread = null;
@@ -69,15 +74,17 @@ public class World extends SurfaceView implements Runnable
 
     private long mNextFrameTime;
 
-    public World(Context context, int x, int y){
+    public World(Context context, int x, int y) {
+
         super(context);
 
-        // work out how many pixels each block in the grid is
-        int blockSize = x / NUM_BLOCKS_WIDE;
-        // How many blocks of same size will fit into height
-        // Todo: This cannot be dynamic -- it has to be static since the grid itself is shared b/w two phones.
-        // Todo: What needs to be done is to determine the _aspect ratio_ and then talk about the block height accordingly
-        mNumBlocksHigh = y / blockSize;
+        this.w = x;
+        this.h = y;
+
+        // Size in segments of the playable area
+        final int NUM_BLOCKS_WIDE = 20;
+        final int NUM_BLOCKS_HIGH = 10;
+
 
         // initialize SoundPool
         if (Build.VERSION.SDK_INT > Build.VERSION_CODES.LOLLIPOP) {
@@ -115,17 +122,21 @@ public class World extends SurfaceView implements Runnable
             // Error
         }
 
-        // todo: grid should take blocksize
-        grid = new Grid(NUM_BLOCKS_WIDE, mNumBlocksHigh);
+        /**
+         * Initialize grid and players
+         */
 
-        food = new Food(context,
-                new Point(NUM_BLOCKS_WIDE,
-                        mNumBlocksHigh),
-        blockSize);
+        // todo: we should instantiate playerOne and playerTwo with cellsize from gridToAbsolute
+        grid = new Grid(NUM_BLOCKS_WIDE, NUM_BLOCKS_HIGH, x, y);
+        playerOne = new Player(context, grid, new Int2(2, 2), 1, new Int2(grid.getX(), grid.getY()));
+        playerTwo = new Player(context, grid, new Int2(4, 4), 2, new Int2(grid.getX(), grid.getY()));
+        grid.setCell(playerOne.getPosition(), CellStatus.PLAYER);
+        grid.setCell(playerTwo.getPosition(), CellStatus.PLAYER);
 
-        player = new Player(context,
-        new Point(NUM_BLOCKS_WIDE, mNumBlocksHigh),
-        blockSize);
+        // Drawing objects
+        mSurfaceHolder = getHolder();
+        mPaint = new Paint();
+
 
         // Initialize with values passed in as params
         mScreenX = x;
@@ -137,7 +148,7 @@ public class World extends SurfaceView implements Runnable
         mFontMargin = mScreenX / 75;
 
         // Initialize objects for drawing
-        mHolder = getHolder();
+        mSurfaceHolder = getHolder();
         mPaint = new Paint();
 
         startNewGame();
@@ -151,6 +162,8 @@ public class World extends SurfaceView implements Runnable
 
     @Override
     public void run() {
+        int timesUpdated = 0;
+        Log.d("Run", "I am running");
         while (mPlaying) {
             // What time is it at the start of the game loop?
             long frameStartTime = System.currentTimeMillis();
@@ -158,9 +171,10 @@ public class World extends SurfaceView implements Runnable
             // if game isn't paused, update 10 times a second
             if (!mPaused) {
                 if (updateRequired()) {
+                    timesUpdated = timesUpdated + 1;
+                    Log.d("timesUpdated", String.valueOf(timesUpdated));
                     update();
                 }
-                // Todo: detectCollisions (to 'kill player', or to 'destroy wall')
             }
 
             // after update, we can draw
@@ -186,10 +200,12 @@ public class World extends SurfaceView implements Runnable
         // reset grid
         this.grid.reset();
         // Todo: reset to player original positions depending on player number
-        player.reset(NUM_BLOCKS_WIDE, mNumBlocksHigh);
+        playerOne.reset(NUM_BLOCKS_WIDE, NUM_BLOCKS_HIGH);
+        playerTwo.reset(NUM_BLOCKS_WIDE, NUM_BLOCKS_HIGH);
 
         // banana should be spawned
-        food.spawn();
+        ArrayList<Int2> emptyCells = grid.getEmpty();
+        food.spawn(emptyCells, NUM_BLOCKS_WIDE, NUM_BLOCKS_HIGH);
 
         // Reset score
         mScoreP1 = 0;
@@ -197,14 +213,12 @@ public class World extends SurfaceView implements Runnable
 
         // setup next frame time
         mNextFrameTime = System.currentTimeMillis();
-
-        generateGame();
     }
 
     void draw() {
-        if (mHolder.getSurface().isValid()) {
+        if (mSurfaceHolder.getSurface().isValid()) {
             // Lock Canvas to draw
-            mCanvas = mHolder.lockCanvas();
+            mCanvas = mSurfaceHolder.lockCanvas();
 
             // Fill screen with solid colour, Todo: replace with grid drawing
             mCanvas.drawColor(Color.argb(255, 26, 128, 182));
@@ -217,9 +231,10 @@ public class World extends SurfaceView implements Runnable
 
             // Draw food, player
             food.draw(mCanvas, mPaint);
-            player.draw(mCanvas, mPaint);
+            playerOne.draw(mCanvas, mPaint);
+            playerTwo.draw(mCanvas, mPaint);
 
-            // Draw bombs, fire, walls
+            // Draw bombs, fire
 
             // Choose font size
             mPaint.setTextSize(mFontSize);
@@ -236,74 +251,44 @@ public class World extends SurfaceView implements Runnable
             }
 
             // Display drawing on screen
-            mHolder.unlockCanvasAndPost(mCanvas);
+            mSurfaceHolder.unlockCanvasAndPost(mCanvas);
         }
     }
 
     public void update() {
-//        this.grid.reset();
-//        this.grid.setCell(player.getPosition(), CellStatus.PLAYER);
-
-        // todo: Move player and update Grid if there is input
-        // todo: also, have a cooldown based on FPS how many fast a player can move... (use
-        
-
-        // Did player eat the food?
-        if (player.checkPickup(food.getLocation())) {
-            // todo: multi-player. for now, all pickups will be given to player 1.
-            food.spawn();
+        // Did player eat food?
+        if (playerOne.checkPickup(food.getLocation())) {
+            ArrayList<Int2> emptyCells = grid.getEmpty();
+            food.spawn(emptyCells, NUM_BLOCKS_WIDE, NUM_BLOCKS_HIGH);
             mScoreP1 = mScoreP1 + 1;
             mSP.play(mEat_ID, 1, 1, 0, 0, 1);
         }
 
-        // Did player die? (todo: player cannot die yet.)
-        if (player.detectDeath()) {
+        if (playerTwo.checkPickup(food.getLocation())) {
+            ArrayList<Int2> emptyCells = grid.getEmpty();
+            food.spawn(emptyCells, NUM_BLOCKS_WIDE, NUM_BLOCKS_HIGH);
+            mScoreP2 = mScoreP2 + 1;
+            mSP.play(mEat_ID, 1, 1, 0, 0, 1);
+        }
+
+        // Did player die?
+        if (playerOne.detectDeath()) {
             mSP.play(mDeathID, 1, 1, 0, 0, 1);
+            pause();
+            Log.d("World", "Player one dies");
+            // Say player 2 wins, timeout, then start new game in 5 secs
+            startNewGame();
         }
 
-
-        generateGame();
-    }
-
-    @Override
-    public boolean onTouchEvent(MotionEvent motionEvent) {
-        switch (motionEvent.getAction() & MotionEvent.ACTION_MASK) {
-            case MotionEvent.ACTION_UP:
-                if (mPaused) {
-                    mPaused = false;
-                    startNewGame();
-                    return true;
-                }
-
-                player.switchHeading(motionEvent);
-                break;
-            default:
-                break;
-        }
-        return true;
-    }
-
-    public Grid returnGrid() {
-        return this.grid;
-    }
-
-    public void generateGame(){
-        for (int y = 0; y < grid.getH(); y ++){
-            for (int x = 0; x < grid.getW(); x ++){
-                CellStatus cellstatus = grid.getCellStatus(new Int2(x, y));
-                if (cellstatus == CellStatus.WALL){
-                    System.out.print("_ ");
-                } else if (cellstatus == CellStatus.PLAYER){
-                    System.out.print("P ");
-                } else if (cellstatus == CellStatus.BOMB){
-                    System.out.print("B ");
-                }else{
-                    System.out.print("..");
-                }
-            }
-            System.out.println();
+        if (playerTwo.detectDeath()) {
+            mSP.play(mDeathID, 1, 1, 0, 0, 1);
+            pause();
+            Log.d("World", "Player two dies");
+            // Say player 1 wins, timeout, then start new game in 5 secs
+            startNewGame();
         }
     }
+
 
     // this creates the blocky movement we desire
     public boolean updateRequired() {
@@ -321,23 +306,24 @@ public class World extends SurfaceView implements Runnable
         return false;
 
     }
-
-    public void movePlayer(String dir){
-        if (dir == "w"){
-            grid = player.moveUp(grid);
-        } else if (dir == "s"){
-            grid = player.moveDown(grid);
-        } else if (dir == "a"){
-            grid = player.moveLeft(grid);
-        } else if (dir == "d"){
-            grid = player.moveRight(grid);
+    @Override
+    public boolean onTouchEvent(MotionEvent motionEvent) {
+        switch (motionEvent.getAction() & MotionEvent.ACTION_MASK) {
+            case MotionEvent.ACTION_UP:
+                if (mPaused) {
+                    Log.d("Pausing", "Unpaused in World");
+                    mPaused = false;
+                    startNewGame();
+                    return true;
+                }
+                Log.d("Touch","onTouchEvent in World");
+                // todo: Check if motion event is coming from Player 1 or 2, and handle accordingly
+                playerOne.switchHeading(motionEvent);
+                break;
+            default:
+                break;
         }
-        update();
-    }
-
-    public void bomb() {
-        this.grid = player.spawnBomb(grid);
-        generateGame();
+        return true;
     }
 
     public void pause() {
@@ -354,15 +340,6 @@ public class World extends SurfaceView implements Runnable
         mPlaying = true;
         mGameThread = new Thread(this);
         mGameThread.start();
-    }
-
-    private void detectCollisions() {
-        // has player come into contact with fire? (if so, kill him!)
-
-        // has the player come into contact with a banana? (if so, increase points and destroy the banana)
-
-        // has player hit a grid he is not allowed to enter
-
     }
 
 }

@@ -3,6 +3,6 @@ package com.example.bomberkong;
 
 public enum CellStatus
 {
-    EMPTY, WALL, PLAYER, FIRE, BOMB;
+    EMPTY, WALL, PLAYER, FIRE, BOMB, FOOD;
 }
 
