@@ -116,7 +116,7 @@ public class World extends SurfaceView implements Runnable
         }
 
         // todo: grid should take blocksize
-        grid = new Grid(5, 5);
+        grid = new Grid(NUM_BLOCKS_WIDE, mNumBlocksHigh);
 
         food = new Food(context,
                 new Point(NUM_BLOCKS_WIDE,
@@ -148,6 +148,7 @@ public class World extends SurfaceView implements Runnable
     // the run method is continuously called by Android // because we implemented the Runnable interface
     // Calling mGameThread.join();
     // will stop the thread
+
     @Override
     public void run() {
         while (mPlaying) {
@@ -212,6 +213,7 @@ public class World extends SurfaceView implements Runnable
             mPaint.setColor(Color.argb(255, 255, 255, 255));
 
             // Draw Grid
+            grid.draw(mCanvas, mPaint);
 
             // Draw food, player
             food.draw(mCanvas, mPaint);

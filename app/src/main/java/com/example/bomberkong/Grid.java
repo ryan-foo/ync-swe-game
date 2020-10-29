@@ -1,5 +1,8 @@
 package com.example.bomberkong;
 
+import android.graphics.Canvas;
+import android.graphics.Paint;
+
 import com.example.bomberkong.util.Int2;
 
 import java.util.Map;
@@ -58,14 +61,31 @@ public class Grid
     public void setCallBack(Callback c) { callback = c; }
     public void addCallBack (Callback c )  { this.callback = c; }
 
-    /**
-     * This function is used by the Grid to callback
-     * its observer (GridRenderer so far)
-     */
-    protected void castChanges() {
-        if (callback != null) {callback.gridChanged(this);}
-    }
+    void draw(Canvas canvas, Paint paint) {
+        if (canvas == null) return;
 
+        canvas.drawARGB(255, 255, 255, 255);
+
+        Paint gridPaint = new Paint();
+        gridPaint.setStyle(Paint.Style.FILL_AND_STROKE);
+        gridPaint.setStrokeWidth(10);
+        gridPaint.setARGB(135, 0, 0, 0);
+
+
+        int xcount = getW();
+        int ycount = getH();
+
+        for (int n = 0; n < xcount; n++) {
+            float xpos = n * canvas.getWidth() / xcount;
+            canvas.drawLine(canvas.getWidth() - xpos, 0, canvas.getWidth() - xpos, canvas.getHeight(), gridPaint);
+        }
+        // Can you draw inside the grid? Draw BitMap
+        // If CellStatus BitMap
+        for (int n = 0; n < ycount; n++) {
+            float ypos = n * canvas.getHeight() / ycount;
+            canvas.drawLine(canvas.getWidth() - 0, ypos, canvas.getWidth() - canvas.getWidth(), ypos, gridPaint);
+        }
+    }
 
     public void reset(){
         for (int x = 0; x < getW(); x ++){
