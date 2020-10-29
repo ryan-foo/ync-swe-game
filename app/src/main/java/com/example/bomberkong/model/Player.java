@@ -22,6 +22,7 @@ public class Player implements Cell
     private int cellWidth;
     private int cellHeight;
 
+    private Context context;
     private Grid grid;
     private int playerNum;
     private Heading heading = Heading.DOWN;
@@ -39,6 +40,7 @@ public class Player implements Cell
      * Constructor for objects of class Player
      */
     public Player(Context context, Grid grid, Int2 gridPosition, int playerNum, Int2 cellSize) {
+        this.context = context;
         this.gridPosition = gridPosition;
         this.playerNum = playerNum;
         this.grid = grid;
@@ -153,13 +155,15 @@ public class Player implements Cell
     // if they tap in between, then it will try for the direction with the least distance.
     // todo: and finally, if they tap on the monkey itself, it will call the place bomb method
     public void switchHeading(MotionEvent motionEvent) {
-        Log.d("switchHeading", "motion event recieved");
+        Log.d("switchHeading", "motion event received");
         float touch_x = motionEvent.getX();
         float touch_y = motionEvent.getY();
 
         /**
          * Grid positions
          * */
+
+        // We need to handle the place bomb function here too -- if x > 3/4 of screen, then call place bomb, otherwise handle as per normal
 
         Int2 gridPosition = grid.absoluteToGridPos(touch_x, touch_y, grid.getNumCellsWide(), grid.getNumCellsHigh(), grid.getActualViewWidth(), grid.getActualViewHigh());
 
@@ -299,10 +303,30 @@ public class Player implements Cell
     }
 
     public Grid spawnBomb(Grid grid){
-        Int2 spawnpos = gridPosition.addReturn(new Int2(0, 1));
-        Bomb bomb = new Bomb (spawnpos);
+        Int2 spawnpos = gridPosition;
+        // switch based on position you're facing
+        switch (heading) {
+            case UP:
+                spawnpos = gridPosition.addReturn(new Int2(0, -1));
+                break;
+
+            case DOWN:
+                spawnpos = gridPosition.addReturn(new Int2(0, 1));
+                break;
+
+            case LEFT:
+                spawnpos = gridPosition.addReturn(new Int2(-1, 0));
+                break;
+
+            case RIGHT:
+                spawnpos = gridPosition.addReturn(new Int2(1, 0));
+                break;
+        }
+
+        if (grid.getCellStatus(spawnpos) == (CellStatus.EMPTY)) {
+            Bomb bomb = new Bomb(context, spawnpos);
+        }
         grid.setCell(spawnpos, CellStatus.BOMB);
         return grid;
     }
 }
-
