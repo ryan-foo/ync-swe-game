@@ -49,9 +49,9 @@ public class World extends SurfaceView implements Runnable
     private Fire fire;
 
     // Every bomb spawned will be added to bombList, and we can get their pos and time to tick down
-    private ArrayList<Bomb> bombList;
+    private ArrayList<Bomb> bombList = new ArrayList<Bomb>();
     // Every fire spawned will be added to fireList, and we can get their pos and time to tick down
-    private ArrayList<Fire> fireList;
+    private ArrayList<Fire> fireList = new ArrayList<Fire>();
 
     private int actualViewWidth;
     private int actualViewHeight;
@@ -229,7 +229,6 @@ public class World extends SurfaceView implements Runnable
         ArrayList<Int2> emptyCells = grid.getEmpty();
         food.spawn(emptyCells, numCellsWide, numCellsHigh);
 
-
         // Reset score
         mScoreP1 = 0;
         mScoreP2 = 0;
@@ -257,12 +256,17 @@ public class World extends SurfaceView implements Runnable
             playerTwo.draw(mCanvas, mPaint);
 
 //             Draw bombs, fire
-            for (Bomb bomb: bombList) {
-                bomb.draw(mCanvas, mPaint);
-            }
+            Iterator<Bomb> itr = bombList.iterator();
 
-            for (Fire fire: fireList) {
-                fire.draw(mCanvas, mPaint);
+            while (itr.hasNext()) {
+                Bomb bomb = itr.next();
+                bomb.draw(mCanvas, mPaint);
+                }
+
+            if (fireList.size() > 0) {
+                for (Fire fire : fireList) {
+                    fire.draw(mCanvas, mPaint);
+                }
             }
 
             // Choose font size
@@ -328,24 +332,32 @@ public class World extends SurfaceView implements Runnable
          */
 
         Iterator<Bomb> itr = bombList.iterator();
+
         while (itr.hasNext()) {
+            Log.d("Length of bombList", String.valueOf(bombList.size()));
             Bomb bomb = itr.next();
             bomb.ticksToExplode -= 1;
             if (bomb.ticksToExplode == 0) {
                 bomb.explode(grid);
                 itr.remove();
                 mSP.play(mBombID, 1, 1, 0, 0, 1);
+
             }
         }
 
-//         all fires in fire list should tick down
-        for (Fire fire: fireList) {
-            fire.ticksToFade -= 1;
-            // if there are any fires with 0 ticks left, change their space to Empty
-            if (fire.ticksToFade == 0) {
-                fireList.remove(fire);
-                grid.setCell(fire.getGridPosition(), CellStatus.EMPTY);
-                mSP.play(mSpawn_ID, 1, 1, 0, 0, 1);
+
+        if (fireList.size() > 0) {
+            Log.d("Fire", "There is at least one fire.");
+
+            //  all fires in fire list should tick down
+            for (Fire fire : fireList) {
+                fire.ticksToFade -= 1;
+                // if there are any fires with 0 ticks left, change their space to Empty
+                if (fire.ticksToFade == 0) {
+                    fireList.remove(fire);
+                    grid.setCell(fire.getGridPosition(), CellStatus.EMPTY);
+                    mSP.play(mSpawn_ID, 1, 1, 0, 0, 1);
+                }
             }
         }
     }
@@ -378,8 +390,7 @@ public class World extends SurfaceView implements Runnable
                 }
                 Log.d("Touch","onTouchEvent in World");
                 // todo: Check if motion event is coming from Player 1 or 2, and handle accordingly
-                playerOne.switchHeading(motionEvent);
-
+                bombList = playerOne.switchHeading(motionEvent);
                 // todo: if it is placing a bomb: add this to bombList
 
                 break;

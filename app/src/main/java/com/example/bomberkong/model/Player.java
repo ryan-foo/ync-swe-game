@@ -153,7 +153,7 @@ public class Player implements Cell
      */
     // todo: the logic here is pretty complex, but it should work as intended. might be worth refactoring.
     // todo: and finally, if they tap on the monkey itself, it will call the place bomb method
-    public void switchHeading(MotionEvent motionEvent) {
+    public ArrayList<Bomb> switchHeading(MotionEvent motionEvent) {
         float touch_x = motionEvent.getX();
         float touch_y = motionEvent.getY();
 
@@ -175,8 +175,8 @@ public class Player implements Cell
         // todo: movement should be seamless (i.e, if we hold down, we should keep moving / turning, and we should control how many times in a frame a player can move.
 
         if (touchGridPositionX == this.gridPosition.getX() && touchGridPositionY == this.gridPosition.getY()){
-//            heading = Heading.NEUTRAL;
-            spawnBomb(context, grid, cellSize, bombList);
+            bombList = spawnBomb(context, grid, cellSize, bombList);
+            heading = Heading.NEUTRAL;
         }
 
         // consider between moving right or up or down depending on which is higher or lower displacement
@@ -225,6 +225,7 @@ public class Player implements Cell
         }
         // and then move after changing direction
         move();
+        return bombList;
     }
 
     /**
@@ -316,6 +317,7 @@ public class Player implements Cell
 
     public ArrayList<Bomb> spawnBomb(Context context, Grid grid, Int2 cellSize, ArrayList<Bomb> bombList) {
         Int2 spawnpos = gridPosition;
+        Log.d("gridPosition", String.valueOf(gridPosition));
         // switch based on position you're facing
         switch (heading) {
             case UP:
@@ -340,6 +342,6 @@ public class Player implements Cell
             bombList.add(bomb);
             grid.setCell(spawnpos, CellStatus.BOMB);
         }
-        return bomb;
+        return bombList;
     }
 }
