@@ -243,25 +243,14 @@ public class World extends SurfaceView implements Runnable {
             mPaint.setColor(Color.argb(255, 255, 255, 255));
 
             // Draw Grid
-            grid.draw(mCanvas, mPaint);
+            grid.draw(mCanvas);
 
             // Draw food, player
             food.draw(mCanvas, mPaint);
             playerOne.draw(mCanvas, mPaint);
             playerTwo.draw(mCanvas, mPaint);
 
-            //Draw bombs, fire
-            Iterator<Bomb> itr = bombList.iterator();
-            while (itr.hasNext()) {
-                Bomb bomb = itr.next();
-                bomb.draw(mCanvas, mPaint);
-            }
-
-            if (fireList.size() > 0) {
-                for (Fire fire : fireList) {
-                    fire.draw(mCanvas, mPaint);
-                }
-            }
+            grid.drawElements(mCanvas);
 
             // Choose font size
             mPaint.setTextSize(mFontSize);

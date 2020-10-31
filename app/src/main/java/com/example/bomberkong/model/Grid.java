@@ -21,6 +21,8 @@ public class Grid
     private int actualViewWidth;
     private int actualViewHigh;
     private Bitmap mBitmapWall;
+    private Bitmap mBitmapBomb;
+    private Bitmap mBitmapFire;
 
     public Grid(Context context, int numCellsWide, int numCellsHigh, int actualViewWidth, int actualViewHeight){
         this.numCellsWide = numCellsWide; // width of the grid in grid blocks
@@ -28,8 +30,12 @@ public class Grid
         this.actualViewWidth = actualViewWidth; // width of the grid in absolute x
         this.actualViewHigh = actualViewHeight ; // width of the grid in absolute y
         this.gridMap = new HashMap<Int2, CellStatus>();
+        this.mBitmapBomb = BitmapFactory.decodeResource(context.getResources(), R.drawable.bomb);
+        this.mBitmapBomb = Bitmap.createScaledBitmap(mBitmapBomb, actualViewWidth/numCellsWide, actualViewHeight/numCellsHigh, false);
         this.mBitmapWall = BitmapFactory.decodeResource(context.getResources(), R.drawable.wall);
         this.mBitmapWall = Bitmap.createScaledBitmap(mBitmapWall, actualViewWidth/numCellsWide, actualViewHeight/numCellsHigh, false);
+        this.mBitmapFire = BitmapFactory.decodeResource(context.getResources(), R.drawable.fire);
+        this.mBitmapFire = Bitmap.createScaledBitmap(mBitmapFire, actualViewWidth/numCellsWide, actualViewHeight/numCellsHigh, false);
         reset();
     }
 
@@ -65,7 +71,32 @@ public class Grid
      * @param paint
      */
 
-    public void draw(Canvas canvas, Paint paint) {
+    public void drawElements(Canvas canvas){
+        if (canvas == null) return;
+        int xcount = getNumCellsWide();
+        int ycount = getNumCellsHigh();
+
+        for (int nx = 0; nx < xcount; nx++) {
+            for (int ny = 0; ny < ycount; ny++) {
+
+                float xpos1 = nx * canvas.getWidth() / xcount;
+                float ypos1 = ny * canvas.getHeight() / ycount;
+                Int2 pos = new Int2(nx, ny);
+                CellStatus status = getCellStatus(pos);
+
+                switch (status) {
+                    case BOMB:
+                        canvas.drawBitmap(mBitmapBomb, xpos1, ypos1, null);
+                        break;
+                    case FIRE:
+                        canvas.drawBitmap(mBitmapFire, xpos1, ypos1, null);
+                        break;
+                }
+            }
+        }
+    }
+
+    public void draw(Canvas canvas) {
         if (canvas == null) return;
 
         canvas.drawARGB(255, 255, 255, 255);
@@ -91,8 +122,6 @@ public class Grid
 
                 float xpos1 = nx * canvas.getWidth() / xcount;
                 float ypos1 = ny * canvas.getHeight() / ycount;
-                float xpos2 = (nx + 1) * canvas.getWidth() / xcount;
-                float ypos2 = (ny + 1) * canvas.getHeight() / ycount;
                 Int2 pos = new Int2(nx, ny);
                 CellStatus status = getCellStatus(pos);
 
