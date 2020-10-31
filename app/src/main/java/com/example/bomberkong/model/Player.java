@@ -173,7 +173,6 @@ public class Player implements Cell
 
         // todo: movement should also validate if the desired grid position is non-collidable!
         // todo: movement should be seamless (i.e, if we hold down, we should keep moving / turning, and we should control how many times in a frame a player can move.
-
         if (touchGridPositionX == this.gridPosition.getX() && touchGridPositionY == this.gridPosition.getY()){
             bombList = spawnBomb(context, grid, cellSize, bombList);
             heading = Heading.NEUTRAL;
@@ -271,7 +270,6 @@ public class Player implements Cell
                 grid.getCellStatus(newpos) == (CellStatus.FIRE) ||
                 grid.getCellStatus(newpos) == (CellStatus.FOOD) ||
                 grid.getCellStatus(newpos) == (CellStatus.BOMB)
-
         )
         {
             gridPosition = newpos;
@@ -286,7 +284,6 @@ public class Player implements Cell
                 grid.getCellStatus(newpos) == (CellStatus.FIRE) ||
                 grid.getCellStatus(newpos) == (CellStatus.FOOD) ||
                 grid.getCellStatus(newpos) == (CellStatus.BOMB)
-
         )
         {
             gridPosition = newpos;
@@ -301,7 +298,6 @@ public class Player implements Cell
                 grid.getCellStatus(newpos) == (CellStatus.FIRE) ||
                 grid.getCellStatus(newpos) == (CellStatus.FOOD) ||
                 grid.getCellStatus(newpos) == (CellStatus.BOMB)
-
         )
         {
             gridPosition = newpos;
@@ -322,7 +318,6 @@ public class Player implements Cell
 
     public ArrayList<Bomb> spawnBomb(Context context, Grid grid, Int2 cellSize, ArrayList<Bomb> bombList) {
         Int2 spawnpos = gridPosition;
-        Log.d("gridPosition", String.valueOf(gridPosition));
         // switch based on position you're facing
         switch (heading) {
             case UP:

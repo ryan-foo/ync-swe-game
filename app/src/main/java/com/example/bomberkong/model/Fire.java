@@ -9,9 +9,13 @@ import android.graphics.Paint;
 import com.example.bomberkong.R;
 import com.example.bomberkong.util.Int2;
 
+import static com.example.bomberkong.R.drawable.bomb;
+import static com.example.bomberkong.R.drawable.fire;
+
 public class Fire implements Cell
 {
     public static Int2 position;
+    private final Context context;
     private int cellWidth;
     private int cellHeight;
     private Bitmap mBitmapFire;
@@ -20,16 +24,15 @@ public class Fire implements Cell
     // todo: continue from here
 
     public Fire(Context context, Int2 position, Int2 cellSize) {
+        this.context = context;
         this.position = position;
         cellWidth = cellSize.x;
         cellHeight = cellSize.y;
 
-        mBitmapFire =
-                BitmapFactory.decodeResource(context.getResources(), R.drawable.monkey);
+        mBitmapFire = BitmapFactory.decodeResource(context.getResources(), fire);
         // Resize the bitmap
         // todo: gridPosToAbsolute
-        mBitmapFire =
-                Bitmap.createScaledBitmap(mBitmapFire, cellWidth, cellHeight, false);
+        mBitmapFire = Bitmap.createScaledBitmap(mBitmapFire, cellWidth, cellHeight, false);
     }
 
     @Override

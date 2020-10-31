@@ -30,9 +30,9 @@ import java.util.ArrayList;
 
 // credits for framework: John Horton
 
-public class World extends SurfaceView implements Runnable
-{
+public class World extends SurfaceView implements Runnable {
     private static final String TAG = "World";
+
     // Objects for drawing
     private SurfaceHolder mSurfaceHolder;
     private Canvas mCanvas;
@@ -45,14 +45,12 @@ public class World extends SurfaceView implements Runnable
     private Player playerOne;
     private Player playerTwo;
     private Food food;
-    private Bomb bomb;
     private Fire fire;
 
     // Every bomb spawned will be added to bombList, and we can get their pos and time to tick down
     private ArrayList<Bomb> bombList = new ArrayList<Bomb>();
     // Every fire spawned will be added to fireList, and we can get their pos and time to tick down
     private ArrayList<Fire> fireList = new ArrayList<Fire>();
-
     private int actualViewWidth;
     private int actualViewHeight;
     private int numCellsWide;
@@ -91,8 +89,9 @@ public class World extends SurfaceView implements Runnable
 
     /**
      * This is the constructor method for World, which acts as the game engine
-     * @param context is passed from MainActivity
-     * @param actualViewWidth represents the actual width of the entire view
+     *
+     * @param context          is passed from MainActivity
+     * @param actualViewWidth  represents the actual width of the entire view
      * @param actualViewHeight represents the actual height of the entire view
      */
 
@@ -113,17 +112,16 @@ public class World extends SurfaceView implements Runnable
         if (Build.VERSION.SDK_INT > Build.VERSION_CODES.LOLLIPOP) {
             AudioAttributes audioAttributes =
                     new AudioAttributes.Builder()
-                    .setUsage(AudioAttributes.USAGE_MEDIA)
-                    .setContentType(AudioAttributes
-                    .CONTENT_TYPE_SONIFICATION)
-                    .build();
+                            .setUsage(AudioAttributes.USAGE_MEDIA)
+                            .setContentType(AudioAttributes
+                                    .CONTENT_TYPE_SONIFICATION)
+                            .build();
 
             mSP = new SoundPool.Builder()
                     .setMaxStreams(5)
                     .setAudioAttributes(audioAttributes)
                     .build();
-        }
-        else {
+        } else {
             mSP = new SoundPool(5, AudioManager.STREAM_MUSIC, 0);
         }
         try {
@@ -136,12 +134,11 @@ public class World extends SurfaceView implements Runnable
             mEat_ID = mSP.load(descriptor, 0);
             // bomb explode sound
             descriptor = assetManager.openFd("bomb.ogg");
-            mBombID =  mSP.load(descriptor, 0);
+            mBombID = mSP.load(descriptor, 0);
             //death sound
             descriptor = assetManager.openFd("chimchar.ogg");
             mDeathID = mSP.load(descriptor, 0);
-        }
-        catch (IOException e) {
+        } catch (IOException e) {
             // Error
         }
 
@@ -152,14 +149,12 @@ public class World extends SurfaceView implements Runnable
         // resolved: see below
 
         grid = new Grid(context, numCellsWide, numCellsHigh, actualViewWidth, actualViewHeight);
-        cellResolution = new Int2(actualViewWidth/numCellsWide, actualViewHeight/numCellsHigh);
+        cellResolution = new Int2(actualViewWidth / numCellsWide, actualViewHeight / numCellsHigh);
         playerOne = new Player(context, grid, new Int2(2, 2), 1, cellResolution, bombList);
         playerTwo = new Player(context, grid, new Int2(4, 4), 2, cellResolution, bombList);
         food = new Food(context, new Int2(3, 3), cellResolution);
         bombList = new ArrayList<Bomb>();
         fireList = new ArrayList<Fire>();
-        bombList.add(new Bomb(context, new Int2(5, 5), cellResolution));
-        fireList.add(new Fire(context, new Int2(7, 7), cellResolution));
         grid.setCell(playerOne.getGridPosition(), CellStatus.PLAYER);
         grid.setCell(playerTwo.getGridPosition(), CellStatus.PLAYER);
 
@@ -173,7 +168,7 @@ public class World extends SurfaceView implements Runnable
         mScreenY = actualViewHeight;
 
         // 5% of width
-        mFontSize = mScreenX / 20;
+        mFontSize = mScreenX / 21;
         // 1.5% of width
         mFontMargin = mScreenX / 75;
 
@@ -213,12 +208,12 @@ public class World extends SurfaceView implements Runnable
                 // update methods of the grid next frame/loop
                 mFPS = MILLI_IN_SECONDS / timeThisFrame;
 
-            // we will use mSpeed / mFPS to determine how fast players move on the screen
+                // we will use mSpeed / mFPS to determine how fast players move on the screen
             }
         }
     }
 
-    public void startNewGame(){
+    public void startNewGame() {
         // reset grid
         this.grid.reset();
         // Todo: reset to player original positions depending on player number
@@ -255,13 +250,12 @@ public class World extends SurfaceView implements Runnable
             playerOne.draw(mCanvas, mPaint);
             playerTwo.draw(mCanvas, mPaint);
 
-//             Draw bombs, fire
+            //Draw bombs, fire
             Iterator<Bomb> itr = bombList.iterator();
-
             while (itr.hasNext()) {
                 Bomb bomb = itr.next();
                 bomb.draw(mCanvas, mPaint);
-                }
+            }
 
             if (fireList.size() > 0) {
                 for (Fire fire : fireList) {
@@ -283,7 +277,6 @@ public class World extends SurfaceView implements Runnable
             if (mPaused) {
                 mPaint.setColor(Color.argb(255, 0, 0, 0));
                 mPaint.setTextSize(250);
-
                 mCanvas.drawText("Tap to begin!", 200, 700, mPaint);
             }
 
@@ -332,34 +325,28 @@ public class World extends SurfaceView implements Runnable
          */
 
         Iterator<Bomb> itr = bombList.iterator();
-
         while (itr.hasNext()) {
-            Log.d("Length of bombList", String.valueOf(bombList.size()));
             Bomb bomb = itr.next();
             bomb.ticksToExplode -= 1;
             if (bomb.ticksToExplode == 0) {
-                bomb.explode(grid);
+                bomb.explode(this, fireList);
                 itr.remove();
                 mSP.play(mBombID, 1, 1, 0, 0, 1);
-
             }
         }
 
-
-        if (fireList.size() > 0) {
-            Log.d("Fire", "There is at least one fire.");
-
-            //  all fires in fire list should tick down
-            for (Fire fire : fireList) {
-                fire.ticksToFade -= 1;
-                // if there are any fires with 0 ticks left, change their space to Empty
-                if (fire.ticksToFade == 0) {
-                    fireList.remove(fire);
-                    grid.setCell(fire.getGridPosition(), CellStatus.EMPTY);
-                    mSP.play(mSpawn_ID, 1, 1, 0, 0, 1);
-                }
+        Iterator<Fire> fitr = fireList.iterator();
+        while (fitr.hasNext()) {
+            Fire fire = fitr.next();
+            fire.ticksToFade -= 1;
+            if (fire.ticksToFade == 0) {
+                fitr.remove();
             }
         }
+    }
+
+    public Grid getGrid(){
+        return this.grid;
     }
 
     // this creates the blocky movement we desire
@@ -392,7 +379,6 @@ public class World extends SurfaceView implements Runnable
                 // todo: Check if motion event is coming from Player 1 or 2, and handle accordingly
                 bombList = playerOne.switchHeading(motionEvent);
                 // todo: if it is placing a bomb: add this to bombList
-
                 break;
             default:
                 break;
