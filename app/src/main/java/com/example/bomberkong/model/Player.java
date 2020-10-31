@@ -254,8 +254,7 @@ public class Player implements Cell
         Int2 newpos = gridPosition.addReturn(new Int2(0, -1));
         if (grid.getCellStatus(newpos) == (CellStatus.EMPTY) ||
                 grid.getCellStatus(newpos) == (CellStatus.FIRE) ||
-                grid.getCellStatus(newpos) == (CellStatus.FOOD) ||
-                grid.getCellStatus(newpos) == (CellStatus.BOMB)
+                grid.getCellStatus(newpos) == (CellStatus.FOOD)
         )
         {
             gridPosition = newpos;
@@ -268,8 +267,7 @@ public class Player implements Cell
         Int2 newpos = gridPosition.addReturn(new Int2(0, 1));
         if (grid.getCellStatus(newpos) == (CellStatus.EMPTY) ||
                 grid.getCellStatus(newpos) == (CellStatus.FIRE) ||
-                grid.getCellStatus(newpos) == (CellStatus.FOOD) ||
-                grid.getCellStatus(newpos) == (CellStatus.BOMB)
+                grid.getCellStatus(newpos) == (CellStatus.FOOD)
         )
         {
             gridPosition = newpos;
@@ -282,8 +280,7 @@ public class Player implements Cell
         Int2 newpos = gridPosition.addReturn(new Int2(1, 0));
         if (grid.getCellStatus(newpos) == (CellStatus.EMPTY) ||
                 grid.getCellStatus(newpos) == (CellStatus.FIRE) ||
-                grid.getCellStatus(newpos) == (CellStatus.FOOD) ||
-                grid.getCellStatus(newpos) == (CellStatus.BOMB)
+                grid.getCellStatus(newpos) == (CellStatus.FOOD)
         )
         {
             gridPosition = newpos;
@@ -296,8 +293,7 @@ public class Player implements Cell
         Int2 newpos = gridPosition.addReturn(new Int2(-1, 0));
         if (grid.getCellStatus(newpos) == (CellStatus.EMPTY) ||
                 grid.getCellStatus(newpos) == (CellStatus.FIRE) ||
-                grid.getCellStatus(newpos) == (CellStatus.FOOD) ||
-                grid.getCellStatus(newpos) == (CellStatus.BOMB)
+                grid.getCellStatus(newpos) == (CellStatus.FOOD)
         )
         {
             gridPosition = newpos;
@@ -338,7 +334,6 @@ public class Player implements Cell
         }
 
         if (grid.getCellStatus(spawnpos) == (CellStatus.EMPTY)) {
-            // todo: what is going on here? figure it out and spawn a bomb man.
             bomb = new Bomb(context, spawnpos, cellSize);
             bombList.add(bomb);
             grid.setCell(spawnpos, CellStatus.BOMB);
