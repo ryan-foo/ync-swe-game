@@ -4,4 +4,6 @@
     <string name="home_multi">Multiplayer</string>
     <string name="home_how_to">How To Play</string>
     <string name="home_app_name">BOMBER KONG</string>
+    <string name="title_activity_how_to_play">ScrollingActivity</string>
+    <string name="action_settings">Settings</string>
 </resources>

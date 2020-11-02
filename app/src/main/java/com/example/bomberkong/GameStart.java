@@ -2,13 +2,14 @@ package com.example.bomberkong;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 
-public class GameStart extends AppCompatActivity {
+public class GameStart extends Activity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -21,9 +22,7 @@ public class GameStart extends AppCompatActivity {
         single_player.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(Intent.ACTION_MAIN);
-                intent.addCategory(Intent.CATEGORY_HOME);
-                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                Intent intent = new Intent(GameStart.this, MainActivity.class);
                 startActivity(intent);
             }
         });
@@ -32,12 +31,19 @@ public class GameStart extends AppCompatActivity {
         multi_player.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(GameStart.this, MultiPlayerRoom.class);
+                Intent intent = new Intent(GameStart.this, HowToPlay.class);
                 startActivity(intent);
             }
         });
 
-        Button
+        Button how_to_play = (Button) findViewById(R.id.button3);
+        how_to_play.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(GameStart.this, HowToPlay.class);
+                startActivity(intent);
+            }
+        });
     }
 
 
