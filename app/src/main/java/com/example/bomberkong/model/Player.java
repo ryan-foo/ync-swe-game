@@ -15,6 +15,9 @@ import java.util.ArrayList;
 
 public class Player implements Cell
 {
+    private final String playerNumControlled;
+    private final int playerNum;
+
     // What direction is the player facing?
     private enum Heading {
         UP, DOWN, LEFT, RIGHT, NEUTRAL;
@@ -25,16 +28,19 @@ public class Player implements Cell
 
     private Context context;
     private Grid grid;
-    private int playerNum;
     private Bomb bomb;
     private Int2 cellSize;
     private ArrayList<Bomb> bombList;
     private Heading heading = Heading.DOWN;
 
-    private Bitmap mBitmapHeadRight;
-    private Bitmap mBitmapHeadLeft;
-    private Bitmap mBitmapHeadUp;
-    private Bitmap mBitmapHeadDown;
+    private Bitmap mBitmapHeadRightOne;
+    private Bitmap mBitmapHeadLeftOne;
+    private Bitmap mBitmapHeadUpOne;
+    private Bitmap mBitmapHeadDownOne;
+    private Bitmap mBitmapHeadRightTwo;
+    private Bitmap mBitmapHeadLeftTwo;
+    private Bitmap mBitmapHeadUpTwo;
+    private Bitmap mBitmapHeadDownTwo;
     private Bitmap mBitmapNeutral;
 
     private boolean destroyable = true;
@@ -44,10 +50,11 @@ public class Player implements Cell
     /**
      * Constructor for objects of class Player
      */
-    public Player(Context context, Grid grid, Int2 gridPosition, int playerNum, Int2 cellSize, ArrayList<Bomb> bombList) {
+    public Player(Context context, Grid grid, Int2 gridPosition, int playerNum, Int2 cellSize, ArrayList<Bomb> bombList, String playerNumControlled) {
+        this.playerNum = playerNum;
+        this.playerNumControlled = playerNumControlled;
         this.context = context;
         this.gridPosition = gridPosition;
-        this.playerNum = playerNum;
         this.grid = grid;
         this.cellSize = cellSize;
         this.bombList = bombList;
@@ -57,27 +64,31 @@ public class Player implements Cell
         grid.setCell(gridPosition, CellStatus.PLAYER);
 
         // todo: take different resource based on Player Number
-        mBitmapHeadUp = BitmapFactory.decodeResource(context.getResources(), R.drawable.oneup);
-        mBitmapHeadDown = BitmapFactory.decodeResource(context.getResources(), R.drawable.onedown);
-        mBitmapHeadLeft = BitmapFactory.decodeResource(context.getResources(), R.drawable.oneleft);
-        mBitmapHeadRight = BitmapFactory.decodeResource(context.getResources(), R.drawable.oneright);
+        mBitmapHeadUpOne = BitmapFactory.decodeResource(context.getResources(), R.drawable.oneup);
+        mBitmapHeadDownOne = BitmapFactory.decodeResource(context.getResources(), R.drawable.onedown);
+        mBitmapHeadLeftOne = BitmapFactory.decodeResource(context.getResources(), R.drawable.oneleft);
+        mBitmapHeadRightOne = BitmapFactory.decodeResource(context.getResources(), R.drawable.oneright);
+        mBitmapHeadUpTwo = BitmapFactory.decodeResource(context.getResources(), R.drawable.twoup);
+        mBitmapHeadDownTwo = BitmapFactory.decodeResource(context.getResources(), R.drawable.twodown);
+        mBitmapHeadLeftTwo = BitmapFactory.decodeResource(context.getResources(), R.drawable.twoleft);
+        mBitmapHeadRightTwo = BitmapFactory.decodeResource(context.getResources(), R.drawable.tworight);
         mBitmapNeutral = BitmapFactory.decodeResource(context.getResources(), R.drawable.monkey);
 
         // todo: load different resource based on whether P1 or P2
-        mBitmapHeadUp = Bitmap.createScaledBitmap(mBitmapHeadUp, cellWidth, cellHeight, false);
-        mBitmapHeadDown = Bitmap.createScaledBitmap(mBitmapHeadDown, cellWidth, cellHeight, false);
-        mBitmapHeadLeft = Bitmap.createScaledBitmap(mBitmapHeadLeft, cellWidth, cellHeight, false);
-        mBitmapHeadRight = Bitmap.createScaledBitmap(mBitmapHeadRight, cellWidth, cellHeight, false);
+        mBitmapHeadUpOne = Bitmap.createScaledBitmap(mBitmapHeadUpOne, cellWidth, cellHeight, false);
+        mBitmapHeadDownOne = Bitmap.createScaledBitmap(mBitmapHeadDownOne, cellWidth, cellHeight, false);
+        mBitmapHeadLeftOne = Bitmap.createScaledBitmap(mBitmapHeadLeftOne, cellWidth, cellHeight, false);
+        mBitmapHeadRightOne = Bitmap.createScaledBitmap(mBitmapHeadRightOne, cellWidth, cellHeight, false);
+        mBitmapHeadUpTwo = Bitmap.createScaledBitmap(mBitmapHeadUpTwo, cellWidth, cellHeight, false);
+        mBitmapHeadDownTwo = Bitmap.createScaledBitmap(mBitmapHeadDownTwo, cellWidth, cellHeight, false);
+        mBitmapHeadLeftTwo = Bitmap.createScaledBitmap(mBitmapHeadLeftTwo, cellWidth, cellHeight, false);
+        mBitmapHeadRightTwo = Bitmap.createScaledBitmap(mBitmapHeadRightTwo, cellWidth, cellHeight, false);
         mBitmapNeutral = Bitmap.createScaledBitmap(mBitmapNeutral, cellWidth, cellHeight, false);
     }
 
     public void reset(int w, int h) {
         // Reset Heading
         heading = heading.DOWN;
-
-        // todo: Reset starting point based on whether Player 1 or Player 2
-        // Reset player position
-        // Start in top left, or bottom right
     }
 
     // todo: movement needs to be conditional and check if the cell above is collidable or not.
@@ -126,19 +137,35 @@ public class Player implements Cell
     public void draw(Canvas canvas, Paint paint) {
         switch (heading) {
             case UP:
-                canvas.drawBitmap(mBitmapHeadUp, gridPosition.x * cellWidth, gridPosition.y * cellHeight, paint);
+                if (playerNum == 1){
+                    canvas.drawBitmap(mBitmapHeadUpOne, gridPosition.x * cellWidth, gridPosition.y * cellHeight, paint);
+                } else {
+                    canvas.drawBitmap(mBitmapHeadUpTwo, gridPosition.x * cellWidth, gridPosition.y * cellHeight, paint);
+                }
                 break;
 
             case DOWN:
-                canvas.drawBitmap(mBitmapHeadDown, gridPosition.x * cellWidth, gridPosition.y * cellHeight, paint);
+                if (playerNum == 1){
+                    canvas.drawBitmap(mBitmapHeadDownOne, gridPosition.x * cellWidth, gridPosition.y * cellHeight, paint);
+                } else {
+                    canvas.drawBitmap(mBitmapHeadDownTwo, gridPosition.x * cellWidth, gridPosition.y * cellHeight, paint);
+                }
                 break;
 
             case LEFT:
-                canvas.drawBitmap(mBitmapHeadLeft, gridPosition.x * cellWidth, gridPosition.y * cellHeight, paint);
+                if (playerNum == 1){
+                    canvas.drawBitmap(mBitmapHeadLeftOne, gridPosition.x * cellWidth, gridPosition.y * cellHeight, paint);
+                } else {
+                    canvas.drawBitmap(mBitmapHeadLeftTwo, gridPosition.x * cellWidth, gridPosition.y * cellHeight, paint);
+                }
                 break;
 
             case RIGHT:
-                canvas.drawBitmap(mBitmapHeadRight, gridPosition.x * cellWidth, gridPosition.y * cellHeight, paint);
+                if (playerNum == 1){
+                    canvas.drawBitmap(mBitmapHeadRightOne, gridPosition.x * cellWidth, gridPosition.y * cellHeight, paint);
+                } else {
+                    canvas.drawBitmap(mBitmapHeadRightTwo, gridPosition.x * cellWidth, gridPosition.y * cellHeight, paint);
+                }
                 break;
 
             case NEUTRAL:
@@ -167,9 +194,6 @@ public class Player implements Cell
         // We need to handle the place bomb function here too -- if x > 3/4 of screen, then call place bomb, otherwise handle as per normal
 
         Int2 gridPosition = grid.absoluteToGridPos(touch_x, touch_y, grid.getNumCellsWide(), grid.getNumCellsHigh(), grid.getActualViewWidth(), grid.getActualViewHigh());
-
-        Log.d("currentpos", String.valueOf(gridPosition.x) + "," + String.valueOf(gridPosition.y));
-        Log.d("touchpos", String.valueOf(touchGridPositionX) + "," + String.valueOf(touchGridPositionY));
 
         // todo: movement should also validate if the desired grid position is non-collidable!
         // todo: movement should be seamless (i.e, if we hold down, we should keep moving / turning, and we should control how many times in a frame a player can move.

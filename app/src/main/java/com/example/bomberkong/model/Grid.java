@@ -68,7 +68,6 @@ public class Grid
      * The draw method in Grid is responsible for drawing both the Grid, empty cells and the walls. All other objects
      * draw themselves, and are called in World. This is because Grid contains overarching information about the game model / walls.
      * @param canvas
-     * @param paint
      */
 
     public void drawElements(Canvas canvas){
@@ -85,6 +84,8 @@ public class Grid
                 CellStatus status = getCellStatus(pos);
 
                 switch (status) {
+                    case EMPTY:
+                        break;
                     case BOMB:
                         canvas.drawBitmap(mBitmapBomb, xpos1, ypos1, null);
                         break;

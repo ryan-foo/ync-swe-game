@@ -3,8 +3,6 @@ package com.example.bomberkong.model;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.Canvas;
-import android.graphics.Paint;
 import android.util.Log;
 
 import com.example.bomberkong.R;
@@ -66,34 +64,25 @@ public class Bomb implements Cell
         CellStatus down = grid.getCellStatus(posDown);
 
         if (left == CellStatus.EMPTY || left == CellStatus.FOOD || left == CellStatus.PLAYER){
-            Log.d("fire", "left");
-            Fire fire = new Fire(context, posLeft, cellSize);
+            Fire fire = new Fire(context, grid,  posLeft, cellSize);
             fireList.add(fire);
             grid.setCell(posLeft, CellStatus.FIRE);
         }
         if (right == CellStatus.EMPTY || right == CellStatus.FOOD|| right == CellStatus.PLAYER){
-            Log.d("fire", "right");
             grid.setCell(posRight, CellStatus.FIRE);
-            Fire fire = new Fire(context, posRight, cellSize);
+            Fire fire = new Fire(context, grid, posRight, cellSize);
             fireList.add(fire);
         }
         if (up == CellStatus.EMPTY || up == CellStatus.FOOD || up == CellStatus.PLAYER){
-            Log.d("fire", "up");
             grid.setCell(posUp, CellStatus.FIRE);
-            Fire fire = new Fire(context, posUp, cellSize);
+            Fire fire = new Fire(context, grid, posUp, cellSize);
             fireList.add(fire);
         }
         if (down == CellStatus.EMPTY || down == CellStatus.FOOD || down == CellStatus.PLAYER){
-            Log.d("fire", "down");
             grid.setCell(posDown, CellStatus.FIRE);
-            Fire fire = new Fire(context, posDown, cellSize);
+            Fire fire = new Fire(context, grid, posDown, cellSize);
             fireList.add(fire);
         }
         // todo: If the fire touches the Monkey, end game;
-    }
-
-    public void draw(Canvas canvas, Paint paint) {
-        canvas.drawBitmap(mBitmapBomb,
-                position.getX() * cellWidth, position.getY() * cellHeight, paint);
     }
 }

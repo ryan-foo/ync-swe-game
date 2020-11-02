@@ -3,19 +3,16 @@ package com.example.bomberkong.model;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.Canvas;
-import android.graphics.Paint;
 
-import com.example.bomberkong.R;
 import com.example.bomberkong.util.Int2;
 
-import static com.example.bomberkong.R.drawable.bomb;
 import static com.example.bomberkong.R.drawable.fire;
 
 public class Fire implements Cell
 {
     public static Int2 position;
     private final Context context;
+    private final Grid grid;
     private int cellWidth;
     private int cellHeight;
     private Bitmap mBitmapFire;
@@ -23,7 +20,8 @@ public class Fire implements Cell
 
     // todo: continue from here
 
-    public Fire(Context context, Int2 position, Int2 cellSize) {
+    public Fire(Context context, Grid grid, Int2 position, Int2 cellSize) {
+        this.grid = grid;
         this.context = context;
         this.position = position;
         cellWidth = cellSize.x;
@@ -49,8 +47,7 @@ public class Fire implements Cell
         return this.position;
     }
 
-    public void draw(Canvas canvas, Paint paint) {
-        canvas.drawBitmap(mBitmapFire,
-                position.getX() * cellWidth, position.getY() * cellHeight, paint);
+    public void remove() {
+        grid.setCell(getGridPosition(), CellStatus.EMPTY);
     }
 }

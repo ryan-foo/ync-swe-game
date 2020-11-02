@@ -32,12 +32,14 @@ import java.util.ArrayList;
 
 public class World extends SurfaceView implements Runnable {
     private static final String TAG = "World";
+    private final String playerNumControlled;
 
     // Objects for drawing
     private SurfaceHolder mSurfaceHolder;
     private Canvas mCanvas;
     private Paint mPaint;
     private Paint scorePaint;
+
 
     // Instances of objects that will last throughout
     private Context context;
@@ -89,14 +91,16 @@ public class World extends SurfaceView implements Runnable {
 
     /**
      * This is the constructor method for World, which acts as the game engine
-     *
      * @param context          is passed from MainActivity
      * @param actualViewWidth  represents the actual width of the entire view
      * @param actualViewHeight represents the actual height of the entire view
+     * @param playerNumControlled is the number of the player that is currently being controlled
      */
 
-    public World(Context context, int actualViewWidth, int actualViewHeight) {
+    public World(Context context, int actualViewWidth, int actualViewHeight, String playerNumControlled) {
         super(context);
+        this.playerNumControlled = playerNumControlled;
+        Log.d(TAG, "Player controlled" + playerNumControlled);
 
         // Actual width/height of cells
         this.actualViewWidth = actualViewWidth;
@@ -106,8 +110,8 @@ public class World extends SurfaceView implements Runnable {
         numCellsWide = 20;
         numCellsHigh = 10;
 
-        /**
-         * Initialize soundpool
+        /*
+          Initialize soundpool
          */
         if (Build.VERSION.SDK_INT > Build.VERSION_CODES.LOLLIPOP) {
             AudioAttributes audioAttributes =
@@ -127,7 +131,6 @@ public class World extends SurfaceView implements Runnable {
         try {
             AssetManager assetManager = context.getAssets();
             AssetFileDescriptor descriptor;
-
             // Prepare sounds in memory
             // pickup food sound
             descriptor = assetManager.openFd("get_food.ogg");
@@ -145,13 +148,10 @@ public class World extends SurfaceView implements Runnable {
         /**
          * Initialize grid and players
          */
-        // todo: we should instantiate playerOne and playerTwo with cellsize from gridToAbsolute
-        // resolved: see below
-
         grid = new Grid(context, numCellsWide, numCellsHigh, actualViewWidth, actualViewHeight);
         cellResolution = new Int2(actualViewWidth / numCellsWide, actualViewHeight / numCellsHigh);
-        playerOne = new Player(context, grid, new Int2(2, 2), 1, cellResolution, bombList);
-        playerTwo = new Player(context, grid, new Int2(4, 4), 2, cellResolution, bombList);
+        playerOne = new Player(context, grid, new Int2(2, 2), 1, cellResolution, bombList, playerNumControlled);
+        playerTwo = new Player(context, grid, new Int2(17, 7), 2, cellResolution, bombList, playerNumControlled);
         food = new Food(context, new Int2(3, 3), cellResolution);
         bombList = new ArrayList<Bomb>();
         fireList = new ArrayList<Fire>();
@@ -183,7 +183,6 @@ public class World extends SurfaceView implements Runnable {
 
     @Override
     public void run() {
-        Log.d("Run", "I am running");
         while (mPlaying) {
             // What time is it at the start of the game loop?
             long frameStartTime = System.currentTimeMillis();
@@ -247,10 +246,9 @@ public class World extends SurfaceView implements Runnable {
 
             // Draw food, player
             food.draw(mCanvas, mPaint);
+            grid.drawElements(mCanvas);
             playerOne.draw(mCanvas, mPaint);
             playerTwo.draw(mCanvas, mPaint);
-
-            grid.drawElements(mCanvas);
 
             // Choose font size
             mPaint.setTextSize(mFontSize);
@@ -324,12 +322,13 @@ public class World extends SurfaceView implements Runnable {
             }
         }
 
+        // todo: there seems to be a bug where the screen does not clear!
         Iterator<Fire> fitr = fireList.iterator();
         while (fitr.hasNext()) {
             Fire fire = fitr.next();
             fire.ticksToFade -= 1;
             if (fire.ticksToFade == 0) {
-                fitr.remove();
+                fire.remove();
             }
         }
     }
@@ -359,14 +358,19 @@ public class World extends SurfaceView implements Runnable {
         switch (motionEvent.getAction() & MotionEvent.ACTION_MASK) {
             case MotionEvent.ACTION_UP:
                 if (mPaused) {
-                    Log.d("Pausing", "Unpaused in World");
                     mPaused = false;
                     startNewGame();
                     return true;
                 }
-                Log.d("Touch","onTouchEvent in World");
-                // todo: Check if motion event is coming from Player 1 or 2, and handle accordingly
-                bombList = playerOne.switchHeading(motionEvent);
+
+                if (playerNumControlled.equals("1")){
+                    Log.d(TAG, "move p1");
+                    bombList = playerOne.switchHeading(motionEvent);
+                } else {
+                    Log.d(TAG, "move p2");
+                    bombList = playerTwo.switchHeading(motionEvent);
+                }
+
                 // todo: if it is placing a bomb: add this to bombList
                 break;
             default:
