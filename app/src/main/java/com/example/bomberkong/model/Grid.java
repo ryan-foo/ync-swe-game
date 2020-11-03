@@ -5,6 +5,9 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Paint;
+import android.os.Build;
+
+import androidx.annotation.RequiresApi;
 
 import com.example.bomberkong.R;
 import com.example.bomberkong.util.Int2;
@@ -12,6 +15,7 @@ import com.example.bomberkong.util.Int2;
 import java.util.ArrayList;
 import java.util.Map;
 import java.util.HashMap;
+import java.util.stream.Collectors;
 
 public class Grid
 {
@@ -21,6 +25,7 @@ public class Grid
     private int actualViewWidth;
     private int actualViewHigh;
     private Bitmap mBitmapWall;
+    private Bitmap mBitmapEmpty;
     private Bitmap mBitmapBomb;
     private Bitmap mBitmapFire;
 
@@ -32,6 +37,8 @@ public class Grid
         this.gridMap = new HashMap<Int2, CellStatus>();
         this.mBitmapBomb = BitmapFactory.decodeResource(context.getResources(), R.drawable.bomb);
         this.mBitmapBomb = Bitmap.createScaledBitmap(mBitmapBomb, actualViewWidth/numCellsWide, actualViewHeight/numCellsHigh, false);
+        this.mBitmapEmpty = BitmapFactory.decodeResource(context.getResources(), R.drawable.empty);
+        this.mBitmapEmpty = Bitmap.createScaledBitmap(mBitmapEmpty, actualViewWidth/numCellsWide, actualViewHeight/numCellsHigh, false);
         this.mBitmapWall = BitmapFactory.decodeResource(context.getResources(), R.drawable.wall);
         this.mBitmapWall = Bitmap.createScaledBitmap(mBitmapWall, actualViewWidth/numCellsWide, actualViewHeight/numCellsHigh, false);
         this.mBitmapFire = BitmapFactory.decodeResource(context.getResources(), R.drawable.fire);
@@ -65,37 +72,10 @@ public class Grid
     }
 
     /**
-     * The draw method in Grid is responsible for drawing both the Grid, empty cells and the walls. All other objects
-     * draw themselves, and are called in World. This is because Grid contains overarching information about the game model / walls.
+     * The draw method in Grid is responsible for drawing both the Grid (the lines), empty cells, fire and bombs. All other objects
+     * draw themselves, and are called in World. This is because Grid contains overarching information about the game model.
      * @param canvas
      */
-
-    public void drawElements(Canvas canvas){
-        if (canvas == null) return;
-        int xcount = getNumCellsWide();
-        int ycount = getNumCellsHigh();
-
-        for (int nx = 0; nx < xcount; nx++) {
-            for (int ny = 0; ny < ycount; ny++) {
-
-                float xpos1 = nx * canvas.getWidth() / xcount;
-                float ypos1 = ny * canvas.getHeight() / ycount;
-                Int2 pos = new Int2(nx, ny);
-                CellStatus status = getCellStatus(pos);
-
-                switch (status) {
-                    case EMPTY:
-                        break;
-                    case BOMB:
-                        canvas.drawBitmap(mBitmapBomb, xpos1, ypos1, null);
-                        break;
-                    case FIRE:
-                        canvas.drawBitmap(mBitmapFire, xpos1, ypos1, null);
-                        break;
-                }
-            }
-        }
-    }
 
     public void draw(Canvas canvas) {
         if (canvas == null) return;
@@ -109,15 +89,8 @@ public class Grid
         int xcount = getNumCellsWide();
         int ycount = getNumCellsHigh();
 
-        // Drawing the lines
-        for (int n = 0; n < xcount; n++) {
-            float xpos = n * canvas.getWidth() / xcount;
-            canvas.drawLine(canvas.getWidth() - xpos, 0, canvas.getWidth() - xpos, canvas.getHeight(), gridPaint);
-        }
-        for (int n = 0; n < ycount; n++) {
-            float ypos = n * canvas.getHeight() / ycount;
-            canvas.drawLine(canvas.getWidth() - 0, ypos, canvas.getWidth() - canvas.getWidth(), ypos, gridPaint);
-        }
+        // drawing objects first
+
         for (int nx = 0; nx < xcount; nx++) {
             for (int ny = 0; ny < ycount; ny++) {
 
@@ -127,13 +100,34 @@ public class Grid
                 CellStatus status = getCellStatus(pos);
 
                 switch (status) {
+                    case EMPTY:
+                        canvas.drawBitmap(mBitmapEmpty, xpos1, ypos1, null);
+                        break;
+                    case BOMB:
+                        canvas.drawBitmap(mBitmapBomb, xpos1, ypos1, null);
+                        break;
+                    case FIRE:
+                        canvas.drawBitmap(mBitmapFire, xpos1, ypos1, null);
+                        break;
                     case WALL:
                         canvas.drawBitmap(mBitmapWall, xpos1, ypos1, null);
                         break;
                 }
             }
         }
+
+        // Drawing the lines
+        for (int n = 0; n < xcount; n++) {
+            float xpos = n * canvas.getWidth() / xcount;
+            canvas.drawLine(canvas.getWidth() - xpos, 0, canvas.getWidth() - xpos, canvas.getHeight(), gridPaint);
+        }
+        for (int n = 0; n < ycount; n++) {
+            float ypos = n * canvas.getHeight() / ycount;
+            canvas.drawLine(canvas.getWidth() - 0, ypos, canvas.getWidth() - canvas.getWidth(), ypos, gridPaint);
+        }
+
     }
+
 
     /**
      * This will be called by Food to determine all the possible candidates for Food to spawn in.

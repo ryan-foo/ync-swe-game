@@ -63,26 +63,25 @@ public class Bomb implements Cell
         CellStatus up = grid.getCellStatus(posUp);
         CellStatus down = grid.getCellStatus(posDown);
 
-        if (left == CellStatus.EMPTY || left == CellStatus.FOOD || left == CellStatus.PLAYER){
+        if (left == CellStatus.EMPTY || left == CellStatus.PLAYER){
             Fire fire = new Fire(context, grid,  posLeft, cellSize);
             fireList.add(fire);
             grid.setCell(posLeft, CellStatus.FIRE);
         }
-        if (right == CellStatus.EMPTY || right == CellStatus.FOOD|| right == CellStatus.PLAYER){
+        if (right == CellStatus.EMPTY || right == CellStatus.PLAYER){
             grid.setCell(posRight, CellStatus.FIRE);
             Fire fire = new Fire(context, grid, posRight, cellSize);
             fireList.add(fire);
         }
-        if (up == CellStatus.EMPTY || up == CellStatus.FOOD || up == CellStatus.PLAYER){
+        if (up == CellStatus.EMPTY || up == CellStatus.PLAYER){
             grid.setCell(posUp, CellStatus.FIRE);
             Fire fire = new Fire(context, grid, posUp, cellSize);
             fireList.add(fire);
         }
-        if (down == CellStatus.EMPTY || down == CellStatus.FOOD || down == CellStatus.PLAYER){
+        if (down == CellStatus.EMPTY || down == CellStatus.PLAYER){
             grid.setCell(posDown, CellStatus.FIRE);
             Fire fire = new Fire(context, grid, posDown, cellSize);
             fireList.add(fire);
         }
-        // todo: If the fire touches the Monkey, end game;
     }
 }

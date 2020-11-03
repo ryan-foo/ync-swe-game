@@ -366,6 +366,8 @@ public class Player implements Cell
             bombList.add(bomb);
             grid.setCell(spawnpos, CellStatus.BOMB);
         }
+        Log.d("GRID STATE", grid.getMap().toString());
+
         return bombList;
     }
 }

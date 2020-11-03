@@ -27,6 +27,7 @@ import java.util.Iterator;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.concurrent.TimeUnit;
 
 // credits for framework: John Horton
 
@@ -87,6 +88,9 @@ public class World extends SurfaceView implements Runnable {
     // volatile can be accessed from outside and inside the thread
     private volatile boolean mPlaying = true;
     private boolean mPaused = false;
+    // start game with neither player having won
+    private boolean playerOneWin = false;
+    private boolean playerTwoWin = false;
     private long mNextFrameTime;
 
     /**
@@ -216,8 +220,11 @@ public class World extends SurfaceView implements Runnable {
         // reset grid
         this.grid.reset();
         // Todo: reset to player original positions depending on player number
+        mPaused = false; // game is running.
         playerOne.reset(numCellsWide, numCellsHigh);
         playerTwo.reset(numCellsWide, numCellsHigh);
+        playerOneWin = false;
+        playerTwoWin = false;
 
         // banana should be spawned
         ArrayList<Int2> emptyCells = grid.getEmpty();
@@ -246,7 +253,7 @@ public class World extends SurfaceView implements Runnable {
 
             // Draw food, player
             food.draw(mCanvas, mPaint);
-            grid.drawElements(mCanvas);
+            //todo: checking if grid uses draw, or drawElements
             playerOne.draw(mCanvas, mPaint);
             playerTwo.draw(mCanvas, mPaint);
 
@@ -264,7 +271,12 @@ public class World extends SurfaceView implements Runnable {
             if (mPaused) {
                 mPaint.setColor(Color.argb(255, 0, 0, 0));
                 mPaint.setTextSize(250);
-                mCanvas.drawText("Tap to begin!", 200, 700, mPaint);
+                if (playerOneWin) {
+                    mCanvas.drawText("Player One Wins!", 200, 700, mPaint);
+                }
+                if (playerTwoWin) {
+                    mCanvas.drawText("Player Two Wins!", 200, 700, mPaint);
+                }
             }
 
             // Display drawing on screen
@@ -291,24 +303,49 @@ public class World extends SurfaceView implements Runnable {
         // Did player die?
         if (playerOne.detectDeath()) {
             mSP.play(mDeathID, 1, 1, 0, 0, 1);
-            pause();
             Log.d("World", "Player one dies");
+            mPaused = true;
+            playerTwoWin = true;
+            draw();
             // Say player 2 wins, timeout, then start new game in 5 secs
+            int gameEndCounter = 5;
+            while (gameEndCounter != 0) {
+                try {
+                    TimeUnit.SECONDS.sleep(1);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                gameEndCounter -= 1;
+            }
+
             startNewGame();
         }
 
         if (playerTwo.detectDeath()) {
             mSP.play(mDeathID, 1, 1, 0, 0, 1);
-            pause();
             Log.d("World", "Player two dies");
+            mPaused = true;
+            playerOneWin = true;
+            draw();
             // Say player 1 wins, timeout, then start new game in 5 secs
+            int gameEndCounter = 5;
+            while (gameEndCounter != 0) {
+                try {
+                    TimeUnit.SECONDS.sleep(1);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                gameEndCounter -= 1;
+            }
+
             startNewGame();
         }
 
 //         all bombs in bomb list should tick down
 
         /**
-         * Iterators allow us to remove elements while iterating through it.
+         * Iterators allow us to remove elements while iterating through a list.
+         * In this case, we use iterators to handle both the ticking down of bombs and the ticking down of fires before removing them from the game.
          */
 
         Iterator<Bomb> itr = bombList.iterator();
@@ -319,6 +356,9 @@ public class World extends SurfaceView implements Runnable {
                 bomb.explode(this, fireList);
                 itr.remove();
                 mSP.play(mBombID, 1, 1, 0, 0, 1);
+                if (itr.hasNext()) {
+                    bomb = itr.next();
+                }
             }
         }
 
@@ -329,7 +369,11 @@ public class World extends SurfaceView implements Runnable {
             fire.ticksToFade -= 1;
             if (fire.ticksToFade == 0) {
                 grid.setCell(fire.getGridPosition(), CellStatus.EMPTY);
+                // todo: something to do with drawing empty?
                 fire.remove();
+                if (fitr.hasNext()) {
+                    fire = fitr.next();
+                }
             }
         }
     }
