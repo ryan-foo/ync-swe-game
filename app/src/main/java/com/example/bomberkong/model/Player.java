@@ -9,6 +9,8 @@ import android.view.MotionEvent;
 
 import com.example.bomberkong.R;
 import com.example.bomberkong.util.Int2;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.ArrayList;
 
@@ -21,6 +23,9 @@ public class Player implements Cell
     private enum Heading {
         UP, DOWN, LEFT, RIGHT, NEUTRAL;
     }
+
+    private FirebaseDatabase database = FirebaseDatabase.getInstance();
+    private DatabaseReference _positionRef = database.getReference("position");
 
     private int cellWidth;
     private int cellHeight;
@@ -296,6 +301,7 @@ public class Player implements Cell
                 grid.getCellStatus(newpos) == (CellStatus.FOOD)
         )
         {
+            _positionRef.setValue(newpos);
             grid.setCell(gridPosition, CellStatus.EMPTY);
             gridPosition = newpos;
             grid.setCell(newpos, CellStatus.PLAYER);
@@ -310,6 +316,7 @@ public class Player implements Cell
                 grid.getCellStatus(newpos) == (CellStatus.FOOD)
         )
         {
+            _positionRef.setValue(newpos);
             grid.setCell(gridPosition, CellStatus.EMPTY);
             gridPosition = newpos;
             grid.setCell(newpos, CellStatus.PLAYER);
@@ -324,6 +331,7 @@ public class Player implements Cell
                 grid.getCellStatus(newpos) == (CellStatus.FOOD)
         )
         {
+            _positionRef.setValue(newpos);
             grid.setCell(gridPosition, CellStatus.EMPTY);
             gridPosition = newpos;
             grid.setCell(newpos, CellStatus.PLAYER);
@@ -338,6 +346,7 @@ public class Player implements Cell
                 grid.getCellStatus(newpos) == (CellStatus.FOOD)
         )
         {
+            _positionRef.setValue(newpos);
             grid.setCell(gridPosition, CellStatus.EMPTY);
             gridPosition = newpos;
             grid.setCell(newpos, CellStatus.PLAYER);
