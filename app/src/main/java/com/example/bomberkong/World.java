@@ -328,6 +328,7 @@ public class World extends SurfaceView implements Runnable {
             Fire fire = fitr.next();
             fire.ticksToFade -= 1;
             if (fire.ticksToFade == 0) {
+                grid.setCell(fire.getGridPosition(), CellStatus.EMPTY);
                 fire.remove();
             }
         }

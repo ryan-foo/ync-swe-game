@@ -281,6 +281,7 @@ public class Player implements Cell
                 grid.getCellStatus(newpos) == (CellStatus.FOOD)
         )
         {
+            grid.setCell(gridPosition, CellStatus.EMPTY);
             gridPosition = newpos;
             grid.setCell(newpos, CellStatus.PLAYER);
         }
@@ -294,6 +295,7 @@ public class Player implements Cell
                 grid.getCellStatus(newpos) == (CellStatus.FOOD)
         )
         {
+            grid.setCell(gridPosition, CellStatus.EMPTY);
             gridPosition = newpos;
             grid.setCell(newpos, CellStatus.PLAYER);
         }
@@ -307,6 +309,7 @@ public class Player implements Cell
                 grid.getCellStatus(newpos) == (CellStatus.FOOD)
         )
         {
+            grid.setCell(gridPosition, CellStatus.EMPTY);
             gridPosition = newpos;
             grid.setCell(newpos, CellStatus.PLAYER);
         }
@@ -320,6 +323,7 @@ public class Player implements Cell
                 grid.getCellStatus(newpos) == (CellStatus.FOOD)
         )
         {
+            grid.setCell(gridPosition, CellStatus.EMPTY);
             gridPosition = newpos;
             grid.setCell(newpos, CellStatus.PLAYER);
         }
