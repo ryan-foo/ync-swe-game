@@ -19,8 +19,9 @@ public class Bomb implements Cell
     private int cellHeight;
     private Int2 cellSize;
     private Bitmap mBitmapBomb;
-    public int ticksToExplode = 30; // our current game is 10 fps, so we will have 3 seconds before it explodes.
-
+    public int ticksToExplode = 15; // our current game is 10 fps, so we will have 1.5 seconds before it explodes.
+    // ticksToExplode ticks down by 1 every frame in World.
+    
     // todo: continue from here
 
     public Bomb(Context context, Int2 position, Int2 cellSize) {
