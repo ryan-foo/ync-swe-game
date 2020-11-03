@@ -75,8 +75,7 @@ public class Food {
 
     // the game objects will handle drawing themselves
     public void draw(Canvas canvas, Paint paint) {
-        canvas.drawBitmap(mBitmapFood,
-                position.getX() * cellWidth, position.getY() * cellHeight, paint);
+        canvas.drawBitmap(mBitmapFood,position.getX() * cellWidth, position.getY() * cellHeight, paint);
     }
 }
 
