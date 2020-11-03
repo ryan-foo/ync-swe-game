@@ -16,6 +16,8 @@ import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 
+import androidx.annotation.NonNull;
+
 import com.example.bomberkong.model.Bomb;
 import com.example.bomberkong.model.CellStatus;
 import com.example.bomberkong.model.Fire;
@@ -23,8 +25,11 @@ import com.example.bomberkong.model.Food;
 import com.example.bomberkong.model.Grid;
 import com.example.bomberkong.model.Player;
 import com.example.bomberkong.util.Int2;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.Iterator;
 
@@ -187,9 +192,40 @@ public class World extends SurfaceView implements Runnable {
         // 1.5% of width
         mFontMargin = mScreenX / 75;
 
+        addScoreEventListener();
         startNewGame();
     }
 
+    private void addScoreEventListener() {
+        DatabaseReference _score1Ref = database.getReference("player1/score");
+        DatabaseReference _score2Ref = database.getReference("player2/score");
+        _score1Ref.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                mScoreP1 = snapshot.getValue(int.class);
+                mCanvas.drawText("Score P1: " + mScoreP1 + " Score P2: " + mScoreP2,
+                        mFontMargin, mFontSize, scorePaint);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+        _score2Ref.addValueEventListener((new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                mScoreP2 = snapshot.getValue(int.class);
+                mCanvas.drawText("Score P1: " + mScoreP1 + " Score P2: " + mScoreP2,
+                        mFontMargin, mFontSize, scorePaint);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        }));
+    }
     // When we start the thread with:
     // mGameThread.start();
     // the run method is continuously called by Android // because we implemented the Runnable interface
