@@ -250,6 +250,8 @@ public class World extends SurfaceView implements Runnable {
         // banana should be spawned
         ArrayList<Int2> emptyCells = grid.getEmpty();
         food.spawn(emptyCells, numCellsWide, numCellsHigh);
+        DatabaseReference _foodRef = database.getReference("food");
+        _foodRef.setValue(food);
 
         // Reset score
         mScoreP1 = 0;
@@ -320,6 +322,8 @@ public class World extends SurfaceView implements Runnable {
             _score1Ref.setValue(mScoreP1);
             ArrayList<Int2> emptyCells = grid.getEmpty();
             food.spawn(emptyCells, numCellsWide, numCellsHigh);
+            DatabaseReference _foodRef = database.getReference("food");
+            _foodRef.setValue(food);
             mSP.play(mEat_ID, 1, 1, 0, 0, 1);
         }
 
