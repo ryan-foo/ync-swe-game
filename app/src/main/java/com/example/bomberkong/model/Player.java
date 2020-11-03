@@ -5,6 +5,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Paint;
+import android.provider.ContactsContract;
 import android.view.MotionEvent;
 
 import com.example.bomberkong.R;
@@ -25,7 +26,6 @@ public class Player implements Cell
     }
 
     private FirebaseDatabase database = FirebaseDatabase.getInstance();
-    private DatabaseReference _positionRef = database.getReference("position");
 
     private int cellWidth;
     private int cellHeight;
@@ -301,6 +301,7 @@ public class Player implements Cell
                 grid.getCellStatus(newpos) == (CellStatus.FOOD)
         )
         {
+            DatabaseReference _positionRef = database.getReference("player" + playerNum + "/position");
             _positionRef.setValue(newpos);
             grid.setCell(gridPosition, CellStatus.EMPTY);
             gridPosition = newpos;
@@ -316,6 +317,7 @@ public class Player implements Cell
                 grid.getCellStatus(newpos) == (CellStatus.FOOD)
         )
         {
+            DatabaseReference _positionRef = database.getReference("player" + playerNum + "/position");
             _positionRef.setValue(newpos);
             grid.setCell(gridPosition, CellStatus.EMPTY);
             gridPosition = newpos;
@@ -331,6 +333,7 @@ public class Player implements Cell
                 grid.getCellStatus(newpos) == (CellStatus.FOOD)
         )
         {
+            DatabaseReference _positionRef = database.getReference("player" + playerNum + "/position");
             _positionRef.setValue(newpos);
             grid.setCell(gridPosition, CellStatus.EMPTY);
             gridPosition = newpos;
@@ -346,6 +349,7 @@ public class Player implements Cell
                 grid.getCellStatus(newpos) == (CellStatus.FOOD)
         )
         {
+            DatabaseReference _positionRef = database.getReference("player" + playerNum + "/position");
             _positionRef.setValue(newpos);
             grid.setCell(gridPosition, CellStatus.EMPTY);
             gridPosition = newpos;
