@@ -23,6 +23,9 @@ import com.example.bomberkong.model.Food;
 import com.example.bomberkong.model.Grid;
 import com.example.bomberkong.model.Player;
 import com.example.bomberkong.util.Int2;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+
 import java.util.Iterator;
 
 import java.io.IOException;
@@ -35,12 +38,14 @@ public class World extends SurfaceView implements Runnable {
     private static final String TAG = "World";
     private final String playerNumControlled;
 
+    // Connect to Firebase database
+    private FirebaseDatabase database = FirebaseDatabase.getInstance();
+
     // Objects for drawing
     private SurfaceHolder mSurfaceHolder;
     private Canvas mCanvas;
     private Paint mPaint;
     private Paint scorePaint;
-
 
     // Instances of objects that will last throughout
     private Context context;
@@ -234,6 +239,11 @@ public class World extends SurfaceView implements Runnable {
         mPaused = false; // game is running.
         playerOne.reset(p1StartPos);
         playerTwo.reset(p2StartPos);
+        // Reset position values reflected on Firebase database
+        DatabaseReference _position1Ref = database.getReference("player1/position");
+        _position1Ref.setValue(p1StartPos);
+        DatabaseReference _position2Ref = database.getReference("player2/position");
+        _position2Ref.setValue(p2StartPos);
         playerOneWin = false;
         playerTwoWin = false;
 
