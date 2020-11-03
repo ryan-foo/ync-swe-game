@@ -91,9 +91,19 @@ public class Player implements Cell
         this.bomb = null;
     }
 
-    public void reset(int w, int h) {
+    /**
+     * We call reset whenever the game starts.
+     * @param x : x position for the player
+     * @param y : y position for the player
+     */
+
+    public void reset(Int2 startPos) {
         // Reset Heading
         heading = heading.DOWN;
+        // Reset Grid position too
+        grid.setCell(startPos, CellStatus.PLAYER);
+        grid.setCell(gridPosition, CellStatus.EMPTY);
+        gridPosition = startPos;
     }
 
     // todo: movement needs to be conditional and check if the cell above is collidable or not.

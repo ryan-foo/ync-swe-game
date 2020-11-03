@@ -95,6 +95,9 @@ public class World extends SurfaceView implements Runnable {
     private long p1NextMoveTime;
     private long p2NextMoveTime;
 
+    private final Int2 p1StartPos = new Int2(2, 2);
+    private final Int2 p2StartPos = new Int2(17, 7);
+
     /**
      * This is the constructor method for World, which acts as the game engine
      * @param context          is passed from MainActivity
@@ -154,10 +157,11 @@ public class World extends SurfaceView implements Runnable {
         /**
          * Initialize grid and players
          */
+
         grid = new Grid(context, numCellsWide, numCellsHigh, actualViewWidth, actualViewHeight);
         cellResolution = new Int2(actualViewWidth / numCellsWide, actualViewHeight / numCellsHigh);
-        playerOne = new Player(context, grid, new Int2(2, 2), 1, cellResolution, playerNumControlled);
-        playerTwo = new Player(context, grid, new Int2(17, 7), 2, cellResolution, playerNumControlled);
+        playerOne = new Player(context, grid, p1StartPos, 1, cellResolution, playerNumControlled);
+        playerTwo = new Player(context, grid, p2StartPos, 2, cellResolution, playerNumControlled);
         food = new Food(context, new Int2(3, 3), cellResolution);
         bombList = new ArrayList<Bomb>();
         fireList = new ArrayList<Fire>();
@@ -218,13 +222,18 @@ public class World extends SurfaceView implements Runnable {
         }
     }
 
+    /**
+     * Start new game is called when we want to start a new game. We start a new game when the game first boots, and also 5 seconds after the game has ended.
+     * This resets the grid, and resets the positions of the players, and the score.
+     */
+
     public void startNewGame() {
         // reset grid
         this.grid.reset();
         // Todo: reset to player original positions depending on player number
         mPaused = false; // game is running.
-        playerOne.reset(numCellsWide, numCellsHigh);
-        playerTwo.reset(numCellsWide, numCellsHigh);
+        playerOne.reset(p1StartPos);
+        playerTwo.reset(p2StartPos);
         playerOneWin = false;
         playerTwoWin = false;
 
@@ -236,8 +245,10 @@ public class World extends SurfaceView implements Runnable {
         mScoreP1 = 0;
         mScoreP2 = 0;
 
-        // setup next frame time
+        // setup time
         mNextFrameTime = System.currentTimeMillis();
+        p1NextMoveTime = System.currentTimeMillis();
+        p2NextMoveTime = System.currentTimeMillis();
     }
 
     void draw() {
@@ -377,7 +388,9 @@ public class World extends SurfaceView implements Runnable {
             fire.ticksToFade -= 1;
             if (fire.ticksToFade == 0) {
                 // todo: something to do with drawing empty?
+                grid.setCell(fire.getGridPosition(), CellStatus.EMPTY);
                 fire.remove();
+
             }
         }
     }
@@ -410,8 +423,8 @@ public class World extends SurfaceView implements Runnable {
      */
 
     public boolean p1MovementAllowed() {
-        // Run at 10 fps
-        final long MOVES_PER_SECOND = 2;
+        // Run at 4 moves per second
+        final long MOVES_PER_SECOND = 4;
         // 1000 milliseconds in a second
         final long MILLIS_PER_SECOND = 1000;
 
@@ -426,8 +439,8 @@ public class World extends SurfaceView implements Runnable {
 
 
     public boolean p2MovementAllowed() {
-        // Run at 10 fps
-        final long MOVES_PER_SECOND = 2;
+        // Run at 4 moves per second
+        final long MOVES_PER_SECOND = 4;
         // 1000 milliseconds in a second
         final long MILLIS_PER_SECOND = 1000;
 
