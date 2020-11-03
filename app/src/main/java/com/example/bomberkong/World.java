@@ -154,8 +154,8 @@ public class World extends SurfaceView implements Runnable {
          */
         grid = new Grid(context, numCellsWide, numCellsHigh, actualViewWidth, actualViewHeight);
         cellResolution = new Int2(actualViewWidth / numCellsWide, actualViewHeight / numCellsHigh);
-        playerOne = new Player(context, grid, new Int2(2, 2), 1, cellResolution, bombList, playerNumControlled);
-        playerTwo = new Player(context, grid, new Int2(17, 7), 2, cellResolution, bombList, playerNumControlled);
+        playerOne = new Player(context, grid, new Int2(2, 2), 1, cellResolution, playerNumControlled);
+        playerTwo = new Player(context, grid, new Int2(17, 7), 2, cellResolution, playerNumControlled);
         food = new Food(context, new Int2(3, 3), cellResolution);
         bombList = new ArrayList<Bomb>();
         fireList = new ArrayList<Fire>();
@@ -341,24 +341,29 @@ public class World extends SurfaceView implements Runnable {
             startNewGame();
         }
 
-//         all bombs in bomb list should tick down
 
         /**
          * Iterators allow us to remove elements while iterating through a list.
          * In this case, we use iterators to handle both the ticking down of bombs and the ticking down of fires before removing them from the game.
          */
 
-        Iterator<Bomb> itr = bombList.iterator();
-        while (itr.hasNext()) {
-            Bomb bomb = itr.next();
-            bomb.ticksToExplode -= 1;
-            if (bomb.ticksToExplode == 0) {
-                bomb.explode(this, fireList);
-                itr.remove();
+        if (playerOne.getBomb() != null) {
+            Bomb bombOne = playerOne.getBomb();
+            bombOne.ticksToExplode -= 1;
+            if (bombOne.ticksToExplode == 0) {
+                bombOne.explode(this, fireList);
                 mSP.play(mBombID, 1, 1, 0, 0, 1);
-                if (itr.hasNext()) {
-                    bomb = itr.next();
-                }
+                playerOne.resetBomb();
+            }
+        }
+
+        if (playerTwo.getBomb() != null) {
+            Bomb bombTwo = playerTwo.getBomb();
+            bombTwo.ticksToExplode -= 1;
+            if (bombTwo.ticksToExplode == 0) {
+                bombTwo.explode(this, fireList);
+                mSP.play(mBombID, 1, 1, 0, 0, 1);
+                playerTwo.resetBomb();
             }
         }
 
@@ -410,10 +415,10 @@ public class World extends SurfaceView implements Runnable {
 
                 if (playerNumControlled.equals("1")){
                     Log.d(TAG, "move p1");
-                    bombList = playerOne.switchHeading(motionEvent);
+                    playerOne.switchHeading(motionEvent);
                 } else {
                     Log.d(TAG, "move p2");
-                    bombList = playerTwo.switchHeading(motionEvent);
+                    playerTwo.switchHeading(motionEvent);
                 }
 
                 // todo: if it is placing a bomb: add this to bombList

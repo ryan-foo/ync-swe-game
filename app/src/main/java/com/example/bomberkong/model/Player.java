@@ -5,7 +5,6 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Paint;
-import android.util.Log;
 import android.view.MotionEvent;
 
 import com.example.bomberkong.R;
@@ -30,7 +29,6 @@ public class Player implements Cell
     private Grid grid;
     private Bomb bomb;
     private Int2 cellSize;
-    private ArrayList<Bomb> bombList;
     private Heading heading = Heading.DOWN;
 
     private Bitmap mBitmapHeadRightOne;
@@ -50,14 +48,13 @@ public class Player implements Cell
     /**
      * Constructor for objects of class Player
      */
-    public Player(Context context, Grid grid, Int2 gridPosition, int playerNum, Int2 cellSize, ArrayList<Bomb> bombList, String playerNumControlled) {
+    public Player(Context context, Grid grid, Int2 gridPosition, int playerNum, Int2 cellSize, String playerNumControlled) {
         this.playerNum = playerNum;
         this.playerNumControlled = playerNumControlled;
         this.context = context;
         this.gridPosition = gridPosition;
         this.grid = grid;
         this.cellSize = cellSize;
-        this.bombList = bombList;
         cellWidth = cellSize.x;
         cellHeight = cellSize.y;
 
@@ -84,6 +81,14 @@ public class Player implements Cell
         mBitmapHeadLeftTwo = Bitmap.createScaledBitmap(mBitmapHeadLeftTwo, cellWidth, cellHeight, false);
         mBitmapHeadRightTwo = Bitmap.createScaledBitmap(mBitmapHeadRightTwo, cellWidth, cellHeight, false);
         mBitmapNeutral = Bitmap.createScaledBitmap(mBitmapNeutral, cellWidth, cellHeight, false);
+    }
+
+    public Bomb getBomb(){
+        return this.bomb;
+    }
+
+    public void resetBomb(){
+        this.bomb = null;
     }
 
     public void reset(int w, int h) {
@@ -117,7 +122,6 @@ public class Player implements Cell
 
     public boolean detectDeath() {
         boolean dead = false;
-
         if (grid.getCellStatus(gridPosition) == CellStatus.FIRE) {
             dead = true;
         }
@@ -180,7 +184,7 @@ public class Player implements Cell
      */
     // todo: the logic here is pretty complex, but it should work as intended. might be worth refactoring.
     // todo: and finally, if they tap on the monkey itself, it will call the place bomb method
-    public ArrayList<Bomb> switchHeading(MotionEvent motionEvent) {
+    public void switchHeading(MotionEvent motionEvent) {
         float touch_x = motionEvent.getX();
         float touch_y = motionEvent.getY();
 
@@ -198,7 +202,9 @@ public class Player implements Cell
         // todo: movement should also validate if the desired grid position is non-collidable!
         // todo: movement should be seamless (i.e, if we hold down, we should keep moving / turning, and we should control how many times in a frame a player can move.
         if (touchGridPositionX == this.gridPosition.getX() && touchGridPositionY == this.gridPosition.getY()){
-            bombList = spawnBomb(context, grid, cellSize, bombList);
+            if (bomb == null){
+                spawnBomb(context, grid, cellSize);
+            }
             heading = Heading.NEUTRAL;
         }
 
@@ -248,7 +254,6 @@ public class Player implements Cell
         }
         // and then move after changing direction
         move();
-        return bombList;
     }
 
     /**
@@ -336,11 +341,9 @@ public class Player implements Cell
      * @param context
      * @param grid
      * @param cellSize
-     * @param bombList
-     * @return bombList
      */
 
-    public ArrayList<Bomb> spawnBomb(Context context, Grid grid, Int2 cellSize, ArrayList<Bomb> bombList) {
+    public void spawnBomb(Context context, Grid grid, Int2 cellSize) {
         Int2 spawnpos = gridPosition;
         // switch based on position you're facing
         switch (heading) {
@@ -363,11 +366,7 @@ public class Player implements Cell
 
         if (grid.getCellStatus(spawnpos) == (CellStatus.EMPTY)) {
             bomb = new Bomb(context, spawnpos, cellSize);
-            bombList.add(bomb);
             grid.setCell(spawnpos, CellStatus.BOMB);
         }
-        Log.d("GRID STATE", grid.getMap().toString());
-
-        return bombList;
     }
 }

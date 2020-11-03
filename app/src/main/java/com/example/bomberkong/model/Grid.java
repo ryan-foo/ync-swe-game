@@ -46,10 +46,6 @@ public class Grid
         reset();
     }
 
-    public Map getMap(){
-        return gridMap;
-    }
-
     public int getNumCellsWide(){
         return numCellsWide;
     }
@@ -196,13 +192,31 @@ public class Grid
                 this.setCell(new Int2 (x, y), CellStatus.EMPTY);
             }
         }
-        for(int x = 0; x < getNumCellsWide(); x ++){
+        //setting borders
+        for (int x = 0; x < getNumCellsWide(); x ++){
             this.setCell(new Int2 (x, 0), CellStatus.WALL);
             this.setCell(new Int2 (x, getNumCellsHigh() - 1), CellStatus.WALL);
         }
-        for (int y = 0; y < getNumCellsHigh(); y ++) {
+        for (int y = 1; y < getNumCellsHigh(); y ++) {
             this.setCell(new Int2 (0, y), CellStatus.WALL);
             this.setCell(new Int2 (getNumCellsWide() - 1, y), CellStatus.WALL);
+        }
+
+        //setting in-game walls
+        int[] yList = {2, 7};
+        int[] xList = {4, 7, 8, 11, 12, 15};
+        for (int y : yList){
+            for (int x : xList){
+                this.setCell(new Int2 (x, y), CellStatus.WALL);
+            }
+        }
+
+        int[] yListTwo = {3, 6};
+        int[] xListTwo = {3, 16};
+        for (int y : yListTwo){
+            for (int x : xListTwo){
+                this.setCell(new Int2 (x, y), CellStatus.WALL);
+            }
         }
     }
 }
