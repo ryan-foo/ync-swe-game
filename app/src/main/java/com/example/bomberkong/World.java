@@ -92,6 +92,8 @@ public class World extends SurfaceView implements Runnable {
     private boolean playerOneWin = false;
     private boolean playerTwoWin = false;
     private long mNextFrameTime;
+    private long p1NextMoveTime;
+    private long p2NextMoveTime;
 
     /**
      * This is the constructor method for World, which acts as the game engine
@@ -400,6 +402,44 @@ public class World extends SurfaceView implements Runnable {
         return false;
     }
 
+    /**
+     * p1movementAllowed allows us to rate limit the amount of input we can take for each player, respectively. It returns a boolean, which when true, allows us to process the input of the player.
+     * 
+     * which 
+     * @return
+     */
+
+    public boolean p1MovementAllowed() {
+        // Run at 10 fps
+        final long MOVES_PER_SECOND = 2;
+        // 1000 milliseconds in a second
+        final long MILLIS_PER_SECOND = 1000;
+
+        // are we due to update the frame?
+        if (p1NextMoveTime <= System.currentTimeMillis()) {
+            // 1/2 a second has passed
+            p1NextMoveTime = System.currentTimeMillis() + MILLIS_PER_SECOND / MOVES_PER_SECOND;
+            return true;
+        }
+        return false;
+    }
+
+
+    public boolean p2MovementAllowed() {
+        // Run at 10 fps
+        final long MOVES_PER_SECOND = 2;
+        // 1000 milliseconds in a second
+        final long MILLIS_PER_SECOND = 1000;
+
+        // are we due to update the frame?
+        if (p2NextMoveTime <= System.currentTimeMillis()) {
+            // 1/2 a second has passed
+            p2NextMoveTime = System.currentTimeMillis() + MILLIS_PER_SECOND / MOVES_PER_SECOND;
+            return true;
+        }
+        return false;
+    }
+
     @Override
     public boolean onTouchEvent(MotionEvent motionEvent) {
         switch (motionEvent.getAction() & MotionEvent.ACTION_MASK) {
@@ -411,11 +451,15 @@ public class World extends SurfaceView implements Runnable {
                 }
 
                 if (playerNumControlled.equals("1")){
-                    Log.d(TAG, "move p1");
-                    playerOne.switchHeading(motionEvent);
+                    if (p1MovementAllowed()) {
+                        Log.d(TAG, "move p1");
+                        playerOne.switchHeading(motionEvent);
+                    }
                 } else {
-                    Log.d(TAG, "move p2");
-                    playerTwo.switchHeading(motionEvent);
+                    if (p2MovementAllowed()) {
+                        Log.d(TAG, "move p2");
+                        playerTwo.switchHeading(motionEvent);
+                    }
                 }
 
                 // todo: if it is placing a bomb: add this to bombList
