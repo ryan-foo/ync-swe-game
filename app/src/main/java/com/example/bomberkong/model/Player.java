@@ -291,6 +291,8 @@ public class Player implements Cell
         return this.gridPosition;
     }
 
+    public void setGridPosition(Int2 position) { this.gridPosition = position; }
+
     /**
      * Moves the player up by one unit.
      * Each of these take a reference to the Grid to validate the movement.

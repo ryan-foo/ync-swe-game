@@ -192,20 +192,22 @@ public class World extends SurfaceView implements Runnable {
         // 1.5% of width
         mFontMargin = mScreenX / 75;
 
-        addScoreEventListener();
-        addFoodEventListener();
+        addScoreListener();
+        addFoodListener();
+        addPlayerPositionListener();
         startNewGame();
     }
 
-    private void addScoreEventListener() {
+    private void addScoreListener() {
         DatabaseReference _score1Ref = database.getReference("player1/score");
-        DatabaseReference _score2Ref = database.getReference("player2/score");
         _score1Ref.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                mScoreP1 = snapshot.getValue(int.class);
-                mCanvas.drawText("Score P1: " + mScoreP1 + " Score P2: " + mScoreP2,
-                        mFontMargin, mFontSize, scorePaint);
+                if (playerNumControlled.equals("2")) {
+                    mScoreP1 = snapshot.getValue(int.class);
+                    mCanvas.drawText("Score P1: " + mScoreP1 + " Score P2: " + mScoreP2,
+                            mFontMargin, mFontSize, scorePaint);
+                }
             }
 
             @Override
@@ -213,12 +215,16 @@ public class World extends SurfaceView implements Runnable {
 
             }
         });
+
+        DatabaseReference _score2Ref = database.getReference("player2/score");
         _score2Ref.addValueEventListener((new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                mScoreP2 = snapshot.getValue(int.class);
-                mCanvas.drawText("Score P1: " + mScoreP1 + " Score P2: " + mScoreP2,
-                        mFontMargin, mFontSize, scorePaint);
+                if (playerNumControlled.equals("2")) {
+                    mScoreP2 = snapshot.getValue(int.class);
+                    mCanvas.drawText("Score P1: " + mScoreP1 + " Score P2: " + mScoreP2,
+                            mFontMargin, mFontSize, scorePaint);
+                }
             }
 
             @Override
@@ -228,13 +234,47 @@ public class World extends SurfaceView implements Runnable {
         }));
     }
 
-    private void addFoodEventListener() {
+    private void addFoodListener() {
         DatabaseReference _foodRef = database.getReference("food");
         _foodRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 Int2 foodLoc = snapshot.getValue(Int2.class);
                 food.setLocation(foodLoc);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+    }
+
+    private void addPlayerPositionListener() {
+        DatabaseReference _pos1Ref = database.getReference("player1/position");
+        _pos1Ref.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if (playerNumControlled.equals("2")) {
+                    Int2 pos1 = snapshot.getValue(Int2.class);
+                    playerOne.setGridPosition(pos1);
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+
+        DatabaseReference _pos2Ref = database.getReference("player2/position");
+        _pos2Ref.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if (playerNumControlled.equals("1")) {
+                    Int2 pos2 = snapshot.getValue(Int2.class);
+                    playerTwo.setGridPosition(pos2);
+                }
             }
 
             @Override
