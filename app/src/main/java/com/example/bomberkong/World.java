@@ -201,6 +201,7 @@ public class World extends SurfaceView implements Runnable {
         addPlayerPositionListener();
         addPlayerHeadingListener();
         addPlayerDeathListener();
+        // addBombListener();
         startNewGame();
     }
 
@@ -239,6 +240,41 @@ public class World extends SurfaceView implements Runnable {
             }
         }));
     }
+/*
+    private void addBombListener() {
+        DatabaseReference _bomb1Ref = database.getReference("player1/bomb/gridPosition");
+        _bomb1Ref.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if (playerNumControlled.equals("2")) {
+                    Int2 bombPos = snapshot.getValue(Int2.class);
+                    playerOne.setBomb(new Bomb(context,bombPos,cellResolution));
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+
+        DatabaseReference _bomb2Ref = database.getReference("player2/bomb/gridPosition");
+        _bomb2Ref.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if (playerNumControlled.equals("1")) {
+                    Int2 bombPos = snapshot.getValue(Int2.class);
+                    playerTwo.setBomb(new Bomb(context,bombPos,cellResolution));
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+    }
+*/
 
     private void addFoodListener() {
         DatabaseReference _foodRef = database.getReference("food");
