@@ -28,7 +28,7 @@ public class CreateRoom extends AppCompatActivity {
                 if(!nameOfRoom.equals("")) {
                     // button.setText("CREATING ROOM");
                     // button.setEnabled(false);
-                    Intent intent = new Intent(CreateRoom.this, WaitingRoom.class);
+                    Intent intent = new Intent(getApplicationContext(), WaitingRoom.class);
                     intent.putExtra(EXTRA_ROOM_MESSAGE, nameOfRoom);
                     startActivity(intent);
                 }
