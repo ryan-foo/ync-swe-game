@@ -25,7 +25,7 @@
         android:layout_marginTop="40dp"
         android:layout_marginEnd="76dp"
         android:layout_marginRight="76dp"
-        android:text="Single Player"
+        android:text="Create Game"
         app:layout_constraintEnd_toStartOf="@+id/multi_player"
         app:layout_constraintTop_toBottomOf="@+id/imageView" />
 
@@ -34,7 +34,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="40dp"
-        android:text="Multi Player"
+        android:text="Join Game"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.499"
         app:layout_constraintStart_toStartOf="parent"
