@@ -302,8 +302,12 @@ public class World extends SurfaceView implements Runnable {
         playerTwoWin = false;
 
         // banana should be spawned
-        ArrayList<Int2> emptyCells = grid.getEmpty();
-        food.spawn(emptyCells, numCellsWide, numCellsHigh);
+        // ArrayList<Int2> emptyCells = grid.getEmpty();
+        // food.spawn(emptyCells, numCellsWide, numCellsHigh);
+
+        // place food at center so that both players start with same food location
+        food.setLocation(new Int2(9,5));
+
         DatabaseReference _foodRef = database.getReference("food");
         _foodRef.setValue(food.getLocation());
 
