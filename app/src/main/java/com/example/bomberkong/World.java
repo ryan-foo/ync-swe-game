@@ -200,7 +200,7 @@ public class World extends SurfaceView implements Runnable {
         addFoodListener();
         addPlayerPositionListener();
         addPlayerHeadingListener();
-
+        addPlayerDeathListener();
         startNewGame();
     }
 
@@ -324,6 +324,40 @@ public class World extends SurfaceView implements Runnable {
         });
     }
 
+    private void addPlayerDeathListener() {
+        DatabaseReference _death1Ref = database.getReference("player1/death");
+        _death1Ref.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                boolean dead1 = snapshot.getValue(boolean.class);
+                playerOne.setDead(dead1);
+                playerOneWin = false;
+                playerTwoWin = true;
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+
+        DatabaseReference _death2Ref = database.getReference("player2/death");
+        _death2Ref.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                boolean dead2 = snapshot.getValue(boolean.class);
+                playerTwo.setDead(dead2);
+                playerTwoWin = false;
+                playerOneWin = true;
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+    }
+
     // When we start the thread with:
     // mGameThread.start();
     // the run method is continuously called by Android // because we implemented the Runnable interface
@@ -374,19 +408,10 @@ public class World extends SurfaceView implements Runnable {
         playerOne.reset(p1StartPos);
         playerTwo.reset(p2StartPos);
 
-        // Reset position values reflected on Firebase database
-        DatabaseReference _position1Ref = database.getReference("player1/position");
-        _position1Ref.setValue(p1StartPos);
-        DatabaseReference _position2Ref = database.getReference("player2/position");
-        _position2Ref.setValue(p2StartPos);
-        // Reset heading values reflected on Firebase database
-        DatabaseReference _heading1Ref = database.getReference("player1/heading");
-        _heading1Ref.setValue(Heading.NEUTRAL);
-        DatabaseReference _heading2Ref = database.getReference("player2/heading");
-        _heading2Ref.setValue(Heading.NEUTRAL);
-
         playerOneWin = false;
         playerTwoWin = false;
+        playerOne.setDead(false);
+        playerTwo.setDead(false);
 
         // banana should be spawned
         // ArrayList<Int2> emptyCells = grid.getEmpty();
@@ -484,11 +509,17 @@ public class World extends SurfaceView implements Runnable {
         }
 
         // Did player die?
-        if (playerOne.detectDeath()) {
+        if (playerOne.getGrid().getCellStatus(playerOne.getGridPosition()) == CellStatus.FIRE) {
+            playerOne.setDead(true);
+        }
+
+        if (playerOne.getDead()) {
             mSP.play(mDeathID, 1, 1, 0, 0, 1);
             Log.d("World", "Player one dies");
             mPaused = true;
             playerTwoWin = true;
+            DatabaseReference _death1Ref = database.getReference("player1/death");
+            _death1Ref.setValue(playerOne.getDead());
             draw();
             // Say player 2 wins, timeout, then start new game in 5 secs
             int gameEndCounter = 5;
@@ -504,11 +535,17 @@ public class World extends SurfaceView implements Runnable {
             startNewGame();
         }
 
-        if (playerTwo.detectDeath()) {
+        if (playerTwo.getGrid().getCellStatus(playerTwo.getGridPosition()) == CellStatus.FIRE) {
+            playerTwo.setDead(true);
+        }
+
+        if (playerTwo.getDead()) {
             mSP.play(mDeathID, 1, 1, 0, 0, 1);
             Log.d("World", "Player two dies");
             mPaused = true;
             playerOneWin = true;
+            DatabaseReference _death2Ref = database.getReference("player2/death");
+            _death2Ref.setValue(playerTwo.getDead());
             draw();
             // Say player 1 wins, timeout, then start new game in 5 secs
             int gameEndCounter = 5;

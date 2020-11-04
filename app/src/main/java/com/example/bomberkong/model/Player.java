@@ -41,9 +41,10 @@ public class Player implements Cell
     private Bitmap mBitmapHeadDownTwo;
     private Bitmap mBitmapNeutral;
 
+    private boolean dead = false;
     private boolean destroyable = true;
     private boolean collidable = true;
-    public Int2 gridPosition;
+    private Int2 gridPosition;
 
     /**
      * Constructor for objects of class Player
@@ -100,12 +101,23 @@ public class Player implements Cell
      */
 
     public void reset(Int2 startPos) {
-        // Reset Heading
-        heading = heading.NEUTRAL;
-        // Reset Grid position too
+        // Reset Grid position
         grid.setCell(startPos, CellStatus.PLAYER);
         grid.setCell(gridPosition, CellStatus.EMPTY);
         gridPosition = startPos;
+        // Reset Heading
+        heading = heading.NEUTRAL;
+        // Reset death
+        dead = false;
+        // Reset position values reflected on Firebase database
+        DatabaseReference _positionRef = database.getReference("player" + playerNum + "/position");
+        _positionRef.setValue(startPos);
+        // Reset heading values reflected on Firebase database
+        DatabaseReference _headingRef = database.getReference("player" + playerNum + "/heading");
+        _headingRef.setValue(heading);
+        // Reset death values reflected on Firebase database
+        DatabaseReference _deathRef = database.getReference("player" + playerNum + "/death");
+        _deathRef.setValue(dead);
     }
 
     // todo: movement needs to be conditional and check if the cell above is collidable or not.
@@ -132,14 +144,9 @@ public class Player implements Cell
         }
     }
 
-    public boolean detectDeath() {
-        boolean dead = false;
-        if (grid.getCellStatus(gridPosition) == CellStatus.FIRE) {
-            dead = true;
-        }
+    public boolean getDead() { return this.dead; }
 
-        return dead;
-    }
+    public void setDead(boolean death) { this.dead = death; }
 
     public boolean checkPickup(Int2 foodPosition) {
         // Check if the food has the same coordinates as Player.
@@ -287,6 +294,11 @@ public class Player implements Cell
     /**
      * Returns the position of the player
      */
+
+    public Grid getGrid() { return this.grid; }
+
+    public void setGrid(Grid grid) { this.grid = grid; }
+
     public Int2 getGridPosition(){
         return this.gridPosition;
     }
