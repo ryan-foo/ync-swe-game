@@ -9,13 +9,14 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".WaitingRoom"></activity>
+        <activity android:name=".JoinRoom"></activity>
+        <activity android:name=".WaitingRoom" />
         <activity
             android:name=".CreateRoom"
-            android:screenOrientation="landscape"></activity>
+            android:screenOrientation="landscape" />
         <activity
             android:name=".HowToPlay"
-            android:screenOrientation="landscape"></activity>
+            android:screenOrientation="landscape" />
         <activity
             android:name=".StartGame"
             android:screenOrientation="landscape">

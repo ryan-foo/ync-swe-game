@@ -24,7 +24,6 @@
             android:textSize="20sp"
             android:textColor="#000000"
             android:text="Game Instructions"
-            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
