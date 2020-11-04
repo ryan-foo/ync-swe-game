@@ -5,7 +5,6 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Paint;
-import android.util.Log;
 
 import com.example.bomberkong.R;
 import com.example.bomberkong.util.Int2;
@@ -72,6 +71,8 @@ public class Food {
     public Int2 getLocation() {
         return position;
     }
+
+    public void setLocation(Int2 location) { position = location; }
 
     // the game objects will handle drawing themselves
     public void draw(Canvas canvas, Paint paint) {

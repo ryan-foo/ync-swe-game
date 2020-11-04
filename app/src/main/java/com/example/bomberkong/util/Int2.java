@@ -14,6 +14,8 @@ public class Int2
      * @param x the x-coordinate
      * @param y the y-coordinate
      */
+    private Int2() {}
+
     public Int2(int x, int y){
         this.x = x;
         this.y = y;
@@ -35,6 +37,11 @@ public class Int2
      */
     public int getY(){
         return this.y;
+    }
+
+    public void setInt2(Int2 location) {
+        this.x = location.x;
+        this.y = location.y;
     }
 
 

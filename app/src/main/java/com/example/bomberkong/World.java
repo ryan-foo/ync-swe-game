@@ -193,6 +193,7 @@ public class World extends SurfaceView implements Runnable {
         mFontMargin = mScreenX / 75;
 
         addScoreEventListener();
+        addFoodEventListener();
         startNewGame();
     }
 
@@ -226,6 +227,23 @@ public class World extends SurfaceView implements Runnable {
             }
         }));
     }
+
+    private void addFoodEventListener() {
+        DatabaseReference _foodRef = database.getReference("food");
+        _foodRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                Int2 foodLoc = snapshot.getValue(Int2.class);
+                food.setLocation(foodLoc);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+    }
+
     // When we start the thread with:
     // mGameThread.start();
     // the run method is continuously called by Android // because we implemented the Runnable interface
@@ -287,7 +305,7 @@ public class World extends SurfaceView implements Runnable {
         ArrayList<Int2> emptyCells = grid.getEmpty();
         food.spawn(emptyCells, numCellsWide, numCellsHigh);
         DatabaseReference _foodRef = database.getReference("food");
-        _foodRef.setValue(food);
+        _foodRef.setValue(food.getLocation());
 
         // Reset score
         mScoreP1 = 0;
@@ -359,7 +377,7 @@ public class World extends SurfaceView implements Runnable {
             ArrayList<Int2> emptyCells = grid.getEmpty();
             food.spawn(emptyCells, numCellsWide, numCellsHigh);
             DatabaseReference _foodRef = database.getReference("food");
-            _foodRef.setValue(food);
+            _foodRef.setValue(food.getLocation());
             mSP.play(mEat_ID, 1, 1, 0, 0, 1);
         }
 
@@ -369,6 +387,8 @@ public class World extends SurfaceView implements Runnable {
             _score2Ref.setValue(mScoreP2);
             ArrayList<Int2> emptyCells = grid.getEmpty();
             food.spawn(emptyCells, numCellsWide, numCellsHigh);
+            DatabaseReference _foodRef = database.getReference("food");
+            _foodRef.setValue(food.getLocation());
             mSP.play(mEat_ID, 1, 1, 0, 0, 1);
         }
 
