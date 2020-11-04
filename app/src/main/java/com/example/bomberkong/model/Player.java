@@ -34,7 +34,7 @@ public class Player implements Cell
     private Grid grid;
     private Bomb bomb;
     private Int2 cellSize;
-    private Heading heading = Heading.DOWN;
+    private Heading heading = Heading.NEUTRAL;
 
     private Bitmap mBitmapHeadRightOne;
     private Bitmap mBitmapHeadLeftOne;
@@ -230,6 +230,8 @@ public class Player implements Cell
             // moving towards bottom right
             if (touchGridPositionY >= this.gridPosition.getY() && (touchGridPositionX - this.gridPosition.getX() > touchGridPositionY - this.gridPosition.getY())) {
                 heading = Heading.RIGHT;
+                DatabaseReference _headingRef = database.getReference("player" + playerNum + "/heading");
+                _headingRef.setValue(heading);
             }
 
             // moving towards bottom right
@@ -269,6 +271,9 @@ public class Player implements Cell
                 heading = Heading.UP;
             }
         }
+        // send player heading data to Firebase database
+        DatabaseReference _headingRef = database.getReference("player" + playerNum + "/heading");
+        _headingRef.setValue(heading);
         // and then move after changing direction
         move();
     }
