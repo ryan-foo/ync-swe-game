@@ -20,11 +20,6 @@ public class Player implements Cell
     private final String playerNumControlled;
     private final int playerNum;
 
-    // What direction is the player facing?
-    private enum Heading {
-        UP, DOWN, LEFT, RIGHT, NEUTRAL;
-    }
-
     private FirebaseDatabase database = FirebaseDatabase.getInstance();
 
     private int cellWidth;
@@ -106,7 +101,7 @@ public class Player implements Cell
 
     public void reset(Int2 startPos) {
         // Reset Heading
-        heading = heading.DOWN;
+        heading = heading.NEUTRAL;
         // Reset Grid position too
         grid.setCell(startPos, CellStatus.PLAYER);
         grid.setCell(gridPosition, CellStatus.EMPTY);
@@ -297,6 +292,10 @@ public class Player implements Cell
     }
 
     public void setGridPosition(Int2 position) { this.gridPosition = position; }
+
+    public Heading getHeading() { return this.heading; }
+
+    public void setHeading(Heading heading) { this.heading = heading; }
 
     /**
      * Moves the player up by one unit.

@@ -20,11 +20,14 @@ import androidx.annotation.NonNull;
 
 import com.example.bomberkong.model.Bomb;
 import com.example.bomberkong.model.CellStatus;
+import com.example.bomberkong.model.Heading;
 import com.example.bomberkong.model.Fire;
 import com.example.bomberkong.model.Food;
 import com.example.bomberkong.model.Grid;
 import com.example.bomberkong.model.Player;
+
 import com.example.bomberkong.util.Int2;
+
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -192,9 +195,12 @@ public class World extends SurfaceView implements Runnable {
         // 1.5% of width
         mFontMargin = mScreenX / 75;
 
+        // add database listeners to World to read from Firebase and update the world realtime
         addScoreListener();
         addFoodListener();
         addPlayerPositionListener();
+        addPlayerHeadingListener();
+
         startNewGame();
     }
 
@@ -284,6 +290,40 @@ public class World extends SurfaceView implements Runnable {
         });
     }
 
+    private void addPlayerHeadingListener() {
+        DatabaseReference _head1Ref = database.getReference("player1/heading");
+        _head1Ref.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if (playerNumControlled.equals("2")) {
+                    Heading heading1 = snapshot.getValue(Heading.class);
+                    playerOne.setHeading(heading1);
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+
+        DatabaseReference _head2Ref = database.getReference("player2/heading");
+        _head2Ref.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if (playerNumControlled.equals("1")) {
+                    Heading heading2 = snapshot.getValue(Heading.class);
+                    playerTwo.setHeading(heading2);
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+    }
+
     // When we start the thread with:
     // mGameThread.start();
     // the run method is continuously called by Android // because we implemented the Runnable interface
@@ -333,11 +373,18 @@ public class World extends SurfaceView implements Runnable {
         mPaused = false; // game is running.
         playerOne.reset(p1StartPos);
         playerTwo.reset(p2StartPos);
+
         // Reset position values reflected on Firebase database
         DatabaseReference _position1Ref = database.getReference("player1/position");
         _position1Ref.setValue(p1StartPos);
         DatabaseReference _position2Ref = database.getReference("player2/position");
         _position2Ref.setValue(p2StartPos);
+        // Reset heading values reflected on Firebase database
+        DatabaseReference _heading1Ref = database.getReference("player1/heading");
+        _heading1Ref.setValue(Heading.NEUTRAL);
+        DatabaseReference _heading2Ref = database.getReference("player2/heading");
+        _heading2Ref.setValue(Heading.NEUTRAL);
+
         playerOneWin = false;
         playerTwoWin = false;
 
