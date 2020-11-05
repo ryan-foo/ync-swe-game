@@ -8,9 +8,6 @@ public class Int2
     public int x;
     public int y;
 
-//    no-argument constructor is needed to call database
-    public Int2() {}
-
     /**
      * Creates a collection of two integer values.
      *

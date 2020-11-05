@@ -8,6 +8,9 @@ import com.example.bomberkong.util.Int2;
 
 import static com.example.bomberkong.R.drawable.fire;
 
+/**
+ * Represents fire that will kill the player upon contact
+ */
 public class Fire implements Cell
 {
     /**

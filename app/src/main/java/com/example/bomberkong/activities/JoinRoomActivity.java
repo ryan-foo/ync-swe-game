@@ -1,4 +1,4 @@
-package com.example.bomberkong;
+package com.example.bomberkong.activities;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -7,10 +7,12 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
 
+import com.example.bomberkong.R;
+
 import java.util.ArrayList;
 import java.util.List;
 
-public class JoinRoom extends AppCompatActivity {
+public class JoinRoomActivity extends AppCompatActivity {
     ListView listview;
 
     List<String> listOfAvailableRooms;

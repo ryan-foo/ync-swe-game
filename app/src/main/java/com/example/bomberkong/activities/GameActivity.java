@@ -1,13 +1,15 @@
-package com.example.bomberkong;
+package com.example.bomberkong.activities;
 
 import android.app.Activity;
 import android.graphics.Point;
 import android.os.Bundle;
 import android.view.Display;
 
+import com.example.bomberkong.World;
+
 // credits for framework: John Horton
 
-public class MainActivity extends Activity {
+public class GameActivity extends Activity {
     private World mWorld;
 
     @Override

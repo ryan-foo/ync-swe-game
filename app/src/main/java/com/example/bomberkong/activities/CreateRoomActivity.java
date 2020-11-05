@@ -1,4 +1,4 @@
-package com.example.bomberkong;
+package com.example.bomberkong.activities;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -8,7 +8,9 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.view.View;
 
-public class CreateRoom extends AppCompatActivity {
+import com.example.bomberkong.R;
+
+public class CreateRoomActivity extends AppCompatActivity {
     public static final String EXTRA_ROOM_MESSAGE = "RoomName";
     private Button button;
     private EditText editText;
@@ -28,7 +30,7 @@ public class CreateRoom extends AppCompatActivity {
                 if(!nameOfRoom.equals("")) {
                     // button.setText("CREATING ROOM");
                     // button.setEnabled(false);
-                    Intent intent = new Intent(getApplicationContext(), WaitingRoom.class);
+                    Intent intent = new Intent(getApplicationContext(), WaitingRoomActivity.class);
                     intent.putExtra(EXTRA_ROOM_MESSAGE, nameOfRoom);
                     startActivity(intent);
                 }

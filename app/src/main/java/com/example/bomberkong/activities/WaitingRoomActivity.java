@@ -1,10 +1,12 @@
-package com.example.bomberkong;
+package com.example.bomberkong.activities;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
 
-public class WaitingRoom extends AppCompatActivity {
+import com.example.bomberkong.R;
+
+public class WaitingRoomActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

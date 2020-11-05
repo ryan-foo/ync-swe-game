@@ -15,6 +15,9 @@ import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.ArrayList;
 
+/**
+ * Represents the player the user can control.
+ */
 public class Player implements Cell
 {
     /**

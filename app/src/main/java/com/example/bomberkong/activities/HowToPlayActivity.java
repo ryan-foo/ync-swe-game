@@ -1,4 +1,4 @@
-package com.example.bomberkong;
+package com.example.bomberkong.activities;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -7,7 +7,9 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 
-public class HowToPlay extends AppCompatActivity {
+import com.example.bomberkong.R;
+
+public class HowToPlayActivity extends AppCompatActivity {
 
     private Button joinGame;
     private Button createGame;
@@ -23,7 +25,7 @@ public class HowToPlay extends AppCompatActivity {
         joinGame.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent seeListOfRooms = new Intent(HowToPlay.this, SelectPlayerActivity.class);
+                Intent seeListOfRooms = new Intent(HowToPlayActivity.this, SelectPlayerActivity.class);
                 startActivity(seeListOfRooms);
             }
         });
@@ -31,7 +33,7 @@ public class HowToPlay extends AppCompatActivity {
         createGame.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent createNewRoom = new Intent(HowToPlay.this, SelectPlayerActivity.class);
+                Intent createNewRoom = new Intent(HowToPlayActivity.this, SelectPlayerActivity.class);
                 startActivity(createNewRoom);
             }
         });
