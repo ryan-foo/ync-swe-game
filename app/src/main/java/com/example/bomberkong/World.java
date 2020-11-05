@@ -115,13 +115,15 @@ public class World extends SurfaceView implements Runnable {
 
     /**
      * This is the constructor method for World, which acts as the game engine
-     * @param context          is passed from GameActivity
+     * @param c          Context is passed from GameActivity
      * @param actualViewWidth  represents the actual width of the entire view
      * @param actualViewHeight represents the actual height of the entire view
      * @param playerNumControlled is the number of the player that is currently being controlled
      */
-    public World(Context context, int actualViewWidth, int actualViewHeight, String playerNumControlled) {
-        super(context);
+    public World(Context c, int actualViewWidth, int actualViewHeight, String playerNumControlled) {
+        super(c);
+        this.context = c;
+        //super(context);
         this.playerNumControlled = playerNumControlled;
         Log.d(TAG, "Player controlled" + playerNumControlled);
 
@@ -242,38 +244,46 @@ public class World extends SurfaceView implements Runnable {
     }
 
     private void addBombListener() {
-        DatabaseReference _bomb1Ref = database.getReference("player1/bomb");
-        _bomb1Ref.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                if (playerNumControlled.equals("2")) {
-                    Bomb bombOne = snapshot.getValue(Bomb.class);
-                    playerOne.setBomb(bombOne);
+        if (playerNumControlled.equals("2")) {
+            DatabaseReference _bomb1Ref = database.getReference("player1/bomb/GridPosition");
+            _bomb1Ref.addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                    Int2 bombOnePos = snapshot.getValue(Int2.class);
+                    if (bombOnePos!=null) {
+                        Bomb bombOne = new Bomb(context, bombOnePos, cellResolution);
+                        playerOne.setBomb(bombOne);
+                    }
                 }
-            }
 
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
+                @Override
+                public void onCancelled(@NonNull DatabaseError error) {
 
-            }
-        });
-
-        DatabaseReference _bomb2Ref = database.getReference("player2/bomb");
-        _bomb2Ref.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                if (playerNumControlled.equals("1")) {
-                    Bomb bombTwo = snapshot.getValue(Bomb.class);
-                    playerTwo.setBomb(bombTwo);
                 }
-            }
+            });
+        }
 
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
+        if (playerNumControlled.equals("1")) {
+            DatabaseReference _bomb2Ref = database.getReference("player2/bomb/GridPosition");
+            _bomb2Ref.addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                    Int2 bombTwoPos = snapshot.getValue(Int2.class);
+                    if (bombTwoPos!=null){
+                        Bomb bombTwo = new Bomb(context,bombTwoPos,cellResolution);
+                        playerTwo.setBomb(bombTwo);
+                    }
+                }
 
-            }
-        });
+                @Override
+                public void onCancelled(@NonNull DatabaseError error) {
+
+                }
+            });
+        }
     }
+
+
 
     private void addFoodListener() {
         DatabaseReference _foodRef = database.getReference("food");
@@ -603,31 +613,32 @@ public class World extends SurfaceView implements Runnable {
          */
 
         if (playerOne.getBomb() != null) {
+            Bomb bombOne = playerOne.getBomb();
             if (playerNumControlled.equals("1")) {
-                Bomb bombOne = playerOne.getBomb();
-                DatabaseReference _bomb1Ref = database.getReference("player1/bomb");
-                _bomb1Ref.setValue(bombOne);
-                bombOne.ticksToExplode -= 1;
-                if (bombOne.ticksToExplode == 0) {
-                    bombOne.explode(this, fireList);
-                    mSP.play(mBombID, 1, 1, 0, 0, 1);
-                    playerOne.resetBomb();
-
-                }
+                Int2 bombOnePos = bombOne.getGridPosition();
+                DatabaseReference _bomb1PosRef = database.getReference("player1/bomb/GridPosition");
+                _bomb1PosRef.setValue(bombOnePos);
+            }
+            bombOne.ticksToExplode -= 1;
+            if (bombOne.ticksToExplode == 0) {
+                bombOne.explode(this, fireList);
+                mSP.play(mBombID, 1, 1, 0, 0, 1);
+                playerOne.resetBomb();
             }
         }
 
         if (playerTwo.getBomb() != null) {
+            Bomb bombTwo = playerTwo.getBomb();
             if (playerNumControlled.equals("2")){
-                Bomb bombTwo = playerTwo.getBomb();
-                DatabaseReference _bomb2Ref = database.getReference("player2/bomb");
-                _bomb2Ref.setValue(bombTwo);
-                bombTwo.ticksToExplode -= 1;
-                if (bombTwo.ticksToExplode == 0) {
-                    bombTwo.explode(this, fireList);
-                    mSP.play(mBombID, 1, 1, 0, 0, 1);
-                    playerTwo.resetBomb();
-                }
+                Int2 bombTwoPos = bombTwo.getGridPosition();
+                DatabaseReference _bomb2PosRef = database.getReference("player2/bomb/GridPosition");
+                _bomb2PosRef.setValue(bombTwoPos);
+            }
+            bombTwo.ticksToExplode -= 1;
+            if (bombTwo.ticksToExplode == 0) {
+                bombTwo.explode(this, fireList);
+                mSP.play(mBombID, 1, 1, 0, 0, 1);
+                playerTwo.resetBomb();
             }
         }
 

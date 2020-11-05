@@ -3,6 +3,7 @@ package com.example.bomberkong.activities;
 import android.app.Activity;
 import android.graphics.Point;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Display;
 
 import com.example.bomberkong.World;
@@ -24,7 +25,8 @@ public class GameActivity extends Activity {
         Point size = new Point();
         display.getSize(size);
 
-        mWorld = new World(this, size.x, size.y, playerNumControlled);
+        Log.e("GameActivity",getApplicationContext().toString());
+        mWorld = new World(getApplicationContext(), size.x, size.y, playerNumControlled);
         setContentView(mWorld);
     }
 
