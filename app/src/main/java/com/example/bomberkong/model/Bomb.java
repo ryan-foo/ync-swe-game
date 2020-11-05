@@ -3,6 +3,7 @@ package com.example.bomberkong.model;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.util.Log;
 
 import com.example.bomberkong.R;
 import com.example.bomberkong.World;
@@ -111,21 +112,25 @@ public class Bomb implements Cell
         if (left == CellStatus.EMPTY || left == CellStatus.PLAYER){
             Fire fire = new Fire(context, grid,  posLeft, cellSize);
             fireList.add(fire);
+            Log.d("explode", fire.getGridPosition().toString());
             grid.setCell(posLeft, CellStatus.FIRE);
         }
         if (right == CellStatus.EMPTY || right == CellStatus.PLAYER){
             grid.setCell(posRight, CellStatus.FIRE);
             Fire fire = new Fire(context, grid, posRight, cellSize);
+            Log.d("explode", fire.getGridPosition().toString());
             fireList.add(fire);
         }
         if (up == CellStatus.EMPTY || up == CellStatus.PLAYER){
             grid.setCell(posUp, CellStatus.FIRE);
             Fire fire = new Fire(context, grid, posUp, cellSize);
+            Log.d("explode", fire.getGridPosition().toString());
             fireList.add(fire);
         }
         if (down == CellStatus.EMPTY || down == CellStatus.PLAYER){
             grid.setCell(posDown, CellStatus.FIRE);
             Fire fire = new Fire(context, grid, posDown, cellSize);
+            Log.d("explode", fire.getGridPosition().toString());
             fireList.add(fire);
         }
     }
