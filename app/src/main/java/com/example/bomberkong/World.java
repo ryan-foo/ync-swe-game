@@ -602,29 +602,52 @@ public class World extends SurfaceView implements Runnable {
          * In this case, we use iterators to handle both the ticking down of bombs and the ticking down of fires before removing them from the game.
          */
 
-        if (playerOne.getBomb() != null) {
-            Bomb bombOne = playerOne.getBomb();
-            DatabaseReference _bomb1Ref = database.getReference("player1/bomb");
-            _bomb1Ref.setValue(bombOne);
-            bombOne.ticksToExplode -= 1;
-            if (bombOne.ticksToExplode == 0) {
-                bombOne.explode(this, fireList);
-                mSP.play(mBombID, 1, 1, 0, 0, 1);
-                playerOne.resetBomb();
+        if(playerNumControlled.equals("1")) {
+            if (playerOne.getBomb() != null) {
+                Bomb bombOne = playerOne.getBomb();
+                DatabaseReference _bomb1Ref = database.getReference("player1/bomb");
+                _bomb1Ref.setValue(bombOne);
+                bombOne.ticksToExplode -= 1;
+                if (bombOne.ticksToExplode == 0) {
+                    bombOne.explode(this, fireList);
+                    mSP.play(mBombID, 1, 1, 0, 0, 1);
+                    playerOne.resetBomb();
+                }
+            }
+
+            if (playerTwo.getBomb() != null) {
+                Bomb bombTwo = playerTwo.getBomb();
+                bombTwo.ticksToExplode -= 1;
+                if (bombTwo.ticksToExplode == 0) {
+                    bombTwo.explode(this, fireList);
+                    mSP.play(mBombID, 1, 1, 0, 0, 1);
+                    playerTwo.resetBomb();
+                }
+            }
+        } else {
+            if (playerOne.getBomb() != null) {
+                Bomb bombOne = playerOne.getBomb();
+                bombOne.ticksToExplode -= 1;
+                if (bombOne.ticksToExplode == 0) {
+                    bombOne.explode(this, fireList);
+                    mSP.play(mBombID, 1, 1, 0, 0, 1);
+                    playerOne.resetBomb();
+                }
+            }
+
+            if (playerTwo.getBomb() != null) {
+                Bomb bombTwo = playerTwo.getBomb();
+                DatabaseReference _bomb2Ref = database.getReference("player2/bomb");
+                _bomb2Ref.setValue(bombTwo);
+                bombTwo.ticksToExplode -= 1;
+                if (bombTwo.ticksToExplode == 0) {
+                    bombTwo.explode(this, fireList);
+                    mSP.play(mBombID, 1, 1, 0, 0, 1);
+                    playerTwo.resetBomb();
+                }
             }
         }
 
-        if (playerTwo.getBomb() != null) {
-            Bomb bombTwo = playerTwo.getBomb();
-            DatabaseReference _bomb2Ref = database.getReference("player2/bomb");
-            _bomb2Ref.setValue(bombTwo);
-            bombTwo.ticksToExplode -= 1;
-            if (bombTwo.ticksToExplode == 0) {
-                bombTwo.explode(this, fireList);
-                mSP.play(mBombID, 1, 1, 0, 0, 1);
-                playerTwo.resetBomb();
-            }
-        }
 
         // todo: there seems to be a bug where the screen does not clear!
         Iterator<Fire> fitr = fireList.iterator();
