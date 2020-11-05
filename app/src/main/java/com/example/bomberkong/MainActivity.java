@@ -11,7 +11,7 @@ public class MainActivity extends Activity {
     private World mWorld;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         // gets the player number that is being controlled.
