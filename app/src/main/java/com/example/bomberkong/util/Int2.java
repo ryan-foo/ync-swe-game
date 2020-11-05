@@ -14,8 +14,6 @@ public class Int2
      * @param x the x-coordinate
      * @param y the y-coordinate
      */
-    private Int2() {}
-
     public Int2(int x, int y){
         this.x = x;
         this.y = y;

@@ -12,18 +12,16 @@ import com.example.bomberkong.util.Int2;
 import java.util.ArrayList;
 import java.util.Random;
 
-
+/**
+ * Represents the Food a Player Object can pick up. The respective player's point increases by 1 when the food is picked up.
+ */
 public class Food {
     public static Int2 position;
     private int cellWidth;
     private int cellHeight;
-    // currently, this will hold the max values for horizontal / vert positions
-    private Int2 mSpawnRange;
 
     // size of pixels of food: which is equal to a single block on the grid
     private Bitmap mBitmapFood;
-
-    // todo: continue from here
 
     public Food(Context context, Int2 position, Int2 cellSize) {
         this.position = position;

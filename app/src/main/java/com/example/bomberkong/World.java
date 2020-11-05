@@ -61,10 +61,7 @@ public class World extends SurfaceView implements Runnable {
     private Player playerOne;
     private Player playerTwo;
     private Food food;
-    private Fire fire;
 
-    // Every bomb spawned will be added to bombList, and we can get their pos and time to tick down
-    private ArrayList<Bomb> bombList = new ArrayList<Bomb>();
     // Every fire spawned will be added to fireList, and we can get their pos and time to tick down
     private ArrayList<Fire> fireList = new ArrayList<Fire>();
     private int actualViewWidth;
@@ -176,7 +173,6 @@ public class World extends SurfaceView implements Runnable {
         playerOne = new Player(context, grid, p1StartPos, 1, cellResolution, playerNumControlled);
         playerTwo = new Player(context, grid, p2StartPos, 2, cellResolution, playerNumControlled);
         food = new Food(context, new Int2(3, 3), cellResolution);
-        bombList = new ArrayList<Bomb>();
         fireList = new ArrayList<Fire>();
         grid.setCell(playerOne.getGridPosition(), CellStatus.PLAYER);
         grid.setCell(playerTwo.getGridPosition(), CellStatus.PLAYER);
@@ -634,8 +630,6 @@ public class World extends SurfaceView implements Runnable {
             if (fire.ticksToFade == 0) {
                 // todo: something to do with drawing empty?
                 grid.setCell(fire.getGridPosition(), CellStatus.EMPTY);
-                fire.remove();
-
             }
         }
     }
@@ -719,8 +713,6 @@ public class World extends SurfaceView implements Runnable {
                         playerTwo.switchHeading(motionEvent);
                     }
                 }
-
-                // todo: if it is placing a bomb: add this to bombList
                 break;
             default:
                 break;
