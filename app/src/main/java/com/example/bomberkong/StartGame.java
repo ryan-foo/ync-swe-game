@@ -26,7 +26,6 @@ public class StartGame extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent playerActivity = new Intent(StartGame.this, SelectPlayerActivity.class);
-                playerActivity.putExtra("playerID", "1");
                 startActivity(playerActivity);
             }
         });
@@ -35,7 +34,6 @@ public class StartGame extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent playerActivity = new Intent(StartGame.this, SelectPlayerActivity.class);
-                playerActivity.putExtra("playerID", "1");
                 startActivity(playerActivity);
             }
         });
@@ -43,8 +41,7 @@ public class StartGame extends AppCompatActivity {
         how_to_play.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent playerActivity = new Intent(StartGame.this, SelectPlayerActivity.class);
-                playerActivity.putExtra("playerID", "1");
+                Intent playerActivity = new Intent(StartGame.this, HowToPlay.class);
                 startActivity(playerActivity);
             }
         });
