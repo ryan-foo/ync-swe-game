@@ -1,4 +1,4 @@
-package com.example.bomberkong;
+package com.example.bomberkong.activities;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -7,7 +7,9 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 
-public class StartGame extends AppCompatActivity {
+import com.example.bomberkong.R;
+
+public class StartGameActivity extends AppCompatActivity {
 
     private Button single_player_game;
     private Button multi_player_game;
@@ -25,7 +27,7 @@ public class StartGame extends AppCompatActivity {
         single_player_game.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent playerActivity = new Intent(StartGame.this, SelectPlayerActivity.class);
+                Intent playerActivity = new Intent(StartGameActivity.this, SelectPlayerActivity.class);
                 playerActivity.putExtra("playerID", "1");
                 startActivity(playerActivity);
             }
@@ -34,7 +36,7 @@ public class StartGame extends AppCompatActivity {
         multi_player_game.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent playerActivity = new Intent(StartGame.this, SelectPlayerActivity.class);
+                Intent playerActivity = new Intent(StartGameActivity.this, SelectPlayerActivity.class);
                 playerActivity.putExtra("playerID", "1");
                 startActivity(playerActivity);
             }
@@ -43,7 +45,7 @@ public class StartGame extends AppCompatActivity {
         how_to_play.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent playerActivity = new Intent(StartGame.this, SelectPlayerActivity.class);
+                Intent playerActivity = new Intent(StartGameActivity.this, SelectPlayerActivity.class);
                 playerActivity.putExtra("playerID", "1");
                 startActivity(playerActivity);
             }

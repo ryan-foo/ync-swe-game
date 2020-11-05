@@ -1,4 +1,4 @@
-package com.example.bomberkong;
+package com.example.bomberkong.activities;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -6,6 +6,8 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+
+import com.example.bomberkong.R;
 
 public class SelectPlayerActivity extends AppCompatActivity {
     private Button player1Button;
@@ -21,7 +23,7 @@ public class SelectPlayerActivity extends AppCompatActivity {
         //buttonClick.setOnClickListener(new View.OnClickListener() {
         player1Button = (Button)findViewById(R.id.buttonP1);
         player2Button = (Button)findViewById(R.id.buttonP2);
-        final Intent playerActivity = new Intent(getApplicationContext(), MainActivity.class);
+        final Intent playerActivity = new Intent(getApplicationContext(), GameActivity.class);
 
         player1Button.setOnClickListener(new View.OnClickListener() {
             @Override

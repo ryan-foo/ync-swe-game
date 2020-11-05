@@ -40,9 +40,14 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.concurrent.TimeUnit;
 
-// credits for framework: John Horton
-
+/**
+ * The world stores instances such as the main game grid, players, and soundPools. It acts as the
+ * main game loop, where the run method keeps track of updates and the onTouchEvent handles player
+ * inputs.
+ * credits for framework: John Horton
+ */
 public class World extends SurfaceView implements Runnable {
+    
     private static final String TAG = "World";
     private final String playerNumControlled;
 
@@ -110,12 +115,11 @@ public class World extends SurfaceView implements Runnable {
 
     /**
      * This is the constructor method for World, which acts as the game engine
-     * @param context          is passed from MainActivity
+     * @param context          is passed from GameActivity
      * @param actualViewWidth  represents the actual width of the entire view
      * @param actualViewHeight represents the actual height of the entire view
      * @param playerNumControlled is the number of the player that is currently being controlled
      */
-
     public World(Context context, int actualViewWidth, int actualViewHeight, String playerNumControlled) {
         super(context);
         this.playerNumControlled = playerNumControlled;

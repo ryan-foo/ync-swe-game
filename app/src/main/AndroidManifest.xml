@@ -9,16 +9,16 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".JoinRoom"></activity>
-        <activity android:name=".WaitingRoom" />
+        <activity android:name=".activities.JoinRoomActivity"></activity>
+        <activity android:name=".activities.WaitingRoomActivity" />
         <activity
-            android:name=".CreateRoom"
+            android:name=".activities.CreateRoomActivity"
             android:screenOrientation="landscape" />
         <activity
-            android:name=".HowToPlay"
+            android:name=".activities.HowToPlayActivity"
             android:screenOrientation="landscape" />
         <activity
-            android:name=".StartGame"
+            android:name=".activities.StartGameActivity"
             android:screenOrientation="landscape">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -27,10 +27,10 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".SelectPlayerActivity"
+            android:name=".activities.SelectPlayerActivity"
             android:screenOrientation="landscape" />
         <activity
-            android:name=".MainActivity"
+            android:name=".activities.GameActivity"
             android:screenOrientation="landscape"
             android:theme="@android:style/Theme.NoTitleBar.Fullscreen">
             <intent-filter>
