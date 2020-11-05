@@ -11,6 +11,7 @@ import android.media.AudioAttributes;
 import android.media.AudioManager;
 import android.media.SoundPool;
 import android.os.Build;
+import android.util.Base64;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
@@ -34,6 +35,12 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.ObjectInput;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutput;
+import java.io.ObjectOutputStream;
 import java.util.Iterator;
 
 import java.io.IOException;
@@ -197,7 +204,7 @@ public class World extends SurfaceView implements Runnable {
         addPlayerPositionListener();
         addPlayerHeadingListener();
         addPlayerDeathListener();
-        addBombListener();
+        // addBombListener();
         startNewGame();
     }
 
@@ -237,13 +244,38 @@ public class World extends SurfaceView implements Runnable {
         }));
     }
 
+    public static String convertToString(Bomb bomb) throws IOException{
+            ByteArrayOutputStream bos = new ByteArrayOutputStream();
+            ObjectOutput out = new ObjectOutputStream(bos);
+            out.writeObject(bomb);
+            final byte[] byteArray = bos.toByteArray();
+            return Base64.encodeToString(byteArray,Base64.DEFAULT);
+    }
+
+    public static Bomb convertFromString(String byteString) throws IOException, ClassNotFoundException {
+            final byte[] bytes = Base64.decode(byteString,Base64.DEFAULT);
+            ByteArrayInputStream bis = new ByteArrayInputStream(bytes);
+            ObjectInput in = new ObjectInputStream(bis);
+            Bomb bombObject = (Bomb) in.readObject();
+            return bombObject;
+    }
+
+    /*
     private void addBombListener() {
         DatabaseReference _bomb1Ref = database.getReference("player1/bomb");
         _bomb1Ref.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 if (playerNumControlled.equals("2")) {
-                    Bomb bombOne = snapshot.getValue(Bomb.class);
+                    String bombString = snapshot.getValue(String.class);
+                    Bomb bombOne = null;
+                    try {
+                        bombOne = World.convertFromString(bombString);
+                    } catch (IOException i) {
+                        i.printStackTrace();
+                    } catch (ClassNotFoundException e) {
+                        e.printStackTrace();
+                    }
                     playerOne.setBomb(bombOne);
                 }
             }
@@ -259,7 +291,15 @@ public class World extends SurfaceView implements Runnable {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 if (playerNumControlled.equals("1")) {
-                    Bomb bombTwo = snapshot.getValue(Bomb.class);
+                    String bombString = snapshot.getValue(String.class);
+                    Bomb bombTwo = null;
+                    try {
+                        bombTwo = World.convertFromString(bombString);
+                    } catch (IOException i) {
+                        i.printStackTrace();
+                    } catch (ClassNotFoundException e) {
+                        e.printStackTrace();
+                    }
                     playerTwo.setBomb(bombTwo);
                 }
             }
@@ -270,6 +310,7 @@ public class World extends SurfaceView implements Runnable {
             }
         });
     }
+     */
 
     private void addFoodListener() {
         DatabaseReference _foodRef = database.getReference("food");
@@ -404,7 +445,11 @@ public class World extends SurfaceView implements Runnable {
             // if game isn't paused, update 10 times a second
             if (!mPaused) {
                 if (updateRequired()) {
-                    update();
+                    try {
+                        update();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
                 }
             }
 
@@ -515,7 +560,7 @@ public class World extends SurfaceView implements Runnable {
         }
     }
 
-    public void update() {
+    public void update() throws IOException {
         // Did player eat food?
         if (playerOne.checkPickup(food.getLocation())) {
             mScoreP1 += 1;
@@ -602,7 +647,8 @@ public class World extends SurfaceView implements Runnable {
             if (playerNumControlled.equals("1")) {
                 Bomb bombOne = playerOne.getBomb();
                 DatabaseReference _bomb1Ref = database.getReference("player1/bomb");
-                _bomb1Ref.setValue(bombOne);
+                String bombOneString = World.convertToString(bombOne);
+                _bomb1Ref.setValue(bombOneString);
                 bombOne.ticksToExplode -= 1;
                 if (bombOne.ticksToExplode == 0) {
                     bombOne.explode(this, fireList);
@@ -623,8 +669,9 @@ public class World extends SurfaceView implements Runnable {
         if(playerTwo.getBomb() != null) {
             if(playerNumControlled.equals("2")){
                 Bomb bombTwo = playerTwo.getBomb();
+                String bombTwoString = World.convertToString(bombTwo);
                 DatabaseReference _bomb2Ref = database.getReference("player2/bomb");
-                _bomb2Ref.setValue(bombTwo);
+                _bomb2Ref.setValue(bombTwoString);
                 bombTwo.ticksToExplode -= 1;
                 if (bombTwo.ticksToExplode == 0) {
                     bombTwo.explode(this, fireList);

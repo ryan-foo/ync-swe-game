@@ -8,6 +8,7 @@ import com.example.bomberkong.R;
 import com.example.bomberkong.World;
 import com.example.bomberkong.util.Int2;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
 /**
@@ -15,7 +16,7 @@ import java.util.ArrayList;
  * on its left, right, top, and bottom coordinates.
  * Each player can only have one bomb spawned at one time.
  */
-public class Bomb implements Cell
+public class Bomb implements Cell, Serializable
 {
     /**
      * The position of the bomb on the grid.

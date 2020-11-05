@@ -20,6 +20,11 @@ public class Int2
     }
 
     /**
+     * A no-argument constructor for Int2
+     */
+    public Int2() {}
+
+    /**
      * Returns the x-coordinate of the Int2
      *
      * @return int x-coordinate

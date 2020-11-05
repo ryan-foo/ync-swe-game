@@ -184,7 +184,7 @@ public class Player implements Cell
     public void resetBomb(){
         this.bomb = null;
         DatabaseReference _bombRef = database.getReference("player" + this.playerNum + "/bomb");
-        _bombRef.setValue(this.bomb);
+        _bombRef.setValue(null);
     }
 
     /**
