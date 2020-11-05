@@ -4,7 +4,6 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 
-import com.example.bomberkong.MainActivity;
 import com.example.bomberkong.R;
 import com.example.bomberkong.World;
 import com.example.bomberkong.util.Int2;
