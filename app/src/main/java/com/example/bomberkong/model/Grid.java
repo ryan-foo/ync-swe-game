@@ -18,23 +18,74 @@ import java.util.Map;
 import java.util.HashMap;
 import java.util.stream.Collectors;
 
+/**
+ * The Grid stores information about what each cell is as a CellStatus. This information is stored
+ * as a HashMap, where the key is the Int2 position of the cell and the value is the CellStatus
+ * of the position. The Grid also handles the drawing of walls, bombs, fires, and the empty cells.
+ */
 public class Grid
 {
+    /**
+     * The Map where the grid position and the corresponding cellstatus is stored. Inspired by
+     * Professor Bodin's implementation of maps in YNCGameLab.
+     */
     private Map<Int2, CellStatus> gridMap;
+
+    /**
+     * Number of cells width-wise in the grid
+     */
     private int numCellsWide;
+
+    /**
+     * Number of cells height-wise in the grid
+     */
     private int numCellsHigh;
+
+    /**
+     * The width-wise pixel size of the view
+     */
     private int actualViewWidth;
+
+    /**
+     * The height-wise pixel size of the view
+     */
     private int actualViewHigh;
+
+    /**
+     * The bitmap for the wall object
+     */
     private Bitmap mBitmapWall;
+
+    /**
+     * The bitmap for an empty cell
+     */
     private Bitmap mBitmapEmpty;
+
+    /**
+     * The bitmap for the bomb object
+     */
     private Bitmap mBitmapBomb;
+
+    /**
+     * The bitmap for the fire object
+     */
     private Bitmap mBitmapFire;
 
+    /**
+     * Constructor class for the Grid. Initializes and resizes relevant bitmaps according to the
+     * screen resolution and number of cells inside the grid.
+     *
+     * @param context passed in from the world for retrieving bitmaps
+     * @param numCellsWide number of horizontal cells in the grid
+     * @param numCellsHigh number of vertical cells in the grid
+     * @param actualViewWidth width-wise pixel size of the view
+     * @param actualViewHeight height-wise pixel size of the view
+     */
     public Grid(Context context, int numCellsWide, int numCellsHigh, int actualViewWidth, int actualViewHeight){
-        this.numCellsWide = numCellsWide; // width of the grid in grid blocks
-        this.numCellsHigh = numCellsHigh; // height of the grid in grid blocks
-        this.actualViewWidth = actualViewWidth; // width of the grid in absolute x
-        this.actualViewHigh = actualViewHeight ; // width of the grid in absolute y
+        this.numCellsWide = numCellsWide;
+        this.numCellsHigh = numCellsHigh;
+        this.actualViewWidth = actualViewWidth;
+        this.actualViewHigh = actualViewHeight;
         this.gridMap = new HashMap<Int2, CellStatus>();
         this.mBitmapBomb = BitmapFactory.decodeResource(context.getResources(), R.drawable.bomb);
         this.mBitmapBomb = Bitmap.createScaledBitmap(mBitmapBomb, actualViewWidth/numCellsWide, actualViewHeight/numCellsHigh, false);
@@ -47,33 +98,70 @@ public class Grid
         reset();
     }
 
+    /**
+     * Returns the number of horizontal cells in the world
+     *
+     * @return int number of horizontal cells
+     */
     public int getNumCellsWide(){
         return numCellsWide;
     }
+
+    /**
+     * Returns the number of vertical cells in the world
+     *
+     * @return int number of vertical cells
+     */
     public int getNumCellsHigh(){
         return numCellsHigh;
     }
+
+    /**
+     * Returns the width-wise pixel size of the view
+     *
+     * @return int width-wise pixel size of view
+     */
     public int getActualViewWidth(){
         return actualViewWidth;
     }
+
+    /**
+     * Returns the height-wise pixel size of the view
+     *
+     * @return int height-wise pixel size of view
+     */
     public int getActualViewHigh(){
         return actualViewHigh;
     }
 
+    /**
+     * Sets cellStatus of the cell at a given position
+     *
+     * @param pos position to set the cellStatus
+     * @param status the cellStatus to be set
+     */
     public void setCell(Int2 pos, CellStatus status) {
         gridMap.put(pos, status);
     }
 
+    /**
+     * Given a gridPosition, returns the cellStatus of that cell
+     *
+     * @param pos position to retrieve the cellStatus
+     *
+     * @return CellStatus status of the cell
+     */
     public CellStatus getCellStatus(Int2 pos) {
         return gridMap.get(pos);
     }
 
     /**
-     * The draw method in Grid is responsible for drawing both the Grid (the lines), empty cells, fire and bombs. All other objects
-     * draw themselves, and are called in World. This is because Grid contains overarching information about the game model.
-     * @param canvas
+     * The draw method in Grid is responsible for drawing both the Grid (the lines), empty cells,
+     * fire and bombs. All other objects draw themselves, and are called in World.
+     * This is because Grid contains overarching information about the game model.
+     *
+     * @param canvas where objects are drawn
      */
-
     public void draw(Canvas canvas) {
         if (canvas == null) return;
 
@@ -128,7 +216,8 @@ public class Grid
 
     /**
      * This will be called by Food to determine all the possible candidates for Food to spawn in.
-     * @return ArrayList<Int2> emptyCells
+     *
+     * @return ArrayList<Int2> all possible empty cells
      */
     public ArrayList<Int2> getEmpty() {
         ArrayList<Int2> emptyCells = new ArrayList<Int2>();
@@ -144,13 +233,16 @@ public class Grid
     }
 
     /**
-     * absoluteToGridPos takes a position and returns its location on a grid.
+     * absoluteToGridPos takes in a pixel-wise position on the view and converts it into
+     * gridPositions. Used when handling motion inputs
+     *
      * @param absX Absolute value of X (screen position in pixels)
      * @param absY Absolute value of Y (screen position in pixels)
      * @param xCount How many cells in grid?
      * @param yCount How many cells in grid?
      * @param gridWidth Width of the grid in pixels
      * @param gridHeight Height of the grid in pixels
+     *
      * @return Int2 xGrid and yGrid position
      */
     public Int2 absoluteToGridPos(float absX, float absY, int xCount, int yCount, int gridWidth, int gridHeight) {
@@ -182,11 +274,10 @@ public class Grid
         return new Int2(xGrid, yGrid);
     }
 
-    /**
-     * Sets the walls to borders.
-     * The walls are being set in Grid.
-     */
 
+    /**
+     * Deletes all fire, food, and players and defines where walls will be placed.
+     */
     public void reset() {
         for (int x = 0; x < getNumCellsWide(); x ++){
             for (int y = 0; y < getNumCellsHigh(); y ++){

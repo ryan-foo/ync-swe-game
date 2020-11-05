@@ -78,7 +78,6 @@ public class Int2
         return this.getX() == e.getX() && this.getY() == e.getY();
     }
 
-
     /**
      * Returns the hashcode of this Int2
      *

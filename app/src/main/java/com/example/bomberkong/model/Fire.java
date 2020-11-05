@@ -20,7 +20,6 @@ public class Fire implements Cell
      */
     private final Context context;
 
-
     /**
      * The grid where the cellStatus will be stored
      */

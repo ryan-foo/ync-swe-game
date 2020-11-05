@@ -644,6 +644,13 @@ public class World extends SurfaceView implements Runnable {
 
 
         // todo: there seems to be a bug where the screen does not clear!
+        for (Fire f : fireList){
+            f.ticksToFade -=1;
+            if (f.ticksToFade == 0){
+                grid.setCell(f.getGridPosition(), CellStatus.EMPTY);
+            }
+        }
+
         Iterator<Fire> fitr = fireList.iterator();
         while (fitr.hasNext()) {
             Fire fire = fitr.next();
