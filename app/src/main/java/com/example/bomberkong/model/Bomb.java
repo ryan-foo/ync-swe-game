@@ -49,6 +49,8 @@ public class Bomb implements Cell
         return this.position;
     }
 
+    public void setGridPosition(Int2 position) { this.position = position; }
+
     public void explode(World world, ArrayList<Fire> fireList){
         Grid grid = world.getGrid();
         // todo: create a neighbors function, change all neighbors that qualify into fire

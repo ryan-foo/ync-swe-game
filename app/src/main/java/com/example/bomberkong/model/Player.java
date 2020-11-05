@@ -94,9 +94,7 @@ public class Player implements Cell
         _bombRef.setValue(this.bomb);
     }
 
-    /*
-    public void setBomb(Bomb bomb) {this.bomb = bomb; }
-    */
+    public void setBomb(Bomb bomb) { this.bomb = bomb; }
 
     /**
      * We call reset whenever the game starts.
