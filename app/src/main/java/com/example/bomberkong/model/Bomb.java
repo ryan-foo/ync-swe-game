@@ -5,6 +5,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.util.Log;
 
+import com.example.bomberkong.MainActivity;
 import com.example.bomberkong.R;
 import com.example.bomberkong.World;
 import com.example.bomberkong.util.Int2;
@@ -67,6 +68,10 @@ public class Bomb implements Cell
      * @param position gridPosition of the bomb on the grid
      * @param cellSize size of each cell
      */
+    private Bomb() {
+        this.context = null;
+    }
+
     public Bomb(Context context, Int2 position, Int2 cellSize) {
         this.context = context;
         this.position = position;
