@@ -16,7 +16,14 @@
             android:screenOrientation="landscape" />
         <activity
             android:name=".HowToPlay"
-            android:screenOrientation="landscape" />
+            android:screenOrientation="landscape"    
+            android:parentActivityName=".StartGame">
+
+    	<!-- Parent activity meta-data to support 4.0 and lower -->
+	    <meta-data
+	        android:name="android.support.StartGame"
+	        android:value="com.example.bomberkong.StartGame" />
+	    </activity>
         <activity
             android:name=".StartGame"
             android:screenOrientation="landscape">
