@@ -16,7 +16,7 @@ public class Fire implements Cell
     /**
      * The position of the fire on the grid.
      */
-    public static Int2 position;
+    public Int2 position;
 
     /**
      * The context of the game (for rendering mostly), passed down in the constructor method.

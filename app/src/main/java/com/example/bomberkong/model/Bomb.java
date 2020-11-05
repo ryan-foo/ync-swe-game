@@ -21,7 +21,7 @@ public class Bomb implements Cell
     /**
      * The position of the bomb on the grid.
      */
-    public static Int2 position;
+    private Int2 position;
 
     /**
      * The context of the game (for rendering mostly), passed down in the constructor method.
@@ -113,28 +113,27 @@ public class Bomb implements Cell
         CellStatus up = grid.getCellStatus(posUp);
         CellStatus down = grid.getCellStatus(posDown);
 
+        ArrayList<Int2> fireInt2List = new ArrayList<Int2>();
+
         if (left == CellStatus.EMPTY || left == CellStatus.PLAYER){
-            Fire fire = new Fire(context, grid,  posLeft, cellSize);
-            fireList.add(fire);
-            Log.d("explode", fire.getGridPosition().toString());
             grid.setCell(posLeft, CellStatus.FIRE);
+            fireInt2List.add(posLeft);
         }
         if (right == CellStatus.EMPTY || right == CellStatus.PLAYER){
             grid.setCell(posRight, CellStatus.FIRE);
-            Fire fire = new Fire(context, grid, posRight, cellSize);
-            Log.d("explode", fire.getGridPosition().toString());
-            fireList.add(fire);
+            fireInt2List.add(posRight);
         }
         if (up == CellStatus.EMPTY || up == CellStatus.PLAYER){
             grid.setCell(posUp, CellStatus.FIRE);
-            Fire fire = new Fire(context, grid, posUp, cellSize);
-            Log.d("explode", fire.getGridPosition().toString());
-            fireList.add(fire);
+            fireInt2List.add(posUp);
         }
         if (down == CellStatus.EMPTY || down == CellStatus.PLAYER){
             grid.setCell(posDown, CellStatus.FIRE);
-            Fire fire = new Fire(context, grid, posDown, cellSize);
-            Log.d("explode", fire.getGridPosition().toString());
+            fireInt2List.add(posDown);
+        }
+
+        for (Int2 i : fireInt2List){
+            Fire fire = new Fire(context, grid, i, cellSize);
             fireList.add(fire);
         }
     }

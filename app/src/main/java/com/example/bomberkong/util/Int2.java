@@ -1,5 +1,7 @@
 package com.example.bomberkong.util;
 
+import androidx.annotation.NonNull;
+
 /**
  * Represents a collection of two integer values. Can be used to store grid positions.
  */
@@ -90,5 +92,10 @@ public class Int2
     public int hashCode()
     {
         return x + y * 100;
+    }
+
+    @Override
+    public String toString() {
+        return Integer.toString(x) + "," + Integer.toString(y);
     }
 }

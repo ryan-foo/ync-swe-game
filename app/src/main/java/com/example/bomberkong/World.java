@@ -612,20 +612,13 @@ public class World extends SurfaceView implements Runnable {
                     bombOne.explode(this, fireList);
                     mSP.play(mBombID, 1, 1, 0, 0, 1);
                     playerOne.resetBomb();
-                }
-            } else {
-                Bomb bombOne = playerOne.getBomb();
-                bombOne.ticksToExplode -= 1;
-                if (bombOne.ticksToExplode == 0) {
-                    bombOne.explode(this, fireList);
-                    mSP.play(mBombID, 1, 1, 0, 0, 1);
-                    playerOne.resetBomb();
+
                 }
             }
         }
 
-        if(playerTwo.getBomb() != null) {
-            if(playerNumControlled.equals("2")){
+        if (playerTwo.getBomb() != null) {
+            if (playerNumControlled.equals("2")){
                 Bomb bombTwo = playerTwo.getBomb();
                 DatabaseReference _bomb2Ref = database.getReference("player2/bomb");
                 _bomb2Ref.setValue(bombTwo);
@@ -635,25 +628,10 @@ public class World extends SurfaceView implements Runnable {
                     mSP.play(mBombID, 1, 1, 0, 0, 1);
                     playerTwo.resetBomb();
                 }
-            } else {
-                Bomb bombTwo = playerTwo.getBomb();
-                bombTwo.ticksToExplode -= 1;
-                if (bombTwo.ticksToExplode == 0) {
-                    bombTwo.explode(this, fireList);
-                    mSP.play(mBombID, 1, 1, 0, 0, 1);
-                    playerTwo.resetBomb();
-                }
             }
         }
-
 
         // todo: there seems to be a bug where the screen does not clear!
-        for (Fire f : fireList){
-            f.ticksToFade -=1;
-            if (f.ticksToFade == 0){
-                grid.setCell(f.getGridPosition(), CellStatus.EMPTY);
-            }
-        }
 
         Iterator<Fire> fitr = fireList.iterator();
         while (fitr.hasNext()) {
