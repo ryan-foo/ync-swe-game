@@ -174,7 +174,7 @@ public class World extends SurfaceView implements Runnable {
 
         grid = new Grid(context, numCellsWide, numCellsHigh, actualViewWidth, actualViewHeight);
         cellResolution = new Int2(actualViewWidth / numCellsWide, actualViewHeight / numCellsHigh);
-        playerOne = new Player(context, grid, p1StartPos, 1, cellResolution, playerNumControlled);
+        playerOne = new  Player(context, grid, p1StartPos, 1, cellResolution, playerNumControlled);
         playerTwo = new Player(context, grid, p2StartPos, 2, cellResolution, playerNumControlled);
         food = new Food(context, new Int2(3, 3), cellResolution);
         fireList = new ArrayList<Fire>();
