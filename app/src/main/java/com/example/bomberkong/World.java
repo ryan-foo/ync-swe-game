@@ -208,8 +208,8 @@ public class World extends SurfaceView implements Runnable {
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 if (playerNumControlled.equals("2")) {
                     mScoreP1 = snapshot.getValue(int.class);
-                    mCanvas.drawText("Score P1: " + mScoreP1 + " Score P2: " + mScoreP2,
-                            mFontMargin, mFontSize, scorePaint);
+//                    mCanvas.drawText("Score P1: " + mScoreP1 + " Score P2: " + mScoreP2,
+//                            mFontMargin, mFontSize, scorePaint);
                 }
             }
 
@@ -225,8 +225,8 @@ public class World extends SurfaceView implements Runnable {
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 if (playerNumControlled.equals("2")) {
                     mScoreP2 = snapshot.getValue(int.class);
-                    mCanvas.drawText("Score P1: " + mScoreP1 + " Score P2: " + mScoreP2,
-                            mFontMargin, mFontSize, scorePaint);
+//                    mCanvas.drawText("Score P1: " + mScoreP1 + " Score P2: " + mScoreP2,
+//                            mFontMargin, mFontSize, scorePaint);
                 }
             }
 
