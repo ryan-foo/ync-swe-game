@@ -15,20 +15,8 @@
             android:name=".activities.CreateRoomActivity"
             android:screenOrientation="landscape" />
         <activity
-<<<<<<< HEAD
             android:name=".activities.HowToPlayActivity"
             android:screenOrientation="landscape" />
-=======
-            android:name=".HowToPlay"
-            android:screenOrientation="landscape"    
-            android:parentActivityName=".StartGame">
-
-    	<!-- Parent activity meta-data to support 4.0 and lower -->
-	    <meta-data
-	        android:name="android.support.StartGame"
-	        android:value="com.example.bomberkong.StartGame" />
-	    </activity>
->>>>>>> 1ae9c3352bd31fb22c40550287971c539e5a3ac8
         <activity
             android:name=".activities.StartGameActivity"
             android:screenOrientation="landscape">
