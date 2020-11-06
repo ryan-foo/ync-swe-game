@@ -658,6 +658,7 @@ public class World extends SurfaceView implements Runnable {
     /**
      * Update method checks if either of the players have picked up the food and whether
      * the players are dead.
+     * it also ticks down the fires and the bombs, and causes the bomb explode into fire.
      */
     public void update() {
         // Did player eat food?
