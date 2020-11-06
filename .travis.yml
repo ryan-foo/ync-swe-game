@@ -24,9 +24,9 @@ android:
     - 'android-sdk-license-.+'
     - 'google-gdk-license-.+'
 
-before_script:
-  - mkdir -p "$ANDROID_HOME/licenses"
-  - cp ./google-licenses/* "$ANDROID_HOME/licenses/"
+#before_script:
+  #- mkdir -p "$ANDROID_HOME/licenses"
+  #- cp ./google-licenses/* "$ANDROID_HOME/licenses/"
   # Create and start emulator
   #- echo no | android create avd --force -n test -t android-22 --abi armeabi-v7a
   #- emulator -avd test -no-skin -no-audio -no-window &
