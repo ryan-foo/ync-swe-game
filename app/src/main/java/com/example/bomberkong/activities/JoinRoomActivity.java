@@ -12,12 +12,32 @@ import com.example.bomberkong.R;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * This activity creates a screen with a list of all available game rooms
+ * By clicking on a room, you can join the game.
+ */
 public class JoinRoomActivity extends AppCompatActivity {
+
+    /**
+     * Displays the list of all available game rooms
+     */
     ListView listview;
 
+    /**
+     * Contains the list of all available game rooms
+     */
     List<String> listOfAvailableRooms;
+
+    /**
+     * Instantiates a string that will contain which room the player will join
+     */
     String joiningRoom = "";
 
+    /**
+     * Creates the activity
+     *
+     * @param savedInstanceState Bundle
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

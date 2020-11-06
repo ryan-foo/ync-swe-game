@@ -10,11 +10,20 @@ import android.view.View;
 
 import com.example.bomberkong.R;
 
+/**
+ * This activity is created from the 'Create Room' button and can be used
+ * to create a room by entering a room name.
+ */
 public class CreateRoomActivity extends AppCompatActivity {
     public static final String EXTRA_ROOM_MESSAGE = "RoomName";
     private Button button;
     private EditText editText;
 
+    /**
+     * Creates a Create Room activity
+     *
+     * @param savedInstanceState Bundle
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
