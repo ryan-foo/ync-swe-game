@@ -191,6 +191,23 @@ public class World extends SurfaceView implements Runnable {
     private int mDeathID = -1; // sound when player dies
 
     /**
+     * Sound to be called when player walks (alternate between left and right sounds)
+     */
+    private int mLWalkID = -1;
+    private int mRWalkID = -1;
+
+    /**
+     * Sound to be called when player places a bomb
+     */
+
+
+
+    /**
+     * Background music
+     */
+    private int mBGMID = -1;
+
+    /**
      * Thread to control the main game loop
      */
     private Thread mGameThread = null;
@@ -287,6 +304,9 @@ public class World extends SurfaceView implements Runnable {
             //death sound
             descriptor = assetManager.openFd("chimchar.ogg");
             mDeathID = mSP.load(descriptor, 0);
+            // BGM
+            descriptor = assetManager.openFd("BGM.ogg");
+            mBGMID = mSP.load(descriptor, 0);
         } catch (IOException e) {
             // Error
         }
@@ -300,6 +320,8 @@ public class World extends SurfaceView implements Runnable {
         fireList = new ArrayList<Fire>();
         grid.setCell(playerOne.getGridPosition(), CellStatus.PLAYER);
         grid.setCell(playerTwo.getGridPosition(), CellStatus.PLAYER);
+
+        // Start playing BGM
 
         // Drawing objects
         mSurfaceHolder = getHolder();
@@ -690,7 +712,7 @@ public class World extends SurfaceView implements Runnable {
         }
 
         if (playerOne.getDead()) {
-            mSP.play(mDeathID, 1, 1, 0, 0, 1);
+            mSP.play(mDeathID, 1, 1, 1, 0, 1);
             Log.d("World", "Player one dies");
             mPaused = true;
             playerTwoWin = true;
@@ -716,7 +738,7 @@ public class World extends SurfaceView implements Runnable {
         }
 
         if (playerTwo.getDead()) {
-            mSP.play(mDeathID, 1, 1, 0, 0, 1);
+            mSP.play(mDeathID, 1, 1, 1, 0, 1);
             Log.d("World", "Player two dies");
             mPaused = true;
             playerOneWin = true;
