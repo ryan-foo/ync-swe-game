@@ -47,74 +47,202 @@ import java.util.concurrent.TimeUnit;
  * credits for framework: John Horton
  */
 public class World extends SurfaceView implements Runnable {
-    
-    private static final String TAG = "World";
+
+    /**
+     * The number of the player being controlled
+     * TODO: Convert it into an int
+     */
     private final String playerNumControlled;
 
-    // Connect to Firebase database
+    /**
+     * Instance of firebase to communicate with it
+     */
     private FirebaseDatabase database = FirebaseDatabase.getInstance();
 
-    // Objects for drawing
+    /**
+     * SurfaceHolder to get the surface to draw on
+     */
     private SurfaceHolder mSurfaceHolder;
+
+    /**
+     * Canvas to draw objects on
+     */
     private Canvas mCanvas;
+
+    /**
+     * Paint to draw the borders of the objects
+     */
     private Paint mPaint;
+
+    /**
+     * Font color for the score
+     */
     private Paint scorePaint;
 
-    // Instances of objects that will last throughout
+    /**
+     * Required to get the bitmaps out of
+     */
     private Context context;
+
+    /**
+     * Main game grid where all movements are recorded and tracked. Passed into some objects when
+     * the objects need to detect surrounding cells
+     */
     private Grid grid;
+
+    /**
+     * Instance of the player controlled by the first user
+     */
     private Player playerOne;
+
+    /**
+     * Instance of the player controlled by the second user
+     */
     private Player playerTwo;
+
+    /**
+     * Instance of the food that can be collected by players
+     */
     private Food food;
 
-    // Every fire spawned will be added to fireList, and we can get their pos and time to tick down
+    /**
+     * List of all available fires. Updated in the main game loop, run().
+     */
     private ArrayList<Fire> fireList = new ArrayList<Fire>();
-    private int actualViewWidth;
-    private int actualViewHeight;
+
+    /**
+     * Number of width-wise cells in the grid
+     */
     private int numCellsWide;
+
+    /**
+     * Number of height-wise cells in the grid
+     */
     private int numCellsHigh;
+
+    /**
+     * Pixel-wise resolution of each cell
+     */
     public Int2 cellResolution;
 
-    // For smooth movement
+    /**
+     * The frames per second the game is run at
+     */
     private long mFPS;
+
+    /**
+     * How many milliseconds are in one second. Used to determine the FPS of the game.
+     */
     private final int MILLI_IN_SECONDS = 1000;
 
-    // These should be passed into World from the constructor
-    public int mScreenX; // Vertical size of the screen
-    public int mScreenY; // Horizontal size of the screen
+    /**
+     * Vertical pixel-wise size of the screen
+     */
+    public int mScreenX;
 
-    // These will be initialized based on screen size in pixels
+    /**
+     * Horizontal pixel-wise size of the screen
+     */
+    public int mScreenY;
+
+    /**
+     * Font size of the scores
+     */
     public int mFontSize;
+
+    /**
+     * Margin between each text
+     */
     public int mFontMargin;
 
+    /**
+     * Player score for player 1
+     */
     public int mScoreP1 = 0;
+
+    /**
+     * Player score for player 2
+     */
     public int mScoreP2 = 0;
 
-    // Sound
+    /**
+     * Instance of SoundPool. Will be modified as necessary
+     */
     private SoundPool mSP;
+
+    /**
+     * Sound to be called when the fire is despawned
+     */
     private int mSpawn_ID = -1; // sound when fire is gone
+
+    /**
+     * Sound to be called when the food is pickedup
+     */
     private int mEat_ID = -1; // sound when fruit is picked
+
+    /**
+     * Sound to be called when bomb explodes
+     */
     private int mBombID = -1; // sound when bomb explodes
+
+    /**
+     * Sound to be called when the player dies
+     */
     private int mDeathID = -1; // sound when player dies
 
-    // Threads and control variables
+    /**
+     * Thread to control the main game loop
+     */
     private Thread mGameThread = null;
 
-    // volatile can be accessed from outside and inside the thread
+    /**
+     * Whether game is being played or not
+     */
     private volatile boolean mPlaying = true;
+
+    /**
+     * Whether game is being played or not
+     */
     private boolean mPaused = false;
-    // start game with neither player having won
+
+    /**
+     * Whether player 1 wins the game
+     */
     private boolean playerOneWin = false;
+
+    /**
+     * Whether player 2 wins the game
+     */
     private boolean playerTwoWin = false;
+
+    /**
+     * Called to determine the time between the current frame and the next
+     */
     private long mNextFrameTime;
+
+    /**
+     * Called to determine the time before next move register from player 1
+     */
     private long p1NextMoveTime;
+
+    /**
+     * Called to determine the time before next move register from player 2
+     */
     private long p2NextMoveTime;
 
+    /**
+     * Starting position for player 1
+     */
     private final Int2 p1StartPos = new Int2(2, 2);
+
+    /**
+     * Starting position for player 2
+     */
     private final Int2 p2StartPos = new Int2(17, 7);
 
     /**
      * This is the constructor method for World, which acts as the game engine
+     *
      * @param c          Context is passed from GameActivity
      * @param actualViewWidth  represents the actual width of the entire view
      * @param actualViewHeight represents the actual height of the entire view
@@ -125,19 +253,12 @@ public class World extends SurfaceView implements Runnable {
         this.context = c;
         //super(context);
         this.playerNumControlled = playerNumControlled;
-        Log.d(TAG, "Player controlled" + playerNumControlled);
-
-        // Actual width/height of cells
-        this.actualViewWidth = actualViewWidth;
-        this.actualViewHeight = actualViewHeight;
 
         // Number of horizontal/vertical cells
         numCellsWide = 20;
         numCellsHigh = 10;
 
-        /*
-          Initialize soundpool
-         */
+        // Initialize SoundPool
         if (Build.VERSION.SDK_INT > Build.VERSION_CODES.LOLLIPOP) {
             AudioAttributes audioAttributes =
                     new AudioAttributes.Builder()
@@ -170,10 +291,7 @@ public class World extends SurfaceView implements Runnable {
             // Error
         }
 
-        /**
-         * Initialize grid and players
-         */
-
+        // Initialize grid and players
         grid = new Grid(context, numCellsWide, numCellsHigh, actualViewWidth, actualViewHeight);
         cellResolution = new Int2(actualViewWidth / numCellsWide, actualViewHeight / numCellsHigh);
         playerOne = new  Player(context, grid, p1StartPos, 1, cellResolution, playerNumControlled);
@@ -207,6 +325,9 @@ public class World extends SurfaceView implements Runnable {
         startNewGame();
     }
 
+    /**
+     * Creates a listener for the game so that changes to game scores can be tracked
+     */
     private void addScoreListener() {
         DatabaseReference _score1Ref = database.getReference("player1/score");
         _score1Ref.addValueEventListener(new ValueEventListener() {
@@ -243,6 +364,9 @@ public class World extends SurfaceView implements Runnable {
         }));
     }
 
+    /**
+     * Creates a listener for the game so that new bombs can be tracked
+     */
     private void addBombListener() {
         if (playerNumControlled.equals("2")) {
             DatabaseReference _bomb1Ref = database.getReference("player1/bomb/GridPosition");
@@ -283,8 +407,9 @@ public class World extends SurfaceView implements Runnable {
         }
     }
 
-
-
+    /**
+     * Creates a listener for the game so that new food can be tracked
+     */
     private void addFoodListener() {
         DatabaseReference _foodRef = database.getReference("food");
         _foodRef.addValueEventListener(new ValueEventListener() {
@@ -301,6 +426,9 @@ public class World extends SurfaceView implements Runnable {
         });
     }
 
+    /**
+     * Creates a listener for the game so that player positions and movements can be tracked
+     */
     private void addPlayerPositionListener() {
         DatabaseReference _pos1Ref = database.getReference("player1/position");
         _pos1Ref.addValueEventListener(new ValueEventListener() {
@@ -335,6 +463,9 @@ public class World extends SurfaceView implements Runnable {
         });
     }
 
+    /**
+     * Creates a listener for the game so that player headings can be tracked
+     */
     private void addPlayerHeadingListener() {
         DatabaseReference _head1Ref = database.getReference("player1/heading");
         _head1Ref.addValueEventListener(new ValueEventListener() {
@@ -369,6 +500,9 @@ public class World extends SurfaceView implements Runnable {
         });
     }
 
+    /**
+     * Creates a listener for the game so that player deaths can be tracked
+     */
     private void addPlayerDeathListener() {
         DatabaseReference _death1Ref = database.getReference("player1/death");
         _death1Ref.addValueEventListener(new ValueEventListener() {
@@ -403,12 +537,11 @@ public class World extends SurfaceView implements Runnable {
         });
     }
 
-    // When we start the thread with:
-    // mGameThread.start();
-    // the run method is continuously called by Android // because we implemented the Runnable interface
-    // Calling mGameThread.join();
-    // will stop the thread
 
+    /**
+     * The main gameloop for the game. Updates the game and renders changes every specified time
+     * step.
+     */
     @Override
     public void run() {
         while (mPlaying) {
@@ -434,22 +567,19 @@ public class World extends SurfaceView implements Runnable {
                 // Store the current frame in mFPS and pass it to
                 // update methods of the grid next frame/loop
                 mFPS = MILLI_IN_SECONDS / timeThisFrame;
-
-                // we will use mSpeed / mFPS to determine how fast players move on the screen
             }
         }
     }
 
     /**
-     * Start new game is called when we want to start a new game. We start a new game when the game first boots, and also 5 seconds after the game has ended.
-     * This resets the grid, and resets the positions of the players, and the score.
+     * Start new game is called when we want to start a new game. We start a new game when the game
+     * first boots, and also 5 seconds after the game has ended. This resets the grid, and resets
+     * the positions of the players, and the score.
      */
-
     public void startNewGame() {
         // reset grid
         this.grid.reset();
-        // Todo: reset to player original positions depending on player number
-        mPaused = false; // game is running.
+        mPaused = false;
         playerOne.reset(p1StartPos);
         playerTwo.reset(p2StartPos);
 
@@ -458,11 +588,6 @@ public class World extends SurfaceView implements Runnable {
         playerOne.setDead(false);
         playerTwo.setDead(false);
 
-        // banana should be spawned
-        // ArrayList<Int2> emptyCells = grid.getEmpty();
-        // food.spawn(emptyCells, numCellsWide, numCellsHigh);
-
-        // place food at center so that both players start with same food location
         food.setLocation(new Int2(9,5));
 
         DatabaseReference _foodRef = database.getReference("food");
@@ -482,14 +607,14 @@ public class World extends SurfaceView implements Runnable {
         p2NextMoveTime = System.currentTimeMillis();
     }
 
+    /**
+     * The draw method draws all grids, game objects, and players
+     */
     void draw() {
         if (mSurfaceHolder.getSurface().isValid()) {
             // Lock Canvas to draw
             mCanvas = mSurfaceHolder.lockCanvas();
-
             mCanvas.drawColor(Color.argb(255, 26, 128, 182));
-
-            // Color to paint with
             mPaint.setColor(Color.argb(255, 255, 255, 255));
 
             // Draw Grid
@@ -498,7 +623,6 @@ public class World extends SurfaceView implements Runnable {
             // Draw food, player
             food.draw(mCanvas, mPaint);
 
-            //todo: checking if grid uses draw, or drawElements
             playerOne.draw(mCanvas, mPaint);
             playerTwo.draw(mCanvas, mPaint);
 
@@ -529,6 +653,10 @@ public class World extends SurfaceView implements Runnable {
         }
     }
 
+    /**
+     * Update method checks if either of the players have picked up the food and whether
+     * the players are dead.
+     */
     public void update() {
         // Did player eat food?
         if (playerOne.checkPickup(food.getLocation())) {
@@ -655,11 +783,20 @@ public class World extends SurfaceView implements Runnable {
         }
     }
 
+    /**
+     * Returns the grid from the world
+     *
+     * @return Grid world grid
+     */
     public Grid getGrid(){
         return this.grid;
     }
 
-    // this creates the blocky movement we desire
+    /**
+     * Determines whether enough time has passed to call a new update
+     *
+     * @return Boolean whether update is required
+     */
     public boolean updateRequired() {
         // Run at 10 fps
         final long TARGET_FPS = 10;
@@ -676,12 +813,11 @@ public class World extends SurfaceView implements Runnable {
     }
 
     /**
-     * p1movementAllowed allows us to rate limit the amount of input we can take for each player, respectively. It returns a boolean, which when true, allows us to process the input of the player.
-     * 
-     * which 
-     * @return
+     * p1movementAllowed allows us to rate limit the amount of input we can take from player 1,
+     * It returns a boolean, which when true, allows us to process the input of the player.
+     *
+     * @return Boolean movement allowed for player 1
      */
-
     public boolean p1MovementAllowed() {
         // Run at 4 moves per second
         final long MOVES_PER_SECOND = 4;
@@ -697,7 +833,12 @@ public class World extends SurfaceView implements Runnable {
         return false;
     }
 
-
+    /**
+     * p2movementAllowed allows us to rate limit the amount of input we can take from player 2,
+     * It returns a boolean, which when true, allows us to process the input of the player.
+     *
+     * @return Boolean movement allowed for player 2
+     */
     public boolean p2MovementAllowed() {
         // Run at 4 moves per second
         final long MOVES_PER_SECOND = 4;
@@ -713,6 +854,14 @@ public class World extends SurfaceView implements Runnable {
         return false;
     }
 
+    /**
+     * onTouchEvent handles the game inputs. In our case, it considers where in the grid the tap
+     * is registered.
+     *
+     * @param motionEvent description of the tapping motion
+     *
+     * @return Boolean whether there has been a tap
+     */
     @Override
     public boolean onTouchEvent(MotionEvent motionEvent) {
         switch (motionEvent.getAction() & MotionEvent.ACTION_MASK) {
@@ -725,12 +874,10 @@ public class World extends SurfaceView implements Runnable {
 
                 if (playerNumControlled.equals("1")){
                     if (p1MovementAllowed()) {
-                        Log.d(TAG, "move p1");
                         playerOne.switchHeading(motionEvent);
                     }
                 } else {
                     if (p2MovementAllowed()) {
-                        Log.d(TAG, "move p2");
                         playerTwo.switchHeading(motionEvent);
                     }
                 }
@@ -741,6 +888,9 @@ public class World extends SurfaceView implements Runnable {
         return true;
     }
 
+    /**
+     * Handles when the game is paused
+     */
     public void pause() {
         mPlaying = false;
         try {
@@ -751,6 +901,9 @@ public class World extends SurfaceView implements Runnable {
         }
     }
 
+    /**
+     * Handles resuming to game play
+     */
     public void resume() {
         mPlaying = true;
         mGameThread = new Thread(this);
