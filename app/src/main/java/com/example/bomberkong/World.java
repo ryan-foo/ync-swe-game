@@ -335,8 +335,8 @@ public class World extends SurfaceView implements Runnable {
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 if (playerNumControlled.equals("2")) {
                     mScoreP1 = snapshot.getValue(int.class);
-//                    mCanvas.drawText("Score P1: " + mScoreP1 + " Score P2: " + mScoreP2,
-//                            mFontMargin, mFontSize, scorePaint);
+                    mCanvas.drawText("Score P1: " + mScoreP1 + " Score P2: " + mScoreP2,
+                            mFontMargin, mFontSize, scorePaint);
                 }
             }
 
@@ -350,10 +350,10 @@ public class World extends SurfaceView implements Runnable {
         _score2Ref.addValueEventListener((new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                if (playerNumControlled.equals("2")) {
+                if (playerNumControlled.equals("1")) {
                     mScoreP2 = snapshot.getValue(int.class);
-//                    mCanvas.drawText("Score P1: " + mScoreP1 + " Score P2: " + mScoreP2,
-//                            mFontMargin, mFontSize, scorePaint);
+                    mCanvas.drawText("Score P1: " + mScoreP1 + " Score P2: " + mScoreP2,
+                            mFontMargin, mFontSize, scorePaint);
                 }
             }
 
@@ -376,7 +376,8 @@ public class World extends SurfaceView implements Runnable {
                     Int2 bombOnePos = snapshot.getValue(Int2.class);
                     if (bombOnePos!=null) {
                         Bomb bombOne = new Bomb(context, bombOnePos, cellResolution);
-                        playerOne.setBomb(bombOne);
+//                        playerOne.setBomb(bombOne);
+                        playerOne.spawnBomb(context, grid, cellResolution);
                     }
                 }
 
