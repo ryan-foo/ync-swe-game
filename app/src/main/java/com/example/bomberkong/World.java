@@ -376,8 +376,8 @@ public class World extends SurfaceView implements Runnable {
                     Int2 bombOnePos = snapshot.getValue(Int2.class);
                     if (bombOnePos!=null) {
                         Bomb bombOne = new Bomb(context, bombOnePos, cellResolution);
-//                        playerOne.setBomb(bombOne);
-                        playerOne.spawnBomb(context, grid, cellResolution);
+                        grid.setCell(bombOnePos, CellStatus.BOMB);
+                        playerOne.setBomb(bombOne);
                     }
                 }
 
@@ -396,6 +396,7 @@ public class World extends SurfaceView implements Runnable {
                     Int2 bombTwoPos = snapshot.getValue(Int2.class);
                     if (bombTwoPos!=null){
                         Bomb bombTwo = new Bomb(context,bombTwoPos,cellResolution);
+                        grid.setCell(bombTwoPos, CellStatus.BOMB);
                         playerTwo.setBomb(bombTwo);
                     }
                 }
