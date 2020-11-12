@@ -1,3 +1,6 @@
 <resources>
     <string name="app_name">BomberKong</string>
+    <string name="HowToPlayInstruction1">The player who created the game starts on the top left as Player 1, the Brown Monkey. The player who joined the game starts on the bottom right as Player 2, the White Monkey.</string>
+    <string name="HowToPlayInstruction2">Your Monkey moves in the direction of your touches: if you touch your screen at the top, the Monkey will move upwards. Likewise, if you touch your screen to the left or right of the Monkey, the monkey will move accordingly. You win points by collecting bananas.</string>
+    <string name="HowToPlayInstruction3">Touch your Monkey to drop a bomb. You can only drop one bomb at a time. If you destroy the enemy Monkey using a bomb, you win the game! Good luck playing!</string>
 </resources>
