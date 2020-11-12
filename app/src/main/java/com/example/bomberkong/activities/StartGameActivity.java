@@ -50,8 +50,8 @@ public class StartGameActivity extends AppCompatActivity {
         single_player_game.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent playerActivity = new Intent(StartGameActivity.this, SelectPlayerActivity.class);
-                playerActivity.putExtra("playerID", "1");
+                Intent playerActivity = new Intent(StartGameActivity.this, CreateRoomActivity.class);
+                //playerActivity.putExtra("playerID", "1");
                 startActivity(playerActivity);
             }
         });
@@ -59,8 +59,8 @@ public class StartGameActivity extends AppCompatActivity {
         multi_player_game.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent playerActivity = new Intent(StartGameActivity.this, SelectPlayerActivity.class);
-                playerActivity.putExtra("playerID", "1");
+                Intent playerActivity = new Intent(StartGameActivity.this, JoinRoomActivity.class);
+                //playerActivity.putExtra("playerID", "1");
                 startActivity(playerActivity);
             }
         });
@@ -68,8 +68,8 @@ public class StartGameActivity extends AppCompatActivity {
         how_to_play.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent playerActivity = new Intent(StartGameActivity.this, SelectPlayerActivity.class);
-                playerActivity.putExtra("playerID", "1");
+                Intent playerActivity = new Intent(StartGameActivity.this, HowToPlayActivity.class);
+                //playerActivity.putExtra("playerID", "1");
                 startActivity(playerActivity);
             }
         });

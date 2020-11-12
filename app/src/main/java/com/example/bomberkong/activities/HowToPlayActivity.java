@@ -44,7 +44,7 @@ public class HowToPlayActivity extends AppCompatActivity {
         joinGame.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent seeListOfRooms = new Intent(HowToPlayActivity.this, SelectPlayerActivity.class);
+                Intent seeListOfRooms = new Intent(HowToPlayActivity.this, JoinRoomActivity.class);
                 startActivity(seeListOfRooms);
             }
         });
@@ -56,7 +56,7 @@ public class HowToPlayActivity extends AppCompatActivity {
         createGame.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent createNewRoom = new Intent(HowToPlayActivity.this, SelectPlayerActivity.class);
+                Intent createNewRoom = new Intent(HowToPlayActivity.this, CreateRoomActivity.class);
                 startActivity(createNewRoom);
             }
         });

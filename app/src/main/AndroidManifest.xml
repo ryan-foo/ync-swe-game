@@ -12,14 +12,36 @@
         <service
             android:name=".MusicService"
             android:enabled="true" />
-        <activity android:name=".activities.JoinRoomActivity"></activity>
-        <activity android:name=".activities.WaitingRoomActivity" />
+        <activity android:name=".activities.JoinRoomActivity"
+            android:screenOrientation="landscape"
+            android:parentActivityName=".activities.StartGameActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.example.bomberkong.activities.StartGameActivity" />
+        </activity>
+        <activity android:name=".activities.WaitingRoomActivity"
+            android:screenOrientation="landscape"
+            android:parentActivityName=".activities.CreateRoomActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.example.bomberkong.activities.CreateRoomActivity" />
+        </activity>
         <activity
             android:name=".activities.CreateRoomActivity"
-            android:screenOrientation="landscape" />
+            android:screenOrientation="landscape"
+            android:parentActivityName=".activities.StartGameActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.example.bomberkong.activities.StartGameActivity" />
+        </activity>
         <activity
             android:name=".activities.HowToPlayActivity"
-            android:screenOrientation="landscape" />
+            android:screenOrientation="landscape"
+            android:parentActivityName=".activities.StartGameActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.example.bomberkong.activities.StartGameActivity" />
+        </activity>
         <activity
             android:name=".activities.StartGameActivity"
             android:screenOrientation="landscape">
