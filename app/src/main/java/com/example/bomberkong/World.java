@@ -372,7 +372,7 @@ public class World extends SurfaceView implements Runnable {
         _score2Ref.addValueEventListener((new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                if (playerNumControlled.equals("1")) {
+                if (playerNumControlled.equals("2")) {
                     mScoreP2 = snapshot.getValue(int.class);
                     mCanvas.drawText("Score P1: " + mScoreP1 + " Score P2: " + mScoreP2,
                             mFontMargin, mFontSize, scorePaint);
@@ -684,26 +684,36 @@ public class World extends SurfaceView implements Runnable {
      */
     public void update() {
         // Did player eat food?
-        if (playerOne.checkPickup(food.getLocation())) {
-            mScoreP1 += 1;
-            DatabaseReference _score1Ref = database.getReference("player1/score");
-            _score1Ref.setValue(mScoreP1);
-            ArrayList<Int2> emptyCells = grid.getEmpty();
-            food.spawn(emptyCells, numCellsWide, numCellsHigh);
-            DatabaseReference _foodRef = database.getReference("food");
-            _foodRef.setValue(food.getLocation());
-            mSP.play(mEat_ID, 1, 1, 0, 0, 1);
-        }
+        if(playerNumControlled.equals("1")) {
+            if (playerOne.checkPickup(food.getLocation())) {
+                mScoreP1 += 1;
+                DatabaseReference _score1Ref = database.getReference("player1/score");
+                _score1Ref.setValue(mScoreP1);
+                ArrayList<Int2> emptyCells = grid.getEmpty();
+                food.spawn(emptyCells, numCellsWide, numCellsHigh);
+                DatabaseReference _foodRef = database.getReference("food");
+                _foodRef.setValue(food.getLocation());
+                mSP.play(mEat_ID, 1, 1, 0, 0, 1);
+            }
 
-        if (playerTwo.checkPickup(food.getLocation())) {
-            mScoreP2 += 1;
-            DatabaseReference _score2Ref = database.getReference("player2/score");
-            _score2Ref.setValue(mScoreP2);
-            ArrayList<Int2> emptyCells = grid.getEmpty();
-            food.spawn(emptyCells, numCellsWide, numCellsHigh);
-            DatabaseReference _foodRef = database.getReference("food");
-            _foodRef.setValue(food.getLocation());
-            mSP.play(mEat_ID, 1, 1, 0, 0, 1);
+            if (playerTwo.checkPickup(food.getLocation())) {
+                mScoreP2 += 1;
+                DatabaseReference _score2Ref = database.getReference("player2/score");
+                _score2Ref.setValue(mScoreP2);
+                ArrayList<Int2> emptyCells = grid.getEmpty();
+                food.spawn(emptyCells, numCellsWide, numCellsHigh);
+                DatabaseReference _foodRef = database.getReference("food");
+                _foodRef.setValue(food.getLocation());
+                mSP.play(mEat_ID, 1, 1, 0, 0, 1);
+            }
+        } else {
+            if (playerOne.checkPickup(food.getLocation())) {
+                mSP.play(mEat_ID, 1, 1, 0, 0, 1);
+            }
+
+            if (playerTwo.checkPickup(food.getLocation())) {
+                mSP.play(mEat_ID, 1, 1, 0, 0, 1);
+            }
         }
 
         // Did player die?
